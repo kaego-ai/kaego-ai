@@ -66,6 +66,7 @@
             div.className = tipe === "typing" ? "typing" : `bubble ${tipe}`;
             div.id = tipe === "typing" ? "typing" : "";
             if (tipe === "kaego") {
+                console.log("TEKS:", teks);
                 teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:bold;font-size:14px">$1</span>');
                 teks = teks.replace(/- ([abcd])\./g, '$1.');
                 teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
