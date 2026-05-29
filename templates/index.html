@@ -33,12 +33,19 @@
             <div class="bubble kaego">Halo Kak! Aku Kaego, asisten AI kamu. Ada yang bisa aku bantu nih? 😊</div>
         </div>
         <div class="chat-input">
-            <input type="text" id="input" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') kirim()">
+            <textarea id="input" placeholder="Ketik pesan..." rows="1" onkeypress="if(event.key==='Enter' && !event.shiftKey){kirim();event.preventDefault()}" style="flex:1;padding:10px 14px;border:1px solid #ddd;border-radius:20px;outline:none;font-size:14px;resize:none;font-family:Arial,sans-serif;overflow:hidden;"></textarea>
             <button onclick="kirim()">Kirim</button>
         </div>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('input').addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        });
+
         async function kirim() {
             const input = document.getElementById("input");
             const pesan = input.value.trim();
