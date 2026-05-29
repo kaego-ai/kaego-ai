@@ -11,7 +11,7 @@
     .chat-header { background: #6c63ff; color: white; padding: 16px 20px; font-size: 18px; font-weight: bold; }
     .chat-header span { font-size: 13px; font-weight: normal; display: block; opacity: 0.8; }
     .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; }
+    .bubble { max-width: 75%; width: fit-content; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; overflow-wrap: anywhere; white-space: pre-wrap; }
     .bubble p, .bubble strong, .bubble em { font-size: 14px; margin: 2px 0; }
     .bubble.user { background: #6c63ff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
     .bubble.kaego { background: #f0f2f5; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; }
