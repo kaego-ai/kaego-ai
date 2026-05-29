@@ -26,7 +26,7 @@ def chat():
     response = client.messages.create(
         model="claude-sonnet-4-5",
         max_tokens=1024,
-        system="Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
+        system="Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, selalu tulis setiap pilihan jawaban di baris baru dengan format:\na. ...\nb. ...\nc. ...\nd. ...",
         messages=riwayat
     )
     
