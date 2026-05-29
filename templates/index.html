@@ -66,7 +66,7 @@
             div.className = tipe === "typing" ? "typing" : `bubble ${tipe}`;
             div.id = tipe === "typing" ? "typing" : "";
             if (tipe === "kaego") {
-                teks = teks.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:bold;font-size:14px">$1</span>');
                 teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
                 div.innerHTML = teks.split('\n').map(line => `<p style="margin:2px 0">${line}</p>`).join('');
             } else {
