@@ -20,6 +20,7 @@
         .chat-input button:hover { background: #5a52d5; }
         .typing { color: #999; font-size: 13px; font-style: italic; }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 </head>
 <body>
     <div class="chat-container">
@@ -62,7 +63,7 @@
             const messages = document.getElementById("messages");
             const div = document.createElement("div");
             div.className = tipe === "typing" ? "typing" : `bubble ${tipe}`;
-            div.textContent = teks;
+            div.innerHTML = marked.parse(teks);
             div.id = tipe === "typing" ? "typing" : "";
             messages.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
