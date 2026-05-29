@@ -18,56 +18,23 @@ def home():
 def chat():
     if "riwayat" not in session:
         session["riwayat"] = []
-    
+
     pesan_user = request.json.get("pesan")
     riwayat = session["riwayat"]
     riwayat.append({"role": "user", "content": pesan_user})
-    
+
     response = client.messages.create(
         model="claude-sonnet-4-5",
         max_tokens=1024,
-        system="""Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.
-
-Saat membuat soal pilihan ganda, WAJIB gunakan format PERSIS seperti ini:
-
-**1. Pertanyaan soal?**
-- a. Pilihan A
-- b. Pilihan B
-- c. Pilihan C
-- d. Pilihan D
-
-**2. Pertanyaan soal berikutnya?**
-- a. Pilihan A
-- b. Pilihan B
-- c. Pilihan C
-- d. Pilihan D
-
-WAJIB gunakan tanda strip (-) sebelum setiap pilihan supaya tampil di baris baru.""",
-Saat membuat soal pilihan ganda, WAJIB gunakan format ini:
-
-1. Pertanyaan soal?
-
-a. Pilihan A
-b. Pilihan B
-c. Pilihan C
-d. Pilihan D
-
-2. Pertanyaan soal berikutnya?
-
-a. Pilihan A
-b. Pilihan B
-c. Pilihan C
-d. Pilihan D
-
-Setiap pilihan HARUS di baris baru. Jangan gabungkan dalam satu baris.""",
+        system="Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan",
         messages=riwayat
     )
-    
+
     jawaban = response.content[0].text
     riwayat.append({"role": "assistant", "content": jawaban})
     session["riwayat"] = riwayat
     return jsonify({"jawaban": jawaban})
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
