@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaego AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .chat-container { width: 420px; height: 600px; background: white; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .chat-header { background: #6c63ff; color: white; padding: 16px 20px; font-size: 18px; font-weight: bold; }
+        .chat-header span { font-size: 13px; font-weight: normal; display: block; opacity: 0.8; }
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; }
+        .bubble.user { background: #6c63ff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .bubble.kaego { background: #f0f2f5; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-input { display: flex; padding: 12px; border-top: 1px solid #eee; gap: 8px; }
+        .chat-input input { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; }
+        .chat-input button { background: #6c63ff; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; }
+        .chat-input button:hover { background: #5a52d5; }
+        .typing { color: #999; font-size: 13px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Kaego AI
+            <span>Asisten pribadi kamu</span>
+        </div>
+        <div class="chat-messages" id="messages">
+            <div class="bubble kaego">Halo Kak! Aku Kaego, asisten AI kamu. Ada yang bisa aku bantu nih? 😊</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="input" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') kirim()">
+            <button onclick="kirim()">Kirim</button>
+        </div>
+    </div>
+
+    <script>
+        async function kirim() {
+            const input = document.getElementById("input");
+            const pesan = input.value.trim();
+            if (!pesan) return;
+
+            tampilPesan(pesan, "user");
+            input.value = "";
+
+            tampilPesan("Kaego sedang mengetik...", "typing");
+
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({pesan: pesan})
+            });
+
+            const data = await response.json();
+            hapusTyping();
+            tampilPesan(data.jawaban, "kaego");
+        }
+
+        function tampilPesan(teks, tipe) {
+            const messages = document.getElementById("messages");
+            const div = document.createElement("div");
+            div.className = tipe === "typing" ? "typing" : `bubble ${tipe}`;
+            div.textContent = teks;
+            div.id = tipe === "typing" ? "typing" : "";
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function hapusTyping() {
+            const typing = document.getElementById("typing");
+            if (typing) typing.remove();
+        }
+    </script>
+</body>
+</html>
