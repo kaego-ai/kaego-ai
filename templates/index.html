@@ -66,7 +66,9 @@
             const messages = document.getElementById("messages");
             const div = document.createElement("div");
             div.className = tipe === "typing" ? "typing" : `bubble ${tipe}`;
-            div.innerHTML = marked.parse(teks);
+            // Pisahkan pilihan a. b. c. d. ke baris baru
+teks = teks.replace(/([abcd])\.\s/g, '\n$1. ');
+div.innerHTML = marked.parse(teks);
             div.id = tipe === "typing" ? "typing" : "";
             messages.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
