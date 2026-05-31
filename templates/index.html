@@ -16,7 +16,7 @@
     .bubble.kaego { background: #f0f2f5; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; }
     .bubble p { font-size: 14px; margin: 2px 0; word-wrap: break-word; overflow-wrap: anywhere; }
     .chat-input { display: flex; padding: 12px; border-top: 1px solid #eee; gap: 8px; align-items: flex-end; }
-    .chat-input textarea { flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; resize: none; font-family: Arial, sans-serif; overflow-y: auto; max-height: 120px; line-height: 1.5; }
+    .chat-input textarea { flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; resize: none; font-family: Arial, sans-serif; max-height: 120px; line-height: 1.5; }
     .chat-input button { background: #6c63ff; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; flex-shrink: 0; }
     .chat-input button:hover { background: #5a52d5; }
     .typing { color: #999; font-size: 13px; font-style: italic; }
@@ -38,45 +38,72 @@
     </div>
 
     <script>
-        const input = document.getElementById("input");
-document.getElementById("btnKirim").addEventListener("click", kirim);
-        input.addEventListener("input", function() {
-            this.style.height = "auto";
-            this.style.height = Math.min(this.scrollHeight, 120) + "px";
-        });
+        var inputEl = document.getElementById("input");
+        var btnEl = document.getElementById("btnKirim");
 
-        input.addEventListener("keypress", function(e) {
+        btnEl.addEventListener("click", kirim);
+
+        inputEl.addEventListener("keypress", function(e) {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 kirim();
             }
         });
 
-        async function kirim() {
-            const pesan = input.value.trim();
+        inputEl.addEventListener("input", function() {
+            this.style.height = "auto";
+            this.style.height = Math.min(this.scrollHeight, 120) + "px";
+        });
+
+        function kirim() {
+            var pesan = inputEl.value.trim();
             if (!pesan) return;
 
             tampilPesan(pesan, "user");
-            input.value = "";
-            input.style.height = "auto";
+            inputEl.value = "";
+            inputEl.style.height = "auto";
 
             tampilPesan("Kaego sedang mengetik...", "typing");
 
-            const response = await fetch("/chat", {
+            fetch("/chat", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({pesan: pesan})
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                hapusTyping();
+                tampilPesan(data.jawaban, "kaego");
+            })
+            .catch(function(err) {
+                hapusTyping();
+                tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego");
             });
-
-            const data = await response.json();
-            hapusTyping();
-            tampilPesan(data.jawaban, "kaego");
         }
 
         function tampilPesan(teks, tipe) {
-            const messages = document.getElementById("messages");
-            const div = document.createElement("div");
-            div.className = tipe === "typing" ? "typing" : `bubble ${tipe}`;
+            var messages = document.getElementById("messages");
+            var div = document.createElement("div");
+            div.className = tipe === "typing" ? "typing" : "bubble " + tipe;
             div.id = tipe === "typing" ? "typing" : "";
             if (tipe === "kaego") {
-                teks = teks.replace(/\*\*(.*?)\*\*/g, '<span s
+                teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:bold;font-size:14px">$1</span>');
+                teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                teks = teks.replace(/^[\-\*]\s*/gm, '');
+                div.innerHTML = teks.split('\n').map(function(line) {
+                    return '<p style="margin:2px 0">' + line + '</p>';
+                }).join('');
+            } else {
+                div.textContent = teks;
+            }
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function hapusTyping() {
+            var typing = document.getElementById("typing");
+            if (typing) typing.remove();
+        }
+    </script>
+</body>
+</html>
