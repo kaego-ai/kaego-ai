@@ -6,34 +6,57 @@
     <title>Kaego AI</title>
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #f0f2f5; height: 100vh; display: flex; justify-content: center; align-items: center; }
-    .chat-container { width: 420px; height: 600px; background: white; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-    .chat-header { background: #6c63ff; color: white; padding: 16px 20px; font-size: 18px; font-weight: bold; }
-    .chat-header span { font-size: 13px; font-weight: normal; display: block; opacity: 0.8; }
-    .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; overflow-wrap: anywhere; }
-    .bubble.user { background: #6c63ff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-    .bubble.kaego { background: #f0f2f5; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; }
-    .bubble p { font-size: 14px; margin: 2px 0; word-wrap: break-word; overflow-wrap: anywhere; }
-    .chat-input { display: flex; padding: 12px; border-top: 1px solid #eee; gap: 8px; align-items: flex-end; }
-    .chat-input textarea { flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; resize: none; font-family: Arial, sans-serif; max-height: 120px; line-height: 1.5; }
-    .chat-input button { background: #6c63ff; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; flex-shrink: 0; }
-    .chat-input button:hover { background: #5a52d5; }
-    .typing { color: #999; font-size: 13px; font-style: italic; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f9fa; height: 100vh; display: flex; flex-direction: column; }
+    .header { padding: 16px 24px; display: flex; align-items: center; gap: 10px; background: white; border-bottom: 1px solid #e0e0e0; }
+    .header-logo { width: 32px; height: 32px; background: linear-gradient(135deg, #6c63ff, #a78bfa); border-radius: 50%; }
+    .header-title { font-size: 20px; font-weight: 600; color: #1a1a2e; }
+    .header-subtitle { font-size: 13px; color: #888; margin-left: 4px; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; margin: 0 auto; }
+    .message { display: flex; gap: 12px; align-items: flex-start; }
+    .message.user { flex-direction: row-reverse; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .avatar.kaego { background: linear-gradient(135deg, #6c63ff, #a78bfa); color: white; font-weight: bold; font-size: 13px; }
+    .avatar.user { background: #e8f0fe; color: #6c63ff; font-size: 18px; }
+    .bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; word-wrap: break-word; overflow-wrap: anywhere; }
+    .bubble.user { background: #6c63ff; color: white; border-bottom-right-radius: 4px; }
+    .bubble.kaego { background: white; color: #1a1a2e; border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .bubble p { margin: 3px 0; font-size: 15px; }
+    .input-area { padding: 16px 24px; background: white; border-top: 1px solid #e0e0e0; }
+    .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; background: #f0f4ff; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #e0e0e0; transition: border 0.2s; }
+    .input-box:focus-within { border-color: #6c63ff; }
+    .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #1a1a2e; }
+    .input-box textarea::placeholder { color: #aaa; }
+    .send-btn { background: #6c63ff; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
+    .send-btn:hover { background: #5a52d5; }
+    .send-btn svg { width: 18px; height: 18px; fill: white; }
+    .typing { color: #888; font-size: 14px; font-style: italic; padding: 4px 0; }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            Kaego AI
-            <span>Asisten pribadi kamu</span>
+    <div class="header">
+        <div class="header-logo"></div>
+        <span class="header-title">Kaego</span>
+        <span class="header-subtitle">AI Assistant</span>
+    </div>
+
+    <div class="chat-messages" id="messages">
+        <div class="message">
+            <div class="avatar kaego">K</div>
+            <div class="bubble kaego">
+                <p>Halo Kak! 👋 Aku Kaego, asisten AI kamu.</p>
+                <p>Ada yang bisa aku bantu nih? 😊</p>
+            </div>
         </div>
-        <div class="chat-messages" id="messages">
-            <div class="bubble kaego">Halo Kak! Aku Kaego, asisten AI kamu. Ada yang bisa aku bantu nih? 😊</div>
-        </div>
-        <div class="chat-input">
-            <textarea id="input" placeholder="Ketik pesan..." rows="1"></textarea>
-            <button id="btnKirim">Kirim</button>
+    </div>
+
+    <div class="input-area">
+        <div class="input-box">
+            <textarea id="input" placeholder="Tanya Kaego apa saja..." rows="1"></textarea>
+            <button class="send-btn" id="btnKirim">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
+                </svg>
+            </button>
         </div>
     </div>
 
@@ -63,7 +86,7 @@
             inputEl.value = "";
             inputEl.style.height = "auto";
 
-            tampilPesan("Kaego sedang mengetik...", "typing");
+            tampilTyping();
 
             fetch("/chat", {
                 method: "POST",
@@ -75,7 +98,7 @@
                 hapusTyping();
                 tampilPesan(data.jawaban, "kaego");
             })
-            .catch(function(err) {
+            .catch(function() {
                 hapusTyping();
                 tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego");
             });
@@ -83,19 +106,39 @@
 
         function tampilPesan(teks, tipe) {
             var messages = document.getElementById("messages");
-            var div = document.createElement("div");
-            div.className = tipe === "typing" ? "typing" : "bubble " + tipe;
-            div.id = tipe === "typing" ? "typing" : "";
+            var wrapper = document.createElement("div");
+            wrapper.className = "message " + tipe;
+
+            var avatar = document.createElement("div");
+            avatar.className = "avatar " + tipe;
+            avatar.textContent = tipe === "kaego" ? "K" : "👤";
+
+            var bubble = document.createElement("div");
+            bubble.className = "bubble " + tipe;
+
             if (tipe === "kaego") {
-                teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:bold;font-size:14px">$1</span>');
+                teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:600">$1</span>');
                 teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
                 teks = teks.replace(/^[\-\*]\s*/gm, '');
-                div.innerHTML = teks.split('\n').map(function(line) {
-                    return '<p style="margin:2px 0">' + line + '</p>';
+                bubble.innerHTML = teks.split('\n').map(function(line) {
+                    return '<p>' + line + '</p>';
                 }).join('');
             } else {
-                div.textContent = teks;
+                bubble.textContent = teks;
             }
+
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(bubble);
+            messages.appendChild(wrapper);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function tampilTyping() {
+            var messages = document.getElementById("messages");
+            var div = document.createElement("div");
+            div.id = "typing";
+            div.className = "typing";
+            div.textContent = "Kaego sedang mengetik...";
             messages.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
         }
