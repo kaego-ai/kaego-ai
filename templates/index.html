@@ -33,13 +33,13 @@
         </div>
         <div class="chat-input">
             <textarea id="input" placeholder="Ketik pesan..." rows="1"></textarea>
-            <button onclick="kirim()">Kirim</button>
+            <button id="btnKirim">Kirim</button>
         </div>
     </div>
 
     <script>
         const input = document.getElementById("input");
-
+document.getElementById("btnKirim").addEventListener("click", kirim);
         input.addEventListener("input", function() {
             this.style.height = "auto";
             this.style.height = Math.min(this.scrollHeight, 120) + "px";
