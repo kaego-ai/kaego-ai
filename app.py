@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, send_from_directory
 import anthropic
 import os
 from dotenv import load_dotenv
@@ -9,6 +9,9 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
 @app.route("/")
 def home():
     session["riwayat"] = []
