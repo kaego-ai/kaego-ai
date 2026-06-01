@@ -27,11 +27,12 @@ def chat():
     riwayat.append({"role": "user", "content": pesan_user})
 
     response = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=4096,
-        system="Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan",
-        messages=riwayat
-    )
+    model="claude-sonnet-4-5",
+    max_tokens=4096,
+    timeout=120,
+    system="Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan",
+    messages=riwayat
+)
 
     jawaban = response.content[0].text
     riwayat.append({"role": "assistant", "content": jawaban})
