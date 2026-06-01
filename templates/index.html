@@ -58,7 +58,7 @@
 
     <div class="input-area">
         <div class="input-box">
-            <textarea id="input" placeholder="Tanya Kaego apa saja..." rows="1"></textarea>
+            <textarea id="input" placeholder="Tanya Kaego atau ketik /gambar [deskripsi]..." rows="1"></textarea>
             <button class="send-btn" id="btnKirim">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
@@ -96,8 +96,44 @@ var inputEl = document.getElementById("input");
         });
 
         function kirim() {
-            var pesan = inputEl.value.trim();
-            if (!pesan) return;
+    var pesan = inputEl.value.trim();
+    if (!pesan) return;
+
+    if (pesan.toLowerCase().startsWith("/gambar ")) {
+        var prompt = pesan.substring(8);
+        tampilPesan(pesan, "user");
+        inputEl.value = "";
+        inputEl.style.height = "auto";
+        tampilTyping();
+
+        fetch("/generate-image", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({prompt: prompt})
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            hapusTyping();
+            var messages = document.getElementById("messages");
+            var wrapper = document.createElement("div");
+            wrapper.className = "message kaego";
+            var avatar = document.createElement("div");
+            avatar.className = "avatar kaego";
+            avatar.textContent = "K";
+            var bubble = document.createElement("div");
+            bubble.className = "bubble kaego";
+            bubble.innerHTML = '<p>Ini gambarnya Kak! 🎨</p><img src="' + data.image_url + '" style="max-width:100%;border-radius:12px;margin-top:8px;">';
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(bubble);
+            messages.appendChild(wrapper);
+            messages.scrollTop = messages.scrollHeight;
+        })
+        .catch(function() {
+            hapusTyping();
+            tampilPesan("Maaf, gagal generate gambar. Coba lagi ya!", "kaego");
+        });
+        return;
+    }
 
             tampilPesan(pesan, "user");
             inputEl.value = "";

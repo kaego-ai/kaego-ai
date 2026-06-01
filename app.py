@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 import anthropic
+import replicate
 import os
 from dotenv import load_dotenv
 
@@ -38,7 +39,15 @@ def chat():
     riwayat.append({"role": "assistant", "content": jawaban})
     session["riwayat"] = riwayat
     return jsonify({"jawaban": jawaban})
-
+@app.route("/generate-image", methods=["POST"])
+def generate_image():
+    prompt = request.json.get("prompt")
+    output = replicate.run(
+        "black-forest-labs/flux-schnell",
+        input={"prompt": prompt}
+    )
+    image_url = output[0] if isinstance(output, list) else str(output)
+    return jsonify({"image_url": image_url})
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
