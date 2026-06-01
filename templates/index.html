@@ -68,6 +68,11 @@
     </div>
 
     <script>
+        // Fix keyboard mobile
+window.addEventListener('resize', function() {
+    document.querySelector('.input-area').scrollIntoView(false);
+    window.scrollTo(0, document.body.scrollHeight);
+});
         var inputEl = document.getElementById("input");
         var btnEl = document.getElementById("btnKirim");
 
