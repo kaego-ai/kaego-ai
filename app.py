@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 import anthropic
 import replicate
-replicate_client = replicate.Client(api_token=os.environ.get("REPLICATE_API_TOKEN"))
 import os
 from dotenv import load_dotenv
 
@@ -10,10 +9,12 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+replicate_client = replicate.Client(api_token=os.environ.get("REPLICATE_API_TOKEN"))
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory('static', filename)
+
 @app.route("/")
 def home():
     session["riwayat"] = []
@@ -23,32 +24,31 @@ def home():
 def chat():
     if "riwayat" not in session:
         session["riwayat"] = []
-
     pesan_user = request.json.get("pesan")
     riwayat = session["riwayat"]
     riwayat.append({"role": "user", "content": pesan_user})
-
     response = client.messages.create(
-    model="claude-sonnet-4-5",
-    max_tokens=4096,
-    timeout=120,
-    system="Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan",
-    messages=riwayat
-)
-
+        model="claude-sonnet-4-5",
+        max_tokens=4096,
+        timeout=120,
+        system="Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Selalu sapa dengan Halo Kak! Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan",
+        messages=riwayat
+    )
     jawaban = response.content[0].text
     riwayat.append({"role": "assistant", "content": jawaban})
     session["riwayat"] = riwayat
     return jsonify({"jawaban": jawaban})
+
 @app.route("/generate-image", methods=["POST"])
 def generate_image():
     prompt = request.json.get("prompt")
-   output = replicate_client.run(
-    "black-forest-labs/flux-schnell",
-    input={"prompt": prompt}
-)
+    output = replicate_client.run(
+        "black-forest-labs/flux-schnell",
+        input={"prompt": prompt}
+    )
     image_url = output[0] if isinstance(output, list) else str(output)
     return jsonify({"image_url": image_url})
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
