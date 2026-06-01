@@ -58,3 +58,96 @@
                     <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
                 </svg>
             </button>
+            </div>
+    </div>
+
+    <script>
+        var inputEl = document.getElementById("input");
+        var btnEl = document.getElementById("btnKirim");
+
+        btnEl.addEventListener("click", kirim);
+
+        inputEl.addEventListener("keypress", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                kirim();
+            }
+        });
+
+        inputEl.addEventListener("input", function() {
+            this.style.height = "auto";
+            this.style.height = Math.min(this.scrollHeight, 120) + "px";
+        });
+
+        function kirim() {
+            var pesan = inputEl.value.trim();
+            if (!pesan) return;
+
+            tampilPesan(pesan, "user");
+            inputEl.value = "";
+            inputEl.style.height = "auto";
+
+            tampilTyping();
+
+            fetch("/chat", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({pesan: pesan})
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                hapusTyping();
+                tampilPesan(data.jawaban, "kaego");
+            })
+            .catch(function() {
+                hapusTyping();
+                tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego");
+            });
+        }
+
+        function tampilPesan(teks, tipe) {
+            var messages = document.getElementById("messages");
+            var wrapper = document.createElement("div");
+            wrapper.className = "message " + tipe;
+
+            var avatar = document.createElement("div");
+            avatar.className = "avatar " + tipe;
+            avatar.textContent = tipe === "kaego" ? "K" : "👤";
+
+            var bubble = document.createElement("div");
+            bubble.className = "bubble " + tipe;
+
+            if (tipe === "kaego") {
+                teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:600">$1</span>');
+                teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                teks = teks.replace(/^[\-\*]\s*/gm, '');
+                bubble.innerHTML = teks.split('\n').map(function(line) {
+                    return '<p>' + line + '</p>';
+                }).join('');
+            } else {
+                bubble.textContent = teks;
+            }
+
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(bubble);
+            messages.appendChild(wrapper);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function tampilTyping() {
+            var messages = document.getElementById("messages");
+            var div = document.createElement("div");
+            div.id = "typing";
+            div.className = "typing";
+            div.textContent = "Kaego sedang mengetik...";
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function hapusTyping() {
+            var typing = document.getElementById("typing");
+            if (typing) typing.remove();
+        }
+    </script>
+</body>
+</html>
