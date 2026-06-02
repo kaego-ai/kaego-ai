@@ -55,7 +55,7 @@
 
     <div class="chat-messages" id="messages">
         <div class="message">
-            <div class="avatar kaego"><img src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div>
+            <div class="avatar kaego"><img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div>
             <div class="bubble kaego">
                 <p>Halo Kak! 👋 Aku Kaego, asisten AI kamu.</p>
                 <p>Ada yang bisa aku bantu nih? 😊</p>
@@ -190,7 +190,7 @@ if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/
             var avatar = document.createElement("div");
             avatar.className = "avatar " + tipe;
            if (tipe === "kaego") {
-    avatar.innerHTML = '<img src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;">';
+    avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;">';
 } else {
     avatar.textContent = "👤";
 }
@@ -216,14 +216,14 @@ if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/
         }
 
         function tampilTyping() {
-            var messages = document.getElementById("messages");
-            var div = document.createElement("div");
-            div.id = "typing";
-            div.className = "typing";
-            div.textContent = "Kaego sedang mengetik...";
-            messages.appendChild(div);
-            messages.scrollTop = messages.scrollHeight;
-        }
+    var messages = document.getElementById("messages");
+    var div = document.createElement("div");
+    div.id = "typing";
+    div.className = "message";
+    div.innerHTML = '<div class="avatar kaego"><img id="avatarTyping" src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego typing-text">Kaego sedang mengetik...</div>';
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
 
         function hapusTyping() {
             var typing = document.getElementById("typing");
