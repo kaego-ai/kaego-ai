@@ -58,6 +58,16 @@
                 <p>Ada yang bisa aku bantu nih? 😊</p>
             </div>
         </div>
+        {% for item in riwayat %}
+        <div class="message user">
+            <div class="avatar user">👤</div>
+            <div class="bubble user">{{ item.pesan }}</div>
+        </div>
+        <div class="message">
+            <div class="avatar kaego">K</div>
+            <div class="bubble kaego"><p>{{ item.jawaban }}</p></div>
+        </div>
+        {% endfor %}
     </div>
 
     <div class="input-area">
