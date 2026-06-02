@@ -58,16 +58,7 @@
                 <p>Ada yang bisa aku bantu nih? 😊</p>
             </div>
         </div>
-        {% for item in riwayat %}
-        <div class="message user">
-            <div class="avatar user">👤</div>
-            <div class="bubble user">{{ item.pesan }}</div>
-        </div>
-        <div class="message">
-            <div class="avatar kaego">K</div>
-            <div class="bubble kaego"><p>{{ item.jawaban }}</p></div>
-        </div>
-        {% endfor %}
+       
     </div>
 
     <div class="input-area">
@@ -94,7 +85,18 @@ setHeight();
 window.addEventListener('resize', setHeight);  
 var inputEl = document.getElementById("input");
         var btnEl = document.getElementById("btnKirim");
-
+fetch("/riwayat")
+.then(function(res) { return res.json(); })
+.then(function(data) {
+    if (data.riwayat) {
+        data.riwayat.forEach(function(item) {
+            tampilPesan(item.pesan, "user");
+            tampilPesan(item.jawaban, "kaego");
+        });
+        var messages = document.getElementById("messages");
+        messages.scrollTop = messages.scrollHeight;
+    }
+});
 var namaEl = document.getElementById("namaUser");
 if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/) || ["",""])[1];
         btnEl.addEventListener("click", kirim);
