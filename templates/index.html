@@ -42,9 +42,13 @@
 </head>
 <body>
     <div class="header">
-        <img src="/static/logo.png" alt="Kaego Logo">
-        <span class="header-subtitle">AI Assistant</span>
+    <img src="/static/logo.png" alt="Kaego Logo">
+    <span class="header-subtitle">AI Assistant</span>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:13px;color:#888;" id="namaUser"></span>
+        <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
     </div>
+</div>
 
     <div class="chat-messages" id="messages">
         <div class="message">
@@ -80,7 +84,9 @@ setHeight();
 window.addEventListener('resize', setHeight);  
 var inputEl = document.getElementById("input");
         var btnEl = document.getElementById("btnKirim");
-
+fetch("/chat", {method: "GET"}).catch(function() {});
+var namaEl = document.getElementById("namaUser");
+if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/) || ["",""])[1];
         btnEl.addEventListener("click", kirim);
 
         inputEl.addEventListener("keypress", function(e) {
