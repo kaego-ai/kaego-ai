@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, session, send_from_d
 import anthropic
 import os
 import requests
+import base64
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,7 +10,6 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
-
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
@@ -42,26 +42,16 @@ def chat():
 @app.route("/generate-image", methods=["POST"])
 def generate_image():
     prompt = request.json.get("prompt")
-    output = replicate_client.run(
-        "black-forest-labs/flux-schnell",
-        input={"prompt": prompt}
-    )
-    image_url = output[0] if isinstance(output, list) else str(output)
-    return jsonify({"image_url": image_url})
-
-@app.route("/generate-image", methods=["POST"])
-def generate_image():
-    prompt = request.json.get("prompt")
     hf_token = os.environ.get("HUGGINGFACE_TOKEN")
     API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
     headers = {"Authorization": f"Bearer {hf_token}"}
     response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
     if response.status_code == 200:
-        import base64
         image_base64 = base64.b64encode(response.content).decode("utf-8")
         return jsonify({"image_url": f"data:image/jpeg;base64,{image_base64}"})
     else:
         return jsonify({"error": "Gagal generate gambar"}), 500
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
