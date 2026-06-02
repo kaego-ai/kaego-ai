@@ -19,7 +19,7 @@ def hash_password(password):
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
-    return send_from_directory('static', filename)
+    return send_from_directory(os.path.join(os.path.dirname(__file__), 'static'), filename)
 
 @app.route("/")
 def home():
