@@ -94,7 +94,7 @@ setHeight();
 window.addEventListener('resize', setHeight);  
 var inputEl = document.getElementById("input");
         var btnEl = document.getElementById("btnKirim");
-fetch("/chat", {method: "GET"}).catch(function() {});
+
 var namaEl = document.getElementById("namaUser");
 if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/) || ["",""])[1];
         btnEl.addEventListener("click", kirim);
