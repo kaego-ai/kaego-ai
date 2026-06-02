@@ -25,6 +25,13 @@ def static_files(filename):
 def home():
     if "user_id" not in session:
         return redirect(url_for("login"))
+    if "riwayat" not in session:
+        result = supabase.table("riwayat_chat").select("*").eq("user_id", session["user_id"]).order("created_at").execute()
+        riwayat = []
+        for item in result.data:
+            riwayat.append({"role": "user", "content": item["pesan"]})
+            riwayat.append({"role": "assistant", "content": item["jawaban"]})
+        session["riwayat"] = riwayat
     return render_template("index.html", nama=session.get("nama"))
 
 @app.route("/login", methods=["GET", "POST"])
