@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 import anthropic
 import os
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -48,6 +49,19 @@ def generate_image():
     image_url = output[0] if isinstance(output, list) else str(output)
     return jsonify({"image_url": image_url})
 
+@app.route("/generate-image", methods=["POST"])
+def generate_image():
+    prompt = request.json.get("prompt")
+    hf_token = os.environ.get("HUGGINGFACE_TOKEN")
+    API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+    headers = {"Authorization": f"Bearer {hf_token}"}
+    response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
+    if response.status_code == 200:
+        import base64
+        image_base64 = base64.b64encode(response.content).decode("utf-8")
+        return jsonify({"image_url": f"data:image/jpeg;base64,{image_base64}"})
+    else:
+        return jsonify({"error": "Gagal generate gambar"}), 500
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
