@@ -3,35 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Kaego AI">
-<meta name="theme-color" content="#1a1a1a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Kaego AI">
+    <meta name="theme-color" content="#0f0f0f">
     <title>Kaego AI</title>
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; }
-   .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #1a1a1a; border-bottom: 1px solid #2a2a2a; }
-.header img { height: 40px; width: auto; max-width: 150px; }
+    .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; }
+    .header img.logo { height: 40px; width: auto; max-width: 150px; }
     .header-subtitle { font-size: 13px; color: #888; }
     .chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; margin: 0 auto; }
     .message { display: flex; gap: 12px; align-items: flex-start; }
     .message.user { flex-direction: row-reverse; }
     .avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; }
-    .avatar.kaego { background: transparent; overflow: visible; position: relative; }
-.avatar.kaego img { width: 36px; height: 36px; border-radius: 50%; object-fit: contain; }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(26, 107, 255, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(26, 107, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(26, 107, 255, 0); } }
-.avatar.kaego img.pulse { animation: pulse 2s infinite; border-radius: 50%; }
-.avatar.kaego img { border-radius: 50%; }
+    .avatar.kaego { background: transparent; }
+    .avatar.kaego img { width: 36px; height: 36px; border-radius: 50%; object-fit: contain; }
     .avatar.user { background: #2a2a2a; color: #aaa; font-size: 18px; }
     .bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; word-wrap: break-word; overflow-wrap: anywhere; }
     .bubble.user { background: #1a6bff; color: white; border-bottom-right-radius: 4px; }
     .bubble.kaego { background: #1e1e1e; color: #e0e0e0; border-bottom-left-radius: 4px; border: 1px solid #2a2a2a; }
     .bubble p { margin: 3px 0; font-size: 15px; }
-    .input-area { padding: 16px 24px; background: #1a1a1a; border-top: 1px solid #2a2a2a; position: sticky; bottom: 0; z-index: 100; }
-    .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; background: #2a2a2a; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; }
+    .input-area { padding: 16px 24px; background: #0f0f0f; border-top: 1px solid #1a1a1a; position: sticky; bottom: 0; z-index: 100; }
+    .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; }
     .input-box:focus-within { border-color: #1a6bff; }
     .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; }
     .input-box textarea::placeholder { color: #555; }
@@ -40,69 +36,127 @@
     .send-btn svg { width: 18px; height: 18px; fill: white; }
     .typing { color: #555; font-size: 14px; font-style: italic; padding: 4px 0; }
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-track { background: #0f0f0f; }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+    /* Halaman Sambutan */
+    .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; }
+    .welcome-screen.hidden { opacity: 0; pointer-events: none; }
+    .welcome-avatar { width: 120px; height: 120px; margin-bottom: 24px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+    .welcome-greeting { font-size: 13px; color: #888; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
+    .welcome-name { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 40px; text-align: center; }
+    .welcome-input-box { width: 90%; max-width: 500px; display: flex; gap: 10px; align-items: flex-end; background: #1e1e1e; border-radius: 24px; padding: 12px 18px; border: 1.5px solid #333; transition: border 0.2s; }
+    .welcome-input-box:focus-within { border-color: #1a6bff; }
+    .welcome-input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; }
+    .welcome-input-box textarea::placeholder { color: #555; }
+    .welcome-send-btn { background: #1a6bff; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .welcome-send-btn:hover { background: #0055dd; }
     </style>
 </head>
 <body>
-    <div class="header">
-    <img src="/static/logo.png" alt="Kaego Logo">
-    <span class="header-subtitle">AI Assistant</span>
-    <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
-        <span style="font-size:13px;color:#888;" id="namaUser"></span>
-        <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
-    </div>
-</div>
 
-    <div class="chat-messages" id="messages">
-        <div class="message">
-            <div class="avatar kaego"><img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div>
-            <div class="bubble kaego">
-                <p>Halo Kak! 👋 Aku Kaego, asisten AI kamu.</p>
-                <p>Ada yang bisa aku bantu nih? 😊</p>
-            </div>
+    <!-- Halaman Sambutan -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <img src="/static/avatar.gif" class="welcome-avatar" alt="Kaego">
+        <div class="welcome-greeting" id="welcomeGreeting">Selamat pagi</div>
+        <div class="welcome-name" id="welcomeName">nama</div>
+        <div class="welcome-input-box">
+            <textarea id="welcomeInput" placeholder="Tanya Kaego apa saja..." rows="1"></textarea>
+            <button class="welcome-send-btn" id="welcomeSendBtn">
+                <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z" fill="white"/></svg>
+            </button>
         </div>
-       
     </div>
+
+    <!-- Halaman Chat -->
+    <div class="header">
+        <img src="/static/logo.png" alt="Kaego Logo" class="logo">
+        <span class="header-subtitle">AI Assistant</span>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:13px;color:#888;" id="namaUser"></span>
+            <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
+        </div>
+    </div>
+
+    <div class="chat-messages" id="messages"></div>
 
     <div class="input-area">
         <div class="input-box">
-            <textarea id="input" placeholder="Tanya Kaego atau ketik /gambar [deskripsi]..." rows="1"></textarea>
+            <textarea id="input" placeholder="Tanya Kaego apa saja..." rows="1"></textarea>
             <button class="send-btn" id="btnKirim">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z" fill="white"/></svg>
             </button>
-            </div>
+        </div>
     </div>
 
     <script>
-        // Fix keyboard mobile
-window.addEventListener('resize', function() {
-    document.querySelector('.input-area').scrollIntoView(false);
-    window.scrollTo(0, document.body.scrollHeight);
-});
-      function setHeight() {
-    document.body.style.height = window.innerHeight + 'px';
-}
-setHeight();
-window.addEventListener('resize', setHeight);  
-var inputEl = document.getElementById("input");
-        var btnEl = document.getElementById("btnKirim");
-fetch("/riwayat")
-.then(function(res) { return res.json(); })
-.then(function(data) {
-    if (data.riwayat) {
-        data.riwayat.forEach(function(item) {
-            tampilPesan(item.pesan, "user");
-            tampilPesan(item.jawaban, "kaego");
+        function setHeight() { document.body.style.height = window.innerHeight + 'px'; }
+        setHeight();
+        window.addEventListener('resize', setHeight);
+
+        // Sapaan sesuai waktu
+        function getSapaan() {
+            var jam = new Date().getHours();
+            if (jam >= 5 && jam < 11) return "Selamat pagi ☀️";
+            if (jam >= 11 && jam < 15) return "Selamat siang 🌤️";
+            if (jam >= 15 && jam < 18) return "Selamat sore 🌅";
+            return "Selamat malam 🌙";
+        }
+
+        // Set sapaan dan nama
+        var namaUser = "{{ nama }}";
+        document.getElementById("welcomeGreeting").textContent = getSapaan();
+        document.getElementById("welcomeName").textContent = namaUser;
+        document.getElementById("namaUser").textContent = "👤 " + namaUser;
+
+        // Load riwayat
+        fetch("/riwayat")
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.riwayat) {
+                data.riwayat.forEach(function(item) {
+                    tampilPesan(item.pesan, "user");
+                    tampilPesan(item.jawaban, "kaego");
+                });
+                var messages = document.getElementById("messages");
+                messages.scrollTop = messages.scrollHeight;
+            }
         });
-        var messages = document.getElementById("messages");
-        messages.scrollTop = messages.scrollHeight;
-    }
-});
-var namaEl = document.getElementById("namaUser");
-if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/) || ["",""])[1];
+
+        // Welcome screen input
+        var welcomeInput = document.getElementById("welcomeInput");
+        var welcomeSendBtn = document.getElementById("welcomeSendBtn");
+
+        welcomeInput.addEventListener("input", function() {
+            this.style.height = "auto";
+            this.style.height = Math.min(this.scrollHeight, 120) + "px";
+        });
+
+        welcomeInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                kirimDariWelcome();
+            }
+        });
+
+        welcomeSendBtn.addEventListener("click", kirimDariWelcome);
+
+        function kirimDariWelcome() {
+            var pesan = welcomeInput.value.trim();
+            if (!pesan) return;
+            document.getElementById("welcomeScreen").classList.add("hidden");
+            setTimeout(function() {
+                document.getElementById("welcomeScreen").style.display = "none";
+            }, 500);
+            document.getElementById("input").value = pesan;
+            kirim();
+        }
+
+        // Chat screen input
+        var inputEl = document.getElementById("input");
+        var btnEl = document.getElementById("btnKirim");
+
         btnEl.addEventListener("click", kirim);
 
         inputEl.addEventListener("keypress", function(e) {
@@ -117,54 +171,21 @@ if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/
             this.style.height = Math.min(this.scrollHeight, 120) + "px";
         });
 
+        function sembunyikanWelcome() {
+            document.getElementById("welcomeScreen").classList.add("hidden");
+            setTimeout(function() {
+                document.getElementById("welcomeScreen").style.display = "none";
+            }, 500);
+        }
+
         function kirim() {
-    var pesan = inputEl.value.trim();
-    if (!pesan) return;
+            var pesan = inputEl.value.trim();
+            if (!pesan) return;
 
-    if (pesan.toLowerCase().startsWith("/gambar ")) {
-        var prompt = pesan.substring(8);
-        tampilPesan(pesan, "user");
-        inputEl.value = "";
-        inputEl.style.height = "auto";
-        tampilTyping();
-
-        fetch("/generate-image", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({prompt: prompt})
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-            hapusTyping();
-            var messages = document.getElementById("messages");
-            var wrapper = document.createElement("div");
-            wrapper.className = "message kaego";
-            var avatar = document.createElement("div");
-            avatar.className = "avatar kaego";
-            if (tipe === "kaego") {
-    avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;">';
-} else {
-    avatar.textContent = "👤";
-}
-            var bubble = document.createElement("div");
-            bubble.className = "bubble kaego";
-            bubble.innerHTML = '<p>Ini gambarnya Kak! 🎨</p><br><img src="' + data.image_url + '" style="width:100%;max-width:300px;border-radius:12px;margin-top:8px;display:block;">';
-            wrapper.appendChild(avatar);
-            wrapper.appendChild(bubble);
-            messages.appendChild(wrapper);
-            messages.scrollTop = messages.scrollHeight;
-        })
-        .catch(function() {
-            hapusTyping();
-            tampilPesan("Maaf, gagal generate gambar. Coba lagi ya!", "kaego");
-        });
-        return;
-    }
-
+            sembunyikanWelcome();
             tampilPesan(pesan, "user");
             inputEl.value = "";
             inputEl.style.height = "auto";
-
             tampilTyping();
 
             fetch("/chat", {
@@ -190,11 +211,12 @@ if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/
 
             var avatar = document.createElement("div");
             avatar.className = "avatar " + tipe;
-           if (tipe === "kaego") {
-    avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;">';
-} else {
-    avatar.textContent = "👤";
-}
+
+            if (tipe === "kaego") {
+                avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;">';
+            } else {
+                avatar.textContent = "👤";
+            }
 
             var bubble = document.createElement("div");
             bubble.className = "bubble " + tipe;
@@ -217,14 +239,14 @@ if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/
         }
 
         function tampilTyping() {
-    var messages = document.getElementById("messages");
-    var div = document.createElement("div");
-    div.id = "typing";
-    div.className = "message";
-    div.innerHTML = '<div class="avatar kaego"><img id="avatarTyping" class="pulse" src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego typing-text">Kaego sedang mengetik...</div>';
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-}
+            var messages = document.getElementById("messages");
+            var div = document.createElement("div");
+            div.id = "typing";
+            div.className = "message";
+            div.innerHTML = '<div class="avatar kaego"><img class="pulse" src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
 
         function hapusTyping() {
             var typing = document.getElementById("typing");
