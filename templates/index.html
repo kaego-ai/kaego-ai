@@ -23,7 +23,8 @@
     .avatar.kaego { background: transparent; overflow: visible; position: relative; }
 .avatar.kaego img { width: 36px; height: 36px; border-radius: 50%; object-fit: contain; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(26, 107, 255, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(26, 107, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(26, 107, 255, 0); } }
-.avatar.kaego img { animation: pulse 2s infinite; border-radius: 50%; }
+.avatar.kaego img.pulse { animation: pulse 2s infinite; border-radius: 50%; }
+.avatar.kaego img { border-radius: 50%; }
     .avatar.user { background: #2a2a2a; color: #aaa; font-size: 18px; }
     .bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; word-wrap: break-word; overflow-wrap: anywhere; }
     .bubble.user { background: #1a6bff; color: white; border-bottom-right-radius: 4px; }
@@ -220,7 +221,7 @@ if (namaEl) namaEl.textContent = "👤 " + (document.cookie.match(/nama=([^;]+)/
     var div = document.createElement("div");
     div.id = "typing";
     div.className = "message";
-    div.innerHTML = '<div class="avatar kaego"><img id="avatarTyping" src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego typing-text">Kaego sedang mengetik...</div>';
+    div.innerHTML = '<div class="avatar kaego"><img id="avatarTyping" class="pulse" src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego typing-text">Kaego sedang mengetik...</div>';
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
 }
