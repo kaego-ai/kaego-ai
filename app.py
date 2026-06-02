@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 import anthropic
-import replicate
 import os
 from dotenv import load_dotenv
 
@@ -9,7 +8,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
-replicate_client = replicate.Client(api_token=os.environ.get("REPLICATE_API_TOKEN"))
+
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
