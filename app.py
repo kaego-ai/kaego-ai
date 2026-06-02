@@ -43,7 +43,7 @@ def chat():
 def generate_image():
     prompt = request.json.get("prompt")
     hf_token = os.environ.get("HUGGINGFACE_TOKEN")
-    API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+    API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
     headers = {"Authorization": f"Bearer {hf_token}"}
     response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
     if response.status_code == 200:
