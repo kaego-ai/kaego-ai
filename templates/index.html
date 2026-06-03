@@ -11,10 +11,33 @@
     <title>Kaego AI</title>
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; }
-    .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; overflow: hidden; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: #111; border-right: 1px solid #222; z-index: 500; transform: translateX(-100%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-header { padding: 20px 16px 12px; border-bottom: 1px solid #222; }
+    .sidebar-logo { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 1px; margin-bottom: 12px; }
+    .sidebar-logo span { background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sidebar-new-btn { width: 100%; padding: 9px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #ccc; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+    .sidebar-new-btn:hover { background: #252525; color: #fff; }
+    .sidebar-list { flex: 1; overflow-y: auto; padding: 12px 8px; display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-item { padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; }
+    .sidebar-item:hover { background: #1a1a1a; color: #fff; }
+    .sidebar-item.active { background: #1a2a3a; color: #4a9eff; }
+    .sidebar-empty { font-size: 13px; color: #555; text-align: center; padding: 24px 0; }
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 499; display: none; }
+    .sidebar-overlay.show { display: block; }
+
+    /* ===== HEADER ===== */
+    .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 100; }
     .header img.logo { height: 40px; width: auto; max-width: 150px; }
     .header-subtitle { font-size: 13px; color: #888; }
+    .menu-btn { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
+    .menu-btn:hover { color: #fff; }
+    .menu-btn svg { width: 22px; height: 22px; }
+
+    /* ===== CHAT ===== */
     .chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; margin: 0 auto; }
     .message { display: flex; gap: 12px; align-items: flex-start; }
     .message.user { flex-direction: row-reverse; }
@@ -27,88 +50,30 @@
     .bubble.kaego { background: #1e1e1e; color: #e0e0e0; border-bottom-left-radius: 4px; border: 1px solid #2a2a2a; }
     .bubble p { margin: 3px 0; font-size: 15px; }
 
-    /* Input area */
+    /* ===== INPUT ===== */
     .input-area { padding: 16px 24px; background: #0f0f0f; border-top: 1px solid #1a1a1a; position: sticky; bottom: 0; z-index: 100; }
     .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
     .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; min-width: 0; padding-top: 0; align-self: center; }
     .input-box textarea::placeholder { color: #555; }
-
-    /* Tombol upload */
-    .upload-btn { background: transparent; border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #666; transition: color 0.2s, background 0.2s; }
-    .upload-btn:hover { color: #1a6bff; background: #1a3a6b22; }
+    .upload-btn { background: transparent; border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #666; transition: color 0.2s; }
+    .upload-btn:hover { color: #1a6bff; }
     .upload-btn svg { width: 20px; height: 20px; }
 
-    /* Tombol kirim - garis lingkaran gradien */
-    .send-btn {
-        background: transparent;
-        border: none;
-        width: 36px; height: 36px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-        position: relative;
-        padding: 0;
-    }
-    .send-btn::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        padding: 3px;
-        background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-    }
+    /* Tombol kirim lingkaran gradien */
+    .send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
+    .send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
     .send-btn svg { display: none; }
     .send-btn:hover::before { opacity: 0.8; }
     .send-btn.loading::before { animation: spin 0.8s linear infinite; }
-    .send-btn:not(.loading)::after {
-        content: '';
-        position: absolute;
-        width: 10px; height: 10px;
-        border-right: 2.5px solid #14b8a6;
-        border-top: 2.5px solid #14b8a6;
-        border-radius: 1px;
-        transform: rotate(45deg) translate(-1px, 1px);
-    }
+    .send-btn:not(.loading)::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Tombol welcome - sama persis */
-    .welcome-send-btn {
-        background: transparent;
-        border: none;
-        width: 36px; height: 36px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-        position: relative;
-        padding: 0;
-    }
-    .welcome-send-btn::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        padding: 3px;
-        background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-    }
+    /* Tombol welcome */
+    .welcome-send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
+    .welcome-send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
     .welcome-send-btn svg { display: none; }
-    .welcome-send-btn::after {
-        content: '';
-        position: absolute;
-        width: 10px; height: 10px;
-        border-right: 2.5px solid #14b8a6;
-        border-top: 2.5px solid #14b8a6;
-        border-radius: 1px;
-        transform: rotate(45deg) translate(-1px, 1px);
-    }
+    .welcome-send-btn::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
     .welcome-send-btn:hover::before { opacity: 0.8; }
 
     /* Preview file */
@@ -120,8 +85,6 @@
     .file-preview-size { font-size: 11px; color: #666; margin-top: 2px; }
     .file-preview-remove { background: transparent; border: none; cursor: pointer; color: #666; font-size: 18px; line-height: 1; padding: 4px; transition: color 0.2s; flex-shrink: 0; }
     .file-preview-remove:hover { color: #ff4444; }
-
-    /* Gambar di chat */
     .bubble img.chat-img { max-width: 100%; border-radius: 10px; display: block; margin-bottom: 8px; border: 1px solid #333; }
     .bubble .file-label { font-size: 12px; color: #888; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
 
@@ -131,7 +94,7 @@
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 
     /* Halaman Sambutan */
-    .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; }
+    .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; }
     .welcome-screen.hidden { opacity: 0; pointer-events: none; }
     .welcome-avatar { width: 120px; height: 120px; margin-bottom: 24px; mix-blend-mode: screen; }
     .welcome-greeting { font-size: 13px; color: #888; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
@@ -141,7 +104,6 @@
     .welcome-input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; align-self: center; }
     .welcome-input-box textarea::placeholder { color: #555; }
 
-    /* Toast */
     .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .toast.show { opacity: 1; }
     </style>
@@ -150,6 +112,23 @@
 
     <div class="toast" id="toast"></div>
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
+
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">Kaego <span>AI</span></div>
+            <button class="sidebar-new-btn" id="sidebarNewBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Obrolan Baru
+            </button>
+        </div>
+        <div class="sidebar-list" id="sidebarList">
+            <div class="sidebar-empty">Belum ada obrolan</div>
+        </div>
+    </div>
 
     <!-- Halaman Sambutan -->
     <div class="welcome-screen" id="welcomeScreen">
@@ -162,18 +141,25 @@
         </div>
     </div>
 
-    <!-- Halaman Chat -->
+    <!-- Header -->
     <div class="header">
+        <button class="menu-btn" id="menuBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
         <img src="/static/logo.png" alt="Kaego Logo" class="logo">
         <span class="header-subtitle">AI Assistant</span>
         <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
-    <span style="font-size:13px;color:#888;" id="namaUser"></span>
-    <button id="btnBaru" title="Obrolan Baru" style="background:transparent;border:none;cursor:pointer;color:#888;display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 8px;border-radius:8px;transition:color 0.2s;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Baru
-    </button>
-    <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
-</div>
+            <span style="font-size:13px;color:#888;" id="namaUser"></span>
+            <button id="btnBaru" title="Obrolan Baru" style="background:transparent;border:none;cursor:pointer;color:#888;display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 8px;border-radius:8px;transition:color 0.2s;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Baru
+            </button>
+            <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
+        </div>
     </div>
 
     <div class="chat-messages" id="messages"></div>
@@ -199,18 +185,6 @@
     </div>
 
     <script>
-        // ===== OBROLAN BARU =====
-document.getElementById("btnBaru").addEventListener("click", function() {
-    if (!confirm("Mulai obrolan baru? Riwayat chat tidak akan hilang.")) return;
-    fetch("/reset", { method: "POST" })
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-        if (data.success) {
-            document.getElementById("messages").innerHTML = "";
-            showToast("Obrolan baru dimulai!");
-        }
-    });
-});
         function setHeight() { document.body.style.height = window.innerHeight + 'px'; }
         setHeight();
         window.addEventListener('resize', setHeight);
@@ -228,10 +202,89 @@ document.getElementById("btnBaru").addEventListener("click", function() {
         document.getElementById("welcomeName").textContent = namaUser;
         document.getElementById("namaUser").textContent = "👤 " + namaUser;
 
+        // ===== SIDEBAR =====
+        var sidebar = document.getElementById("sidebar");
+        var overlay = document.getElementById("sidebarOverlay");
+
+        document.getElementById("menuBtn").addEventListener("click", function() {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+            muatDaftarObrolan();
+        });
+
+        overlay.addEventListener("click", tutupSidebar);
+
+        function tutupSidebar() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+        }
+
+        function muatDaftarObrolan() {
+            fetch("/daftar_obrolan")
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                var list = document.getElementById("sidebarList");
+                list.innerHTML = "";
+                if (!data.obrolan || data.obrolan.length === 0) {
+                    list.innerHTML = '<div class="sidebar-empty">Belum ada obrolan</div>';
+                    return;
+                }
+                data.obrolan.forEach(function(item) {
+                    var div = document.createElement("div");
+                    div.className = "sidebar-item";
+                    div.textContent = item.judul || "Obrolan";
+                    div.addEventListener("click", function() {
+                        bukaObrolan(item.id, item.judul);
+                    });
+                    list.appendChild(div);
+                });
+            });
+        }
+
+        function bukaObrolan(id, judul) {
+            fetch("/buka_obrolan/" + id)
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                var messages = document.getElementById("messages");
+                messages.innerHTML = "";
+                if (data.riwayat) {
+                    data.riwayat.forEach(function(item) {
+                        tampilPesan(item.pesan, "user");
+                        tampilPesan(item.jawaban, "kaego");
+                    });
+                    messages.scrollTop = messages.scrollHeight;
+                }
+                tutupSidebar();
+                sembunyikanWelcome();
+                showToast("Membuka: " + (judul || "Obrolan"));
+            });
+        }
+
+        document.getElementById("sidebarNewBtn").addEventListener("click", function() {
+            mulaiObrolanBaru();
+            tutupSidebar();
+        });
+
+        document.getElementById("btnBaru").addEventListener("click", function() {
+            mulaiObrolanBaru();
+        });
+
+        function mulaiObrolanBaru() {
+            fetch("/reset", { method: "POST" })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    document.getElementById("messages").innerHTML = "";
+                    showToast("Obrolan baru dimulai!");
+                }
+            });
+        }
+
+        // ===== LOAD RIWAYAT =====
         fetch("/riwayat")
         .then(function(res) { return res.json(); })
         .then(function(data) {
-            if (data.riwayat) {
+            if (data.riwayat && data.riwayat.length > 0) {
                 data.riwayat.forEach(function(item) {
                     tampilPesan(item.pesan, "user");
                     tampilPesan(item.jawaban, "kaego");
@@ -351,16 +404,13 @@ document.getElementById("btnBaru").addEventListener("click", function() {
                 document.getElementById("input").value = "";
                 document.getElementById("input").style.height = "auto";
                 document.getElementById("filePreview").style.display = "none";
-
                 var formData = new FormData();
                 formData.append("file", selectedFile);
                 formData.append("pesan", pesanFinal);
                 selectedFile = null;
                 document.getElementById("fileInput").value = "";
-
                 loadingMulai();
                 tampilTyping();
-
                 fetch("/upload", { method: "POST", body: formData })
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
@@ -373,15 +423,12 @@ document.getElementById("btnBaru").addEventListener("click", function() {
                     loadingSelesai();
                     tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego");
                 });
-
             } else {
                 tampilPesan(pesan, "user");
                 document.getElementById("input").value = "";
                 document.getElementById("input").style.height = "auto";
-
                 loadingMulai();
                 tampilTyping();
-
                 fetch("/chat", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
@@ -411,7 +458,6 @@ document.getElementById("btnBaru").addEventListener("click", function() {
             var bubble = document.createElement("div");
             bubble.className = "bubble user";
             bubble.style.padding = "10px 12px";
-
             if (file.type.startsWith("image/")) {
                 var img = document.createElement("img");
                 img.className = "chat-img";
@@ -423,14 +469,12 @@ document.getElementById("btnBaru").addEventListener("click", function() {
                 label.innerHTML = "📄 " + file.name;
                 bubble.appendChild(label);
             }
-
             if (pesan && pesan !== "Tolong analisis file ini") {
                 var teksEl = document.createElement("div");
                 teksEl.style.fontSize = "15px";
                 teksEl.textContent = pesan;
                 bubble.appendChild(teksEl);
             }
-
             wrapper.appendChild(avatar);
             wrapper.appendChild(bubble);
             messages.appendChild(wrapper);

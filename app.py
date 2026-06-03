@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory, redirect, url_for
 import anthropic
 import os
-import requests
 import base64
 import hashlib
 from supabase import create_client
@@ -26,12 +25,8 @@ def home():
     if "user_id" not in session:
         return redirect(url_for("login"))
     if "riwayat" not in session:
-        result = supabase.table("riwayat_chat").select("*").eq("user_id", session["user_id"]).order("created_at").execute()
-        riwayat = []
-        for item in result.data:
-            riwayat.append({"role": "user", "content": item["pesan"]})
-            riwayat.append({"role": "assistant", "content": item["jawaban"]})
-        session["riwayat"] = riwayat
+        session["riwayat"] = []
+        session["obrolan_id"] = None
     return render_template("index.html", nama=session.get("nama"))
 
 @app.route("/login", methods=["GET", "POST"])
@@ -45,6 +40,7 @@ def login():
             session["user_id"] = user["id"]
             session["nama"] = user["nama"]
             session["riwayat"] = []
+            session["obrolan_id"] = None
             return jsonify({"success": True, "nama": user["nama"]})
         return jsonify({"success": False, "message": "Email atau password salah"})
     return render_template("login.html")
@@ -73,8 +69,19 @@ def chat():
         return jsonify({"error": "Tidak terlogin"}), 401
     if "riwayat" not in session:
         session["riwayat"] = []
+
     pesan_user = request.json.get("pesan")
     riwayat = session["riwayat"]
+
+    # Buat obrolan baru jika belum ada
+    if not session.get("obrolan_id"):
+        judul = pesan_user[:40] + ("..." if len(pesan_user) > 40 else "")
+        result = supabase.table("obrolan").insert({
+            "user_id": session["user_id"],
+            "judul": judul
+        }).execute()
+        session["obrolan_id"] = result.data[0]["id"]
+
     riwayat.append({"role": "user", "content": pesan_user})
     response = client.messages.create(
         model="claude-sonnet-4-5",
@@ -86,11 +93,14 @@ def chat():
     jawaban = response.content[0].text
     riwayat.append({"role": "assistant", "content": jawaban})
     session["riwayat"] = riwayat
+
     supabase.table("riwayat_chat").insert({
         "user_id": session["user_id"],
+        "obrolan_id": session["obrolan_id"],
         "pesan": pesan_user,
         "jawaban": jawaban
     }).execute()
+
     return jsonify({"jawaban": jawaban})
 
 @app.route("/riwayat", methods=["GET"])
@@ -100,28 +110,52 @@ def get_riwayat():
     result = supabase.table("riwayat_chat").select("*").eq("user_id", session["user_id"]).order("created_at").execute()
     return jsonify({"riwayat": result.data})
 
+@app.route("/daftar_obrolan", methods=["GET"])
+def daftar_obrolan():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    result = supabase.table("obrolan").select("*").eq("user_id", session["user_id"]).order("created_at", desc=True).execute()
+    return jsonify({"obrolan": result.data})
+
+@app.route("/buka_obrolan/<obrolan_id>", methods=["GET"])
+def buka_obrolan(obrolan_id):
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    result = supabase.table("riwayat_chat").select("*").eq("obrolan_id", obrolan_id).order("created_at").execute()
+    riwayat = []
+    for item in result.data:
+        riwayat.append({"role": "user", "content": item["pesan"]})
+        riwayat.append({"role": "assistant", "content": item["jawaban"]})
+    session["riwayat"] = riwayat
+    session["obrolan_id"] = obrolan_id
+    return jsonify({"riwayat": result.data})
+
 @app.route("/upload", methods=["POST"])
 def upload():
     if "user_id" not in session:
         return jsonify({"error": "Tidak terlogin"}), 401
-    
     try:
         file = request.files.get("file")
         pesan = request.form.get("pesan", "Tolong analisis file ini")
-        
         if not file:
             return jsonify({"error": "Tidak ada file"}), 400
-        
         file_data = file.read()
         file_base64 = base64.b64encode(file_data).decode("utf-8")
         file_type = file.content_type
-        
         print(f"File: {file.filename}, type: {file_type}, size: {len(file_data)}")
-        
         if "riwayat" not in session:
             session["riwayat"] = []
         riwayat = session["riwayat"]
-        
+
+        # Buat obrolan baru jika belum ada
+        if not session.get("obrolan_id"):
+            judul = f"[File] {file.filename[:35]}"
+            result = supabase.table("obrolan").insert({
+                "user_id": session["user_id"],
+                "judul": judul
+            }).execute()
+            session["obrolan_id"] = result.data[0]["id"]
+
         if file_type.startswith("image/"):
             content = [
                 {"type": "image", "source": {"type": "base64", "media_type": file_type, "data": file_base64}},
@@ -134,9 +168,8 @@ def upload():
             ]
         else:
             return jsonify({"error": f"Format tidak didukung: {file_type}"}), 400
-        
+
         riwayat.append({"role": "user", "content": content})
-        
         response = client.messages.create(
             model="claude-sonnet-4-5",
             max_tokens=4096,
@@ -144,28 +177,30 @@ def upload():
             system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
             messages=riwayat
         )
-        
         jawaban = response.content[0].text
         riwayat.append({"role": "assistant", "content": jawaban})
         session["riwayat"] = riwayat
-        
+
         supabase.table("riwayat_chat").insert({
             "user_id": session["user_id"],
+            "obrolan_id": session["obrolan_id"],
             "pesan": f"[File: {file.filename}] {pesan}",
             "jawaban": jawaban
         }).execute()
-        
+
         return jsonify({"jawaban": jawaban})
-    
     except Exception as e:
         print(f"ERROR upload: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
 @app.route("/reset", methods=["POST"])
 def reset():
     if "user_id" not in session:
         return jsonify({"error": "Tidak terlogin"}), 401
     session["riwayat"] = []
+    session["obrolan_id"] = None
     return jsonify({"success": True})
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
