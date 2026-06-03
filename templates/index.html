@@ -167,9 +167,13 @@
         <img src="/static/logo.png" alt="Kaego Logo" class="logo">
         <span class="header-subtitle">AI Assistant</span>
         <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
-            <span style="font-size:13px;color:#888;" id="namaUser"></span>
-            <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
-        </div>
+    <span style="font-size:13px;color:#888;" id="namaUser"></span>
+    <button id="btnBaru" title="Obrolan Baru" style="background:transparent;border:none;cursor:pointer;color:#888;display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 8px;border-radius:8px;transition:color 0.2s;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Baru
+    </button>
+    <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
+</div>
     </div>
 
     <div class="chat-messages" id="messages"></div>
@@ -195,6 +199,18 @@
     </div>
 
     <script>
+        // ===== OBROLAN BARU =====
+document.getElementById("btnBaru").addEventListener("click", function() {
+    if (!confirm("Mulai obrolan baru? Riwayat chat tidak akan hilang.")) return;
+    fetch("/reset", { method: "POST" })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.success) {
+            document.getElementById("messages").innerHTML = "";
+            showToast("Obrolan baru dimulai!");
+        }
+    });
+});
         function setHeight() { document.body.style.height = window.innerHeight + 'px'; }
         setHeight();
         window.addEventListener('resize', setHeight);

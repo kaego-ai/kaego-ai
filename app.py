@@ -160,7 +160,12 @@ def upload():
     except Exception as e:
         print(f"ERROR upload: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
+@app.route("/reset", methods=["POST"])
+def reset():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    session["riwayat"] = []
+    return jsonify({"success": True})
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
