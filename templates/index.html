@@ -26,14 +26,37 @@
     .bubble.user { background: #1a6bff; color: white; border-bottom-right-radius: 4px; }
     .bubble.kaego { background: #1e1e1e; color: #e0e0e0; border-bottom-left-radius: 4px; border: 1px solid #2a2a2a; }
     .bubble p { margin: 3px 0; font-size: 15px; }
+
+    /* Input area */
     .input-area { padding: 16px 24px; background: #0f0f0f; border-top: 1px solid #1a1a1a; position: sticky; bottom: 0; z-index: 100; }
-    .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; }
+    .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
-    .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; }
+    .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; min-width: 0; }
     .input-box textarea::placeholder { color: #555; }
+
+    /* Tombol upload */
+    .upload-btn { background: transparent; border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #666; transition: color 0.2s, background 0.2s; }
+    .upload-btn:hover { color: #1a6bff; background: #1a3a6b22; }
+    .upload-btn svg { width: 20px; height: 20px; }
+
     .send-btn { background: #1a6bff; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
     .send-btn:hover { background: #0055dd; }
     .send-btn svg { width: 18px; height: 18px; fill: white; }
+
+    /* Preview file */
+    .file-preview { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 4px 0 4px; border-top: 1px solid #2a2a2a; margin-top: 4px; }
+    .file-preview-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid #333; background: #2a2a2a; flex-shrink: 0; }
+    .file-preview-pdf { width: 48px; height: 48px; border-radius: 8px; background: #2a1a1a; border: 1px solid #4a2a2a; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+    .file-preview-info { flex: 1; min-width: 0; }
+    .file-preview-name { font-size: 13px; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-preview-size { font-size: 11px; color: #666; margin-top: 2px; }
+    .file-preview-remove { background: transparent; border: none; cursor: pointer; color: #666; font-size: 18px; line-height: 1; padding: 4px; transition: color 0.2s; flex-shrink: 0; }
+    .file-preview-remove:hover { color: #ff4444; }
+
+    /* Gambar di chat */
+    .bubble img.chat-img { max-width: 100%; border-radius: 10px; display: block; margin-bottom: 8px; border: 1px solid #333; }
+    .bubble .file-label { font-size: 12px; color: #888; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+
     .typing { color: #555; font-size: 14px; font-style: italic; padding: 4px 0; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0f0f0f; }
@@ -43,7 +66,6 @@
     .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; }
     .welcome-screen.hidden { opacity: 0; pointer-events: none; }
     .welcome-avatar { width: 120px; height: 120px; margin-bottom: 24px; mix-blend-mode: screen; }
-    
     .welcome-greeting { font-size: 13px; color: #888; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
     .welcome-name { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 40px; text-align: center; }
     .welcome-input-box { width: 90%; max-width: 500px; display: flex; gap: 10px; align-items: flex-end; background: #1e1e1e; border-radius: 24px; padding: 12px 18px; border: 1.5px solid #333; transition: border 0.2s; }
@@ -52,9 +74,16 @@
     .welcome-input-box textarea::placeholder { color: #555; }
     .welcome-send-btn { background: #1a6bff; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .welcome-send-btn:hover { background: #0055dd; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .toast.show { opacity: 1; }
     </style>
 </head>
 <body>
+
+    <div class="toast" id="toast"></div>
+    <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
 
     <!-- Halaman Sambutan -->
     <div class="welcome-screen" id="welcomeScreen">
@@ -82,8 +111,21 @@
     <div class="chat-messages" id="messages"></div>
 
     <div class="input-area">
-        <div class="input-box">
+        <div class="input-box" id="inputBox">
+            <div class="file-preview" id="filePreview" style="display:none;">
+                <div id="previewThumb"></div>
+                <div class="file-preview-info">
+                    <div class="file-preview-name" id="previewName"></div>
+                    <div class="file-preview-size" id="previewSize"></div>
+                </div>
+                <button class="file-preview-remove" id="removeFile">✕</button>
+            </div>
             <textarea id="input" placeholder="Tanya Kaego apa saja..." rows="1"></textarea>
+            <button class="upload-btn" id="uploadBtn" title="Upload foto atau PDF">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.42 16.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                </svg>
+            </button>
             <button class="send-btn" id="btnKirim">
                 <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z" fill="white"/></svg>
             </button>
@@ -95,7 +137,6 @@
         setHeight();
         window.addEventListener('resize', setHeight);
 
-        // Sapaan sesuai waktu
         function getSapaan() {
             var jam = new Date().getHours();
             if (jam >= 5 && jam < 11) return "Selamat pagi ☀️";
@@ -104,13 +145,11 @@
             return "Selamat malam 🌙";
         }
 
-        // Set sapaan dan nama
         var namaUser = "{{ nama }}";
         document.getElementById("welcomeGreeting").textContent = getSapaan();
         document.getElementById("welcomeName").textContent = namaUser;
         document.getElementById("namaUser").textContent = "👤 " + namaUser;
 
-        // Load riwayat
         fetch("/riwayat")
         .then(function(res) { return res.json(); })
         .then(function(data) {
@@ -119,119 +158,202 @@
                     tampilPesan(item.pesan, "user");
                     tampilPesan(item.jawaban, "kaego");
                 });
-                var messages = document.getElementById("messages");
-                messages.scrollTop = messages.scrollHeight;
+                document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
             }
         });
 
-        // Welcome screen input
-        var welcomeInput = document.getElementById("welcomeInput");
-        var welcomeSendBtn = document.getElementById("welcomeSendBtn");
+        // ===== UPLOAD FILE =====
+        var selectedFile = null;
 
-        welcomeInput.addEventListener("input", function() {
-            this.style.height = "auto";
-            this.style.height = Math.min(this.scrollHeight, 120) + "px";
+        document.getElementById("uploadBtn").addEventListener("click", function() {
+            document.getElementById("fileInput").click();
         });
 
-        welcomeInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                kirimDariWelcome();
+        document.getElementById("fileInput").addEventListener("change", function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("File terlalu besar (maks 5MB)");
+                this.value = "";
+                return;
             }
+            selectedFile = file;
+            tampilPreviewFile(file);
         });
 
-        welcomeSendBtn.addEventListener("click", kirimDariWelcome);
+        function tampilPreviewFile(file) {
+            document.getElementById("previewName").textContent = file.name;
+            document.getElementById("previewSize").textContent = formatBytes(file.size);
+            var thumb = document.getElementById("previewThumb");
+            thumb.innerHTML = "";
+            if (file.type.startsWith("image/")) {
+                var img = document.createElement("img");
+                img.className = "file-preview-thumb";
+                img.src = URL.createObjectURL(file);
+                thumb.appendChild(img);
+            } else {
+                var pdfIcon = document.createElement("div");
+                pdfIcon.className = "file-preview-pdf";
+                pdfIcon.textContent = "📄";
+                thumb.appendChild(pdfIcon);
+            }
+            document.getElementById("filePreview").style.display = "flex";
+        }
+
+        document.getElementById("removeFile").addEventListener("click", function() {
+            selectedFile = null;
+            document.getElementById("fileInput").value = "";
+            document.getElementById("filePreview").style.display = "none";
+        });
+
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + " B";
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+            return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+        }
+
+        function showToast(msg) {
+            var t = document.getElementById("toast");
+            t.textContent = msg;
+            t.classList.add("show");
+            setTimeout(function() { t.classList.remove("show"); }, 2500);
+        }
+
+        // ===== WELCOME =====
+        document.getElementById("welcomeInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); kirimDariWelcome(); }
+        });
+        document.getElementById("welcomeSendBtn").addEventListener("click", kirimDariWelcome);
 
         function kirimDariWelcome() {
-            var pesan = welcomeInput.value.trim();
+            var pesan = document.getElementById("welcomeInput").value.trim();
             if (!pesan) return;
-            document.getElementById("welcomeScreen").classList.add("hidden");
-            setTimeout(function() {
-                document.getElementById("welcomeScreen").style.display = "none";
-            }, 500);
+            sembunyikanWelcome();
             document.getElementById("input").value = pesan;
             kirim();
         }
 
-        // Chat screen input
-        var inputEl = document.getElementById("input");
-        var btnEl = document.getElementById("btnKirim");
+        // ===== CHAT INPUT =====
+        document.getElementById("btnKirim").addEventListener("click", kirim);
 
-        btnEl.addEventListener("click", kirim);
-
-        inputEl.addEventListener("keypress", function(e) {
-            if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                kirim();
-            }
+        document.getElementById("input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); kirim(); }
         });
 
-        inputEl.addEventListener("input", function() {
+        document.getElementById("input").addEventListener("input", function() {
             this.style.height = "auto";
             this.style.height = Math.min(this.scrollHeight, 120) + "px";
         });
 
         function sembunyikanWelcome() {
             document.getElementById("welcomeScreen").classList.add("hidden");
-            setTimeout(function() {
-                document.getElementById("welcomeScreen").style.display = "none";
-            }, 500);
+            setTimeout(function() { document.getElementById("welcomeScreen").style.display = "none"; }, 500);
         }
 
         function kirim() {
-            var pesan = inputEl.value.trim();
-            if (!pesan) return;
-
+            var pesan = document.getElementById("input").value.trim();
+            if (!pesan && !selectedFile) return;
             sembunyikanWelcome();
-            tampilPesan(pesan, "user");
-            inputEl.value = "";
-            inputEl.style.height = "auto";
-            tampilTyping();
 
-            fetch("/chat", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({pesan: pesan})
-            })
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-                hapusTyping();
-                tampilPesan(data.jawaban, "kaego");
-            })
-            .catch(function() {
-                hapusTyping();
-                tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego");
-            });
+            if (selectedFile) {
+                var pesanFinal = pesan || "Tolong analisis file ini";
+                tampilPesanFile(selectedFile, pesanFinal);
+                document.getElementById("input").value = "";
+                document.getElementById("input").style.height = "auto";
+                document.getElementById("filePreview").style.display = "none";
+
+                var formData = new FormData();
+                formData.append("file", selectedFile);
+                formData.append("pesan", pesanFinal);
+                selectedFile = null;
+                document.getElementById("fileInput").value = "";
+                tampilTyping();
+
+                fetch("/upload", { method: "POST", body: formData })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    hapusTyping();
+                    tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego");
+                })
+                .catch(function() {
+                    hapusTyping();
+                    tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego");
+                });
+
+            } else {
+                tampilPesan(pesan, "user");
+                document.getElementById("input").value = "";
+                document.getElementById("input").style.height = "auto";
+                tampilTyping();
+
+                fetch("/chat", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({pesan: pesan})
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) { hapusTyping(); tampilPesan(data.jawaban, "kaego"); })
+                .catch(function() { hapusTyping(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+            }
+        }
+
+        function tampilPesanFile(file, pesan) {
+            var messages = document.getElementById("messages");
+            var wrapper = document.createElement("div");
+            wrapper.className = "message user";
+            var avatar = document.createElement("div");
+            avatar.className = "avatar user";
+            avatar.textContent = "👤";
+            var bubble = document.createElement("div");
+            bubble.className = "bubble user";
+            bubble.style.padding = "10px 12px";
+
+            if (file.type.startsWith("image/")) {
+                var img = document.createElement("img");
+                img.className = "chat-img";
+                img.src = URL.createObjectURL(file);
+                bubble.appendChild(img);
+            } else {
+                var label = document.createElement("div");
+                label.className = "file-label";
+                label.innerHTML = "📄 " + file.name;
+                bubble.appendChild(label);
+            }
+
+            if (pesan && pesan !== "Tolong analisis file ini") {
+                var teksEl = document.createElement("div");
+                teksEl.style.fontSize = "15px";
+                teksEl.textContent = pesan;
+                bubble.appendChild(teksEl);
+            }
+
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(bubble);
+            messages.appendChild(wrapper);
+            messages.scrollTop = messages.scrollHeight;
         }
 
         function tampilPesan(teks, tipe) {
             var messages = document.getElementById("messages");
             var wrapper = document.createElement("div");
             wrapper.className = "message " + tipe;
-
             var avatar = document.createElement("div");
             avatar.className = "avatar " + tipe;
-
             if (tipe === "kaego") {
                 avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;">';
             } else {
                 avatar.textContent = "👤";
             }
-
             var bubble = document.createElement("div");
             bubble.className = "bubble " + tipe;
-
             if (tipe === "kaego") {
                 teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:600">$1</span>');
                 teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
                 teks = teks.replace(/^[\-\*]\s*/gm, '');
-                bubble.innerHTML = teks.split('\n').map(function(line) {
-                    return '<p>' + line + '</p>';
-                }).join('');
+                bubble.innerHTML = teks.split('\n').map(function(line) { return '<p>' + line + '</p>'; }).join('');
             } else {
                 bubble.textContent = teks;
             }
-
             wrapper.appendChild(avatar);
             wrapper.appendChild(bubble);
             messages.appendChild(wrapper);
@@ -243,7 +365,7 @@
             var div = document.createElement("div");
             div.id = "typing";
             div.className = "message";
-            div.innerHTML = '<div class="avatar kaego"><img class="pulse" src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
+            div.innerHTML = '<div class="avatar kaego"><img src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
             messages.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
         }

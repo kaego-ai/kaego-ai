@@ -99,7 +99,60 @@ def get_riwayat():
         return jsonify({"error": "Tidak terlogin"}), 401
     result = supabase.table("riwayat_chat").select("*").eq("user_id", session["user_id"]).order("created_at").execute()
     return jsonify({"riwayat": result.data})
-
+@app.route("/upload", methods=["POST"])
+def upload():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    
+    file = request.files.get("file")
+    pesan = request.form.get("pesan", "Tolong analisis file ini")
+    
+    if not file:
+        return jsonify({"error": "Tidak ada file"}), 400
+    
+    file_data = file.read()
+    file_base64 = base64.b64encode(file_data).decode("utf-8")
+    file_type = file.content_type
+    
+    if "riwayat" not in session:
+        session["riwayat"] = []
+    
+    riwayat = session["riwayat"]
+    
+    if file_type.startswith("image/"):
+        content = [
+            {"type": "image", "source": {"type": "base64", "media_type": file_type, "data": file_base64}},
+            {"type": "text", "text": pesan}
+        ]
+    elif file_type == "application/pdf":
+        content = [
+            {"type": "document", "source": {"type": "base64", "media_type": "application/pdf", "data": file_base64}},
+            {"type": "text", "text": pesan}
+        ]
+    else:
+        return jsonify({"error": "Format file tidak didukung"}), 400
+    
+    riwayat.append({"role": "user", "content": content})
+    
+    response = client.messages.create(
+        model="claude-sonnet-4-5",
+        max_tokens=4096,
+        timeout=120,
+        system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
+        messages=riwayat
+    )
+    
+    jawaban = response.content[0].text
+    riwayat.append({"role": "assistant", "content": jawaban})
+    session["riwayat"] = riwayat
+    
+    supabase.table("riwayat_chat").insert({
+        "user_id": session["user_id"],
+        "pesan": f"[File: {file.filename}] {pesan}",
+        "jawaban": jawaban
+    }).execute()
+    
+    return jsonify({"jawaban": jawaban})
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
