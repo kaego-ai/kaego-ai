@@ -78,8 +78,8 @@
     .welcome-input-box:focus-within { border-color: #1a6bff; }
     .welcome-input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; align-self: center; }
     .welcome-input-box textarea::placeholder { color: #555; }
-    .welcome-send-btn { background: #1a6bff; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .welcome-send-btn:hover { background: #0055dd; }
+    .welcome-send-btn { background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity 0.2s; }
+.welcome-send-btn:hover { opacity: 0.85; }
 
     /* Toast */
     .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
