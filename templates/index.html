@@ -29,9 +29,9 @@
 
     /* Input area */
     .input-area { padding: 16px 24px; background: #0f0f0f; border-top: 1px solid #1a1a1a; position: sticky; bottom: 0; z-index: 100; }
-    .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
+    .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
-    .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; min-width: 0; }
+    .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; min-width: 0; padding-top: 0; align-self: center; }
     .input-box textarea::placeholder { color: #555; }
 
     /* Tombol upload */
@@ -39,9 +39,15 @@
     .upload-btn:hover { color: #1a6bff; background: #1a3a6b22; }
     .upload-btn svg { width: 20px; height: 20px; }
 
-    .send-btn { background: #1a6bff; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
-    .send-btn:hover { background: #0055dd; }
-    .send-btn svg { width: 18px; height: 18px; fill: white; }
+    /* Tombol kirim dengan gradien */
+    .send-btn { background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity 0.2s; position: relative; overflow: hidden; }
+    .send-btn:hover { opacity: 0.85; }
+    .send-btn svg { width: 14px; height: 14px; fill: white; position: relative; z-index: 1; }
+    .send-btn.loading { animation: spin 0.8s linear infinite; pointer-events: none; }
+    .send-btn.loading svg { display: none; }
+    .send-btn.loading::after { content: ''; position: absolute; width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin-inner 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin-inner { to { transform: rotate(360deg); } }
 
     /* Preview file */
     .file-preview { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 4px 0 4px; border-top: 1px solid #2a2a2a; margin-top: 4px; }
@@ -68,9 +74,9 @@
     .welcome-avatar { width: 120px; height: 120px; margin-bottom: 24px; mix-blend-mode: screen; }
     .welcome-greeting { font-size: 13px; color: #888; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
     .welcome-name { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 40px; text-align: center; }
-    .welcome-input-box { width: 90%; max-width: 500px; display: flex; gap: 10px; align-items: flex-end; background: #1e1e1e; border-radius: 24px; padding: 12px 18px; border: 1.5px solid #333; transition: border 0.2s; }
+    .welcome-input-box { width: 90%; max-width: 500px; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 12px 18px; border: 1.5px solid #333; transition: border 0.2s; }
     .welcome-input-box:focus-within { border-color: #1a6bff; }
-    .welcome-input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; }
+    .welcome-input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; align-self: center; }
     .welcome-input-box textarea::placeholder { color: #555; }
     .welcome-send-btn { background: #1a6bff; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .welcome-send-btn:hover { background: #0055dd; }
@@ -250,6 +256,18 @@
             setTimeout(function() { document.getElementById("welcomeScreen").style.display = "none"; }, 500);
         }
 
+        function loadingMulai() {
+            var btn = document.getElementById("btnKirim");
+            btn.classList.add("loading");
+            btn.disabled = true;
+        }
+
+        function loadingSelesai() {
+            var btn = document.getElementById("btnKirim");
+            btn.classList.remove("loading");
+            btn.disabled = false;
+        }
+
         function kirim() {
             var pesan = document.getElementById("input").value.trim();
             if (!pesan && !selectedFile) return;
@@ -267,16 +285,20 @@
                 formData.append("pesan", pesanFinal);
                 selectedFile = null;
                 document.getElementById("fileInput").value = "";
+
+                loadingMulai();
                 tampilTyping();
 
                 fetch("/upload", { method: "POST", body: formData })
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     hapusTyping();
+                    loadingSelesai();
                     tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego");
                 })
                 .catch(function() {
                     hapusTyping();
+                    loadingSelesai();
                     tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego");
                 });
 
@@ -284,6 +306,8 @@
                 tampilPesan(pesan, "user");
                 document.getElementById("input").value = "";
                 document.getElementById("input").style.height = "auto";
+
+                loadingMulai();
                 tampilTyping();
 
                 fetch("/chat", {
@@ -292,8 +316,16 @@
                     body: JSON.stringify({pesan: pesan})
                 })
                 .then(function(res) { return res.json(); })
-                .then(function(data) { hapusTyping(); tampilPesan(data.jawaban, "kaego"); })
-                .catch(function() { hapusTyping(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+                .then(function(data) {
+                    hapusTyping();
+                    loadingSelesai();
+                    tampilPesan(data.jawaban, "kaego");
+                })
+                .catch(function() {
+                    hapusTyping();
+                    loadingSelesai();
+                    tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego");
+                });
             }
         }
 
