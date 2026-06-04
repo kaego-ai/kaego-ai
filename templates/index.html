@@ -16,11 +16,12 @@
     /* ===== SIDEBAR ===== */
     .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: #111; border-right: 1px solid #222; z-index: 500; transform: translateX(-100%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { transform: translateX(0); }
-    .sidebar-header { padding: 20px 16px 12px; border-bottom: 1px solid #222; }
-    .sidebar-logo { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 1px; margin-bottom: 12px; }
+    .sidebar-header { padding: 16px 16px 12px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 10px; }
+    .sidebar-back { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
+    .sidebar-back:hover { color: #fff; }
+    .sidebar-back svg { width: 20px; height: 20px; }
+    .sidebar-logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; }
     .sidebar-logo span { background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .sidebar-new-btn { width: 100%; padding: 9px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #ccc; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
-    .sidebar-new-btn:hover { background: #252525; color: #fff; }
     .sidebar-list { flex: 1; overflow-y: auto; padding: 12px 8px; display: flex; flex-direction: column; gap: 4px; }
     .sidebar-item { padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; }
     .sidebar-item:hover { background: #1a1a1a; color: #fff; }
@@ -32,7 +33,6 @@
     /* ===== HEADER ===== */
     .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 100; }
     .header img.logo { height: 40px; width: auto; max-width: 150px; }
-    .header-subtitle { font-size: 13px; color: #888; }
     .menu-btn { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
     .menu-btn:hover { color: #fff; }
     .menu-btn svg { width: 22px; height: 22px; }
@@ -93,10 +93,15 @@
     ::-webkit-scrollbar-track { background: #0f0f0f; }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 
-    /* Halaman Sambutan */
+    /* ===== HALAMAN SAMBUTAN ===== */
     .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; }
     .welcome-screen.hidden { opacity: 0; pointer-events: none; }
-    .welcome-avatar { width: 120px; height: 120px; margin-bottom: 24px; mix-blend-mode: screen; }
+    .welcome-top { position: absolute; top: 16px; left: 16px; }
+    .welcome-bottom { position: absolute; bottom: 24px; left: 16px; display: flex; align-items: center; gap: 16px; }
+    .welcome-bottom-btn { background: transparent; border: none; cursor: pointer; color: #666; display: flex; align-items: center; gap: 6px; font-size: 13px; padding: 6px 10px; border-radius: 10px; transition: color 0.2s, background 0.2s; font-family: inherit; }
+    .welcome-bottom-btn:hover { color: #ccc; background: #1a1a1a; }
+    .welcome-bottom-btn svg { width: 16px; height: 16px; }
+    .welcome-logo { height: 56px; width: auto; margin-bottom: 28px; }
     .welcome-greeting { font-size: 13px; color: #888; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
     .welcome-name { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 40px; text-align: center; }
     .welcome-input-box { width: 90%; max-width: 500px; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 12px 18px; border: 1.5px solid #333; transition: border 0.2s; }
@@ -119,11 +124,12 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">Kaego <span>AI</span></div>
-            <button class="sidebar-new-btn" id="sidebarNewBtn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Obrolan Baru
+            <button class="sidebar-back" id="backBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
             </button>
+            <div class="sidebar-logo">Kaego <span>AI</span></div>
         </div>
         <div class="sidebar-list" id="sidebarList">
             <div class="sidebar-empty">Belum ada obrolan</div>
@@ -132,7 +138,36 @@
 
     <!-- Halaman Sambutan -->
     <div class="welcome-screen" id="welcomeScreen">
-        <img src="/static/avatar.gif" class="welcome-avatar" alt="Kaego">
+        <!-- Kiri atas: tombol menu -->
+        <div class="welcome-top">
+            <button class="menu-btn" id="menuBtnWelcome">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <!-- Kiri bawah: profil + keluar -->
+        <div class="welcome-bottom">
+            <div class="welcome-bottom-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span id="namaWelcome"></span>
+            </div>
+            <a href="/logout" class="welcome-bottom-btn" style="text-decoration:none;color:#ff5555;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Keluar
+            </a>
+        </div>
+        <!-- Tengah -->
+        <img src="/static/logo.png" class="welcome-logo" alt="Kaego">
         <div class="welcome-greeting" id="welcomeGreeting">Selamat pagi</div>
         <div class="welcome-name" id="welcomeName">nama</div>
         <div class="welcome-input-box">
@@ -151,7 +186,6 @@
             </svg>
         </button>
         <img src="/static/logo.png" alt="Kaego Logo" class="logo">
-        <span class="header-subtitle">AI Assistant</span>
         <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
             <span style="font-size:13px;color:#888;" id="namaUser"></span>
             <button id="btnBaru" title="Obrolan Baru" style="background:transparent;border:none;cursor:pointer;color:#888;display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 8px;border-radius:8px;transition:color 0.2s;">
@@ -201,23 +235,27 @@
         document.getElementById("welcomeGreeting").textContent = getSapaan();
         document.getElementById("welcomeName").textContent = namaUser;
         document.getElementById("namaUser").textContent = "👤 " + namaUser;
+        document.getElementById("namaWelcome").textContent = namaUser;
 
         // ===== SIDEBAR =====
         var sidebar = document.getElementById("sidebar");
         var overlay = document.getElementById("sidebarOverlay");
 
-        document.getElementById("menuBtn").addEventListener("click", function() {
+        function bukaSidebar() {
             sidebar.classList.add("open");
             overlay.classList.add("show");
             muatDaftarObrolan();
-        });
-
-        overlay.addEventListener("click", tutupSidebar);
+        }
 
         function tutupSidebar() {
             sidebar.classList.remove("open");
             overlay.classList.remove("show");
         }
+
+        document.getElementById("menuBtn").addEventListener("click", bukaSidebar);
+        document.getElementById("menuBtnWelcome").addEventListener("click", bukaSidebar);
+        document.getElementById("backBtn").addEventListener("click", tutupSidebar);
+        overlay.addEventListener("click", tutupSidebar);
 
         function muatDaftarObrolan() {
             fetch("/daftar_obrolan")
@@ -260,14 +298,7 @@
             });
         }
 
-        document.getElementById("sidebarNewBtn").addEventListener("click", function() {
-            mulaiObrolanBaru();
-            tutupSidebar();
-        });
-
-        document.getElementById("btnBaru").addEventListener("click", function() {
-            mulaiObrolanBaru();
-        });
+        document.getElementById("btnBaru").addEventListener("click", mulaiObrolanBaru);
 
         function mulaiObrolanBaru() {
             fetch("/reset", { method: "POST" })
