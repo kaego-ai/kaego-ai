@@ -200,7 +200,29 @@ def reset():
     session["riwayat"] = []
     session["obrolan_id"] = None
     return jsonify({"success": True})
+@app.route("/profil", methods=["GET"])
+def get_profil():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    result = supabase.table("users").select("nama, email, foto_profil, gaya_font").eq("id", session["user_id"]).execute()
+    if result.data:
+        return jsonify({"profil": result.data[0]})
+    return jsonify({"error": "Profil tidak ditemukan"}), 404
 
+@app.route("/profil/update", methods=["POST"])
+def update_profil():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    data = request.json
+    update_data = {}
+    if "nama" in data:
+        update_data["nama"] = data["nama"]
+        session["nama"] = data["nama"]
+    if "gaya_font" in data:
+        update_data["gaya_font"] = data["gaya_font"]
+    if update_data:
+        supabase.table("users").update(update_data).eq("id", session["user_id"]).execute()
+    return jsonify({"success": True})
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
