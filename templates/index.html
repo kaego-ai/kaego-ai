@@ -20,11 +20,17 @@
     .sidebar-back { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
     .sidebar-back:hover { color: #fff; }
     .sidebar-back svg { width: 20px; height: 20px; }
-    .sidebar-list { flex: 1; overflow-y: auto; padding: 12px 8px; display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-body { flex: 1; overflow-y: auto; padding: 8px; }
+    .riwayat-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #1a1a1a; border: none; border-radius: 10px; color: #ccc; font-size: 13px; cursor: pointer; font-family: inherit; transition: background 0.2s; margin-bottom: 4px; }
+    .riwayat-toggle:hover { background: #222; color: #fff; }
+    .riwayat-toggle svg { transition: transform 0.2s; }
+    .riwayat-toggle.open svg.chevron { transform: rotate(180deg); }
+    .sidebar-list { display: none; flex-direction: column; gap: 4px; padding: 4px 0; }
+    .sidebar-list.open { display: flex; }
     .sidebar-item { padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; }
     .sidebar-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-item.active { background: #1a2a3a; color: #4a9eff; }
-    .sidebar-empty { font-size: 13px; color: #555; text-align: center; padding: 24px 0; }
+    .sidebar-empty { font-size: 13px; color: #555; text-align: center; padding: 16px 0; }
     .sidebar-footer { padding: 12px 8px; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 4px; }
     .sidebar-footer-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; font-size: 13px; color: #888; cursor: pointer; background: transparent; border: none; font-family: inherit; transition: background 0.2s, color 0.2s; width: 100%; text-align: left; text-decoration: none; }
     .sidebar-footer-item:hover { background: #1a1a1a; color: #fff; }
@@ -60,7 +66,6 @@
     .upload-btn { background: transparent; border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #666; transition: color 0.2s; }
     .upload-btn:hover { color: #1a6bff; }
     .upload-btn svg { width: 20px; height: 20px; }
-
     .send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
     .send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
     .send-btn svg { display: none; }
@@ -68,13 +73,11 @@
     .send-btn.loading::before { animation: spin 0.8s linear infinite; }
     .send-btn:not(.loading)::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .welcome-send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
     .welcome-send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
     .welcome-send-btn svg { display: none; }
     .welcome-send-btn::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
     .welcome-send-btn:hover::before { opacity: 0.8; }
-
     .file-preview { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 4px 0 4px; border-top: 1px solid #2a2a2a; margin-top: 4px; }
     .file-preview-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid #333; background: #2a2a2a; flex-shrink: 0; }
     .file-preview-pdf { width: 48px; height: 48px; border-radius: 8px; background: #2a1a1a; border: 1px solid #4a2a2a; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
@@ -85,7 +88,6 @@
     .file-preview-remove:hover { color: #ff4444; }
     .bubble img.chat-img { max-width: 100%; border-radius: 10px; display: block; margin-bottom: 8px; border: 1px solid #333; }
     .bubble .file-label { font-size: 12px; color: #888; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
-
     .typing { color: #555; font-size: 14px; font-style: italic; padding: 4px 0; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0f0f0f; }
@@ -95,10 +97,6 @@
     .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; pointer-events: all; }
     .welcome-screen.hidden { opacity: 0; pointer-events: none; }
     .welcome-top { position: absolute; top: 16px; left: 16px; z-index: 1001; pointer-events: all; }
-    .welcome-bottom { position: absolute; bottom: 24px; left: 16px; display: flex; align-items: center; gap: 16px; z-index: 1001; pointer-events: all; }
-    .welcome-bottom-btn { background: transparent; border: none; cursor: pointer; color: #666; display: flex; align-items: center; gap: 6px; font-size: 13px; padding: 6px 10px; border-radius: 10px; transition: color 0.2s, background 0.2s; font-family: inherit; }
-    .welcome-bottom-btn:hover { color: #ccc; background: #1a1a1a; }
-    .welcome-bottom-btn svg { width: 16px; height: 16px; }
     .welcome-logo { height: 56px; width: auto; max-width: 200px; margin-bottom: 28px; }
     .welcome-greeting { font-size: 13px; color: #888; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
     .welcome-name { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 40px; text-align: center; }
@@ -106,7 +104,6 @@
     .welcome-input-box:focus-within { border-color: #1a6bff; }
     .welcome-input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; align-self: center; }
     .welcome-input-box textarea::placeholder { color: #555; }
-
     .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .toast.show { opacity: 1; }
     </style>
@@ -129,8 +126,17 @@
             </button>
             <img src="/static/logo.png" style="height:32px;width:auto;max-width:140px;">
         </div>
-        <div class="sidebar-list" id="sidebarList">
-            <div class="sidebar-empty">Belum ada obrolan</div>
+        <div class="sidebar-body">
+            <button class="riwayat-toggle" id="toggleRiwayat">
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Riwayat Obrolan
+                </span>
+                <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="sidebar-list" id="sidebarList">
+                <div class="sidebar-empty">Belum ada obrolan</div>
+            </div>
         </div>
         <div class="sidebar-footer">
             <div class="sidebar-footer-item">
@@ -159,7 +165,6 @@
                 </svg>
             </button>
         </div>
-        
         <img src="/static/avatar.gif" class="welcome-logo" alt="Kaego">
         <div class="welcome-greeting" id="welcomeGreeting">Selamat pagi</div>
         <div class="welcome-name" id="welcomeName">nama</div>
@@ -219,7 +224,6 @@
         var namaUser = "{{ nama }}";
         document.getElementById("welcomeGreeting").textContent = getSapaan();
         document.getElementById("welcomeName").textContent = namaUser;
-        
         document.getElementById("namaUserSidebar").textContent = namaUser;
 
         // ===== SIDEBAR =====
@@ -246,6 +250,14 @@
         document.getElementById("backBtn").addEventListener("click", tutupSidebar);
         overlay.addEventListener("click", tutupSidebar);
 
+        // Toggle riwayat accordion
+        document.getElementById("toggleRiwayat").addEventListener("click", function() {
+            var list = document.getElementById("sidebarList");
+            var btn = document.getElementById("toggleRiwayat");
+            list.classList.toggle("open");
+            btn.classList.toggle("open");
+        });
+
         document.getElementById("sidebarNewBtn").addEventListener("click", function() {
             mulaiObrolanBaru();
             tutupSidebar();
@@ -256,6 +268,7 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 var list = document.getElementById("sidebarList");
+                var wasOpen = list.classList.contains("open");
                 list.innerHTML = "";
                 if (!data.obrolan || data.obrolan.length === 0) {
                     list.innerHTML = '<div class="sidebar-empty">Belum ada obrolan</div>';
