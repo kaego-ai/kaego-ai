@@ -14,7 +14,7 @@
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; overflow: hidden; }
 
     /* ===== SIDEBAR ===== */
-    .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: #111; border-right: 1px solid #222; z-index: 1002;
+    .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: #111; border-right: 1px solid #222; z-index: 1002; transform: translateX(-100%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { transform: translateX(0); }
     .sidebar-header { padding: 16px 16px 12px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 10px; }
     .sidebar-back { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
@@ -27,7 +27,7 @@
     .sidebar-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-item.active { background: #1a2a3a; color: #4a9eff; }
     .sidebar-empty { font-size: 13px; color: #555; text-align: center; padding: 24px 0; }
-    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; display: none; }
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; display: none; pointer-events: none; }
     .sidebar-overlay.show { display: block; }
 
     /* ===== HEADER ===== */
@@ -101,7 +101,7 @@
     .welcome-bottom-btn { background: transparent; border: none; cursor: pointer; color: #666; display: flex; align-items: center; gap: 6px; font-size: 13px; padding: 6px 10px; border-radius: 10px; transition: color 0.2s, background 0.2s; font-family: inherit; }
     .welcome-bottom-btn:hover { color: #ccc; background: #1a1a1a; }
     .welcome-bottom-btn svg { width: 16px; height: 16px; }
-    .welcome-logo { height: 56px; width: auto; margin-bottom: 28px; }
+    .welcome-logo { height: 56px; width: auto; max-width: 200px; margin-bottom: 28px; }
     .welcome-greeting { font-size: 13px; color: #888; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
     .welcome-name { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 40px; text-align: center; }
     .welcome-input-box { width: 90%; max-width: 500px; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 12px 18px; border: 1.5px solid #333; transition: border 0.2s; }
@@ -242,15 +242,17 @@
         var overlay = document.getElementById("sidebarOverlay");
 
         function bukaSidebar() {
-            sidebar.classList.add("open");
-            overlay.classList.add("show");
-            muatDaftarObrolan();
-        }
+    sidebar.classList.add("open");
+    overlay.classList.add("show");
+    overlay.style.pointerEvents = "all";
+    muatDaftarObrolan();
+}
 
-        function tutupSidebar() {
-            sidebar.classList.remove("open");
-            overlay.classList.remove("show");
-        }
+function tutupSidebar() {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+    overlay.style.pointerEvents = "none";
+}
 
         document.getElementById("menuBtn").addEventListener("click", bukaSidebar);
         document.getElementById("menuBtnWelcome").addEventListener("click", bukaSidebar);
