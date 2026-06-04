@@ -96,7 +96,7 @@
     /* ===== HALAMAN SAMBUTAN ===== */
     .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; }
     .welcome-screen.hidden { opacity: 0; pointer-events: none; }
-    .welcome-top { position: absolute; top: 16px; left: 16px; }
+    .welcome-top { position: absolute; top: 16px; left: 16px; z-index: 1000; }
     .welcome-bottom { position: absolute; bottom: 24px; left: 16px; display: flex; align-items: center; gap: 16px; }
     .welcome-bottom-btn { background: transparent; border: none; cursor: pointer; color: #666; display: flex; align-items: center; gap: 6px; font-size: 13px; padding: 6px 10px; border-radius: 10px; transition: color 0.2s, background 0.2s; font-family: inherit; }
     .welcome-bottom-btn:hover { color: #ccc; background: #1a1a1a; }
