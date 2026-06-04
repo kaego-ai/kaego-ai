@@ -240,7 +240,8 @@
         // ===== SIDEBAR =====
         var sidebar = document.getElementById("sidebar");
         var overlay = document.getElementById("sidebarOverlay");
-
+sidebar.classList.remove("open");
+overlay.classList.remove("show");
         function bukaSidebar() {
     sidebar.classList.add("open");
     overlay.classList.add("show");
