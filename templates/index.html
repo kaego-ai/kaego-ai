@@ -20,13 +20,14 @@
     .sidebar-back { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
     .sidebar-back:hover { color: #fff; }
     .sidebar-back svg { width: 20px; height: 20px; }
-    .sidebar-logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; }
-    .sidebar-logo span { background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .sidebar-list { flex: 1; overflow-y: auto; padding: 12px 8px; display: flex; flex-direction: column; gap: 4px; }
     .sidebar-item { padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; }
     .sidebar-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-item.active { background: #1a2a3a; color: #4a9eff; }
     .sidebar-empty { font-size: 13px; color: #555; text-align: center; padding: 24px 0; }
+    .sidebar-footer { padding: 12px 8px; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-footer-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; font-size: 13px; color: #888; cursor: pointer; background: transparent; border: none; font-family: inherit; transition: background 0.2s, color 0.2s; width: 100%; text-align: left; text-decoration: none; }
+    .sidebar-footer-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; display: none; pointer-events: none; }
     .sidebar-overlay.show { display: block; }
 
@@ -60,7 +61,6 @@
     .upload-btn:hover { color: #1a6bff; }
     .upload-btn svg { width: 20px; height: 20px; }
 
-    /* Tombol kirim lingkaran gradien */
     .send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
     .send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
     .send-btn svg { display: none; }
@@ -69,14 +69,12 @@
     .send-btn:not(.loading)::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Tombol welcome */
     .welcome-send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
     .welcome-send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
     .welcome-send-btn svg { display: none; }
     .welcome-send-btn::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
     .welcome-send-btn:hover::before { opacity: 0.8; }
 
-    /* Preview file */
     .file-preview { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 4px 0 4px; border-top: 1px solid #2a2a2a; margin-top: 4px; }
     .file-preview-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid #333; background: #2a2a2a; flex-shrink: 0; }
     .file-preview-pdf { width: 48px; height: 48px; border-radius: 8px; background: #2a1a1a; border: 1px solid #4a2a2a; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
@@ -129,16 +127,29 @@
                     <path d="M15 18l-6-6 6-6"/>
                 </svg>
             </button>
-            <div class="sidebar-logo">Kaego <span>AI</span></div>
+            <img src="/static/logo.png" style="height:32px;width:auto;max-width:140px;">
         </div>
         <div class="sidebar-list" id="sidebarList">
             <div class="sidebar-empty">Belum ada obrolan</div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span id="namaUserSidebar"></span>
+            </div>
+            <button class="sidebar-footer-item" id="sidebarNewBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Obrolan Baru
+            </button>
+            <a href="/logout" class="sidebar-footer-item" style="color:#ff5555;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Keluar
+            </a>
         </div>
     </div>
 
     <!-- Halaman Sambutan -->
     <div class="welcome-screen" id="welcomeScreen">
-        <!-- Kiri atas: tombol menu -->
         <div class="welcome-top">
             <button class="menu-btn" id="menuBtnWelcome">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -148,26 +159,17 @@
                 </svg>
             </button>
         </div>
-        <!-- Kiri bawah: profil + keluar -->
         <div class="welcome-bottom">
             <div class="welcome-bottom-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span id="namaWelcome"></span>
             </div>
             <a href="/logout" class="welcome-bottom-btn" style="text-decoration:none;color:#ff5555;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 Keluar
             </a>
         </div>
-        <!-- Tengah -->
-        <img src="/static/logo.png" class="welcome-logo" alt="Kaego">
+        <img src="/static/avatar.gif" class="welcome-logo" alt="Kaego">
         <div class="welcome-greeting" id="welcomeGreeting">Selamat pagi</div>
         <div class="welcome-name" id="welcomeName">nama</div>
         <div class="welcome-input-box">
@@ -186,14 +188,6 @@
             </svg>
         </button>
         <img src="/static/logo.png" alt="Kaego Logo" class="logo">
-        <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
-            <span style="font-size:13px;color:#888;" id="namaUser"></span>
-            <button id="btnBaru" title="Obrolan Baru" style="background:transparent;border:none;cursor:pointer;color:#888;display:flex;align-items:center;gap:5px;font-size:13px;padding:4px 8px;border-radius:8px;transition:color 0.2s;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Baru
-            </button>
-            <a href="/logout" style="font-size:13px;color:#ff4444;text-decoration:none;">Keluar</a>
-        </div>
     </div>
 
     <div class="chat-messages" id="messages"></div>
@@ -234,31 +228,37 @@
         var namaUser = "{{ nama }}";
         document.getElementById("welcomeGreeting").textContent = getSapaan();
         document.getElementById("welcomeName").textContent = namaUser;
-        document.getElementById("namaUser").textContent = "👤 " + namaUser;
         document.getElementById("namaWelcome").textContent = namaUser;
+        document.getElementById("namaUserSidebar").textContent = namaUser;
 
         // ===== SIDEBAR =====
         var sidebar = document.getElementById("sidebar");
         var overlay = document.getElementById("sidebarOverlay");
-sidebar.classList.remove("open");
-overlay.classList.remove("show");
-        function bukaSidebar() {
-    sidebar.classList.add("open");
-    overlay.classList.add("show");
-    overlay.style.pointerEvents = "all";
-    muatDaftarObrolan();
-}
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
 
-function tutupSidebar() {
-    sidebar.classList.remove("open");
-    overlay.classList.remove("show");
-    overlay.style.pointerEvents = "none";
-}
+        function bukaSidebar() {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+            overlay.style.pointerEvents = "all";
+            muatDaftarObrolan();
+        }
+
+        function tutupSidebar() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+            overlay.style.pointerEvents = "none";
+        }
 
         document.getElementById("menuBtn").addEventListener("click", bukaSidebar);
         document.getElementById("menuBtnWelcome").addEventListener("click", bukaSidebar);
         document.getElementById("backBtn").addEventListener("click", tutupSidebar);
         overlay.addEventListener("click", tutupSidebar);
+
+        document.getElementById("sidebarNewBtn").addEventListener("click", function() {
+            mulaiObrolanBaru();
+            tutupSidebar();
+        });
 
         function muatDaftarObrolan() {
             fetch("/daftar_obrolan")
@@ -300,8 +300,6 @@ function tutupSidebar() {
                 showToast("Membuka: " + (judul || "Obrolan"));
             });
         }
-
-        document.getElementById("btnBaru").addEventListener("click", mulaiObrolanBaru);
 
         function mulaiObrolanBaru() {
             fetch("/reset", { method: "POST" })
