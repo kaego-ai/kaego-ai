@@ -9,6 +9,9 @@
     <meta name="apple-mobile-web-app-title" content="Kaego AI">
     <meta name="theme-color" content="#0f0f0f">
     <title>Kaego AI</title>
+    <meta name="theme-color" content="#0f0f0f">
+<title>Kaego AI</title>
+<link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; overflow: hidden; }
@@ -36,6 +39,25 @@
     .sidebar-footer-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; display: none; pointer-events: none; }
     .sidebar-overlay.show { display: block; }
+
+    /* ===== MODAL PROFIL ===== */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; width: 90%; max-width: 400px; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .modal-title { font-size: 17px; font-weight: 600; color: #fff; }
+    .modal-close { background: transparent; border: none; cursor: pointer; color: #666; font-size: 20px; line-height: 1; transition: color 0.2s; }
+    .modal-close:hover { color: #fff; }
+    .profil-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 20px; border: 2px solid #333; background: #2a2a2a; }
+    .profil-avatar-placeholder { width: 80px; height: 80px; border-radius: 50%; background: #2a2a2a; border: 2px solid #333; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; }
+    .modal-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .modal-value { font-size: 14px; color: #ccc; background: #111; padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; }
+    .modal-input { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 16px; }
+    .modal-input:focus { border-color: #1a6bff; }
+    .modal-select { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 20px; cursor: pointer; }
+    .modal-select:focus { border-color: #1a6bff; }
+    .modal-btn { width: 100%; padding: 12px; background: #1a6bff; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+    .modal-btn:hover { background: #0055dd; }
 
     /* ===== HEADER ===== */
     .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 100; }
@@ -112,6 +134,35 @@
 
     <div class="toast" id="toast"></div>
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
+    <input type="file" id="fotoProfilInput" accept="image/*" style="display:none">
+
+    <!-- Modal Profil -->
+    <div class="modal-overlay" id="modalProfil">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Profil Saya</span>
+                <button class="modal-close" id="tutupProfil">✕</button>
+            </div>
+            <div id="profilAvatarWrap">
+                <div class="profil-avatar-placeholder" id="profilAvatarPlaceholder">👤</div>
+            </div>
+            <div style="text-align:center;margin-bottom:16px;">
+                <button onclick="document.getElementById('fotoProfilInput').click()" style="background:transparent;border:1px solid #333;color:#888;font-size:12px;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:inherit;">Ganti Foto</button>
+            </div>
+            <div class="modal-label">Email</div>
+            <div class="modal-value" id="profilEmail">-</div>
+            <div class="modal-label">Nama</div>
+            <input class="modal-input" id="profilNama" type="text" placeholder="Nama kamu">
+            <div class="modal-label">Gaya Font</div>
+            <select class="modal-select" id="profilFont">
+                <option value="default">Default (Segoe UI)</option>
+                <option value="serif">Serif (Georgia)</option>
+                <option value="mono">Monospace (Courier)</option>
+                <option value="rounded">Rounded (Varela Round)</option>
+            </select>
+            <button class="modal-btn" id="simpanProfil">Simpan</button>
+        </div>
+    </div>
 
     <!-- Sidebar overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -139,10 +190,10 @@
             </div>
         </div>
         <div class="sidebar-footer">
-            <div class="sidebar-footer-item">
+            <button class="sidebar-footer-item" id="btnProfil">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span id="namaUserSidebar"></span>
-            </div>
+            </button>
             <button class="sidebar-footer-item" id="sidebarNewBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Obrolan Baru
@@ -250,7 +301,6 @@
         document.getElementById("backBtn").addEventListener("click", tutupSidebar);
         overlay.addEventListener("click", tutupSidebar);
 
-        // Toggle riwayat accordion
         document.getElementById("toggleRiwayat").addEventListener("click", function() {
             var list = document.getElementById("sidebarList");
             var btn = document.getElementById("toggleRiwayat");
@@ -263,12 +313,146 @@
             tutupSidebar();
         });
 
+        // ===== PROFIL =====
+        document.getElementById("btnProfil").addEventListener("click", function() {
+            bukaProfil();
+            tutupSidebar();
+        });
+
+        document.getElementById("tutupProfil").addEventListener("click", function() {
+            document.getElementById("modalProfil").classList.remove("show");
+        });
+
+        document.getElementById("modalProfil").addEventListener("click", function(e) {
+            if (e.target === this) this.classList.remove("show");
+        });
+
+        function bukaProfil() {
+            fetch("/profil")
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.profil) {
+                    var p = data.profil;
+                    document.getElementById("profilEmail").textContent = p.email || "-";
+                    document.getElementById("profilNama").value = p.nama || "";
+                    document.getElementById("profilFont").value = p.gaya_font || "default";
+
+                    var wrap = document.getElementById("profilAvatarWrap");
+                    if (p.foto_profil) {
+                        wrap.innerHTML = '<img class="profil-avatar" src="' + p.foto_profil + '" alt="Foto Profil">';
+                    } else {
+                        // Coba ambil dari Gravatar pakai email
+                        var emailHash = p.email ? p.email.trim().toLowerCase() : "";
+                        var gravatarUrl = "https://www.gravatar.com/avatar/" + md5(emailHash) + "?d=404&s=80";
+                        var img = new Image();
+                        img.onload = function() {
+                            wrap.innerHTML = '<img class="profil-avatar" src="' + gravatarUrl + '" alt="Foto Profil">';
+                        };
+                        img.onerror = function() {
+                            wrap.innerHTML = '<div class="profil-avatar-placeholder">👤</div>';
+                        };
+                        img.src = gravatarUrl;
+                    }
+                }
+            });
+            document.getElementById("modalProfil").classList.add("show");
+        }
+
+        // Ganti foto profil
+        document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                var base64 = ev.target.result;
+                document.getElementById("profilAvatarWrap").innerHTML = '<img class="profil-avatar" src="' + base64 + '">';
+                // Simpan ke server
+                fetch("/profil/update", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({foto_profil: base64})
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Simpan profil
+        document.getElementById("simpanProfil").addEventListener("click", function() {
+            var nama = document.getElementById("profilNama").value.trim();
+            var font = document.getElementById("profilFont").value;
+            if (!nama) { showToast("Nama tidak boleh kosong!"); return; }
+
+            fetch("/profil/update", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({nama: nama, gaya_font: font})
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    // Update font
+                    var fontMap = {
+                        "default": "'Segoe UI', Arial, sans-serif",
+                        "serif": "Georgia, serif",
+                        "mono": "'Courier New', monospace",
+                        "rounded": "'Varela Round', sans-serif"
+                    };
+                    document.body.style.fontFamily = fontMap[font] || fontMap["default"];
+                    // Update nama
+                    namaUser = nama;
+                    document.getElementById("welcomeName").textContent = nama;
+                    document.getElementById("namaUserSidebar").textContent = nama;
+                    document.getElementById("modalProfil").classList.remove("show");
+                    showToast("Profil berhasil disimpan!");
+                }
+            });
+        });
+
+        // MD5 sederhana untuk Gravatar
+        function md5(str) {
+            // Fungsi md5 mini
+            function safeAdd(x, y) { var lsw=(x&0xFFFF)+(y&0xFFFF); var msw=(x>>16)+(y>>16)+(lsw>>16); return (msw<<16)|(lsw&0xFFFF); }
+            function bitRotateLeft(num, cnt) { return (num<<cnt)|(num>>>(32-cnt)); }
+            function md5cmn(q,a,b,x,s,t) { return safeAdd(bitRotateLeft(safeAdd(safeAdd(a,q),safeAdd(x,t)),s),b); }
+            function md5ff(a,b,c,d,x,s,t) { return md5cmn((b&c)|((~b)&d),a,b,x,s,t); }
+            function md5gg(a,b,c,d,x,s,t) { return md5cmn((b&d)|(c&(~d)),a,b,x,s,t); }
+            function md5hh(a,b,c,d,x,s,t) { return md5cmn(b^c^d,a,b,x,s,t); }
+            function md5ii(a,b,c,d,x,s,t) { return md5cmn(c^(b|(~d)),a,b,x,s,t); }
+            var m=[], i, hex='', str2=unescape(encodeURIComponent(str));
+            var length8=str2.length*8;
+            for(i=0;i<str2.length;i++){m[i>>2]|=str2.charCodeAt(i)<<((i%4)*8);}
+            m[length8>>5]|=0x80<<(length8%32);m[(((length8+64)>>>9)<<4)+14]=length8;
+            var a=1732584193,b=-271733879,c=-1732584194,d=271733878;
+            for(i=0;i<m.length;i+=16){
+                var aa=a,bb=b,cc=c,dd=d;
+                a=md5ff(a,b,c,d,m[i+0],7,-680876936);d=md5ff(d,a,b,c,m[i+1],12,-389564586);c=md5ff(c,d,a,b,m[i+2],17,606105819);b=md5ff(b,c,d,a,m[i+3],22,-1044525330);
+                a=md5ff(a,b,c,d,m[i+4],7,-176418897);d=md5ff(d,a,b,c,m[i+5],12,1200080426);c=md5ff(c,d,a,b,m[i+6],17,-1473231341);b=md5ff(b,c,d,a,m[i+7],22,-45705983);
+                a=md5ff(a,b,c,d,m[i+8],7,1770035416);d=md5ff(d,a,b,c,m[i+9],12,-1958414417);c=md5ff(c,d,a,b,m[i+10],17,-42063);b=md5ff(b,c,d,a,m[i+11],22,-1990404162);
+                a=md5ff(a,b,c,d,m[i+12],7,1804603682);d=md5ff(d,a,b,c,m[i+13],12,-40341101);c=md5ff(c,d,a,b,m[i+14],17,-1502002290);b=md5ff(b,c,d,a,m[i+15],22,1236535329);
+                a=md5gg(a,b,c,d,m[i+1],5,-165796510);d=md5gg(d,a,b,c,m[i+6],9,-1069501632);c=md5gg(c,d,a,b,m[i+11],14,643717713);b=md5gg(b,c,d,a,m[i+0],20,-373897302);
+                a=md5gg(a,b,c,d,m[i+5],5,-701558691);d=md5gg(d,a,b,c,m[i+10],9,38016083);c=md5gg(c,d,a,b,m[i+15],14,-660478335);b=md5gg(b,c,d,a,m[i+4],20,-405537848);
+                a=md5gg(a,b,c,d,m[i+9],5,568446438);d=md5gg(d,a,b,c,m[i+14],9,-1019803690);c=md5gg(c,d,a,b,m[i+3],14,-187363961);b=md5gg(b,c,d,a,m[i+8],20,1163531501);
+                a=md5gg(a,b,c,d,m[i+13],5,-1444681467);d=md5gg(d,a,b,c,m[i+2],9,-51403784);c=md5gg(c,d,a,b,m[i+7],14,1735328473);b=md5gg(b,c,d,a,m[i+12],20,-1926607734);
+                a=md5hh(a,b,c,d,m[i+5],4,-378558);d=md5hh(d,a,b,c,m[i+8],11,-2022574463);c=md5hh(c,d,a,b,m[i+11],16,1839030562);b=md5hh(b,c,d,a,m[i+14],23,-35309556);
+                a=md5hh(a,b,c,d,m[i+1],4,-1530992060);d=md5hh(d,a,b,c,m[i+4],11,1272893353);c=md5hh(c,d,a,b,m[i+7],16,-155497632);b=md5hh(b,c,d,a,m[i+10],23,-1094730640);
+                a=md5hh(a,b,c,d,m[i+13],4,681279174);d=md5hh(d,a,b,c,m[i+0],11,-358537222);c=md5hh(c,d,a,b,m[i+3],16,-722521979);b=md5hh(b,c,d,a,m[i+6],23,76029189);
+                a=md5hh(a,b,c,d,m[i+9],4,-640364487);d=md5hh(d,a,b,c,m[i+12],11,-421815835);c=md5hh(c,d,a,b,m[i+15],16,530742520);b=md5hh(b,c,d,a,m[i+2],23,-995338651);
+                a=md5ii(a,b,c,d,m[i+0],6,-198630844);d=md5ii(d,a,b,c,m[i+7],10,1126891415);c=md5ii(c,d,a,b,m[i+14],15,-1416354905);b=md5ii(b,c,d,a,m[i+5],21,-57434055);
+                a=md5ii(a,b,c,d,m[i+12],6,1700485571);d=md5ii(d,a,b,c,m[i+3],10,-1894986606);c=md5ii(c,d,a,b,m[i+10],15,-1051523);b=md5ii(b,c,d,a,m[i+1],21,-2054922799);
+                a=md5ii(a,b,c,d,m[i+8],6,1873313359);d=md5ii(d,a,b,c,m[i+15],10,-30611744);c=md5ii(c,d,a,b,m[i+6],15,-1560198380);b=md5ii(b,c,d,a,m[i+13],21,1309151649);
+                a=md5ii(a,b,c,d,m[i+4],6,-145523070);d=md5ii(d,a,b,c,m[i+11],10,-1120210379);c=md5ii(c,d,a,b,m[i+2],15,718787259);b=md5ii(b,c,d,a,m[i+9],21,-343485551);
+                a=safeAdd(a,aa);b=safeAdd(b,bb);c=safeAdd(c,cc);d=safeAdd(d,dd);
+            }
+            var result=[a,b,c,d];
+            for(i=0;i<result.length;i++){var n=result[i];for(var j=0;j<4;j++){hex+=(((n>>>(j*8+4))&0x0F)).toString(16)+(((n>>>(j*8))&0x0F)).toString(16);}}
+            return hex;
+        }
+
         function muatDaftarObrolan() {
             fetch("/daftar_obrolan")
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 var list = document.getElementById("sidebarList");
-                var wasOpen = list.classList.contains("open");
                 list.innerHTML = "";
                 if (!data.obrolan || data.obrolan.length === 0) {
                     list.innerHTML = '<div class="sidebar-empty">Belum ada obrolan</div>';
@@ -278,9 +462,7 @@
                     var div = document.createElement("div");
                     div.className = "sidebar-item";
                     div.textContent = item.judul || "Obrolan";
-                    div.addEventListener("click", function() {
-                        bukaObrolan(item.id, item.judul);
-                    });
+                    div.addEventListener("click", function() { bukaObrolan(item.id, item.judul); });
                     list.appendChild(div);
                 });
             });
@@ -316,7 +498,6 @@
             });
         }
 
-        // ===== LOAD RIWAYAT =====
         fetch("/riwayat")
         .then(function(res) { return res.json(); })
         .then(function(data) {
@@ -329,21 +510,14 @@
             }
         });
 
-        // ===== UPLOAD FILE =====
         var selectedFile = null;
 
-        document.getElementById("uploadBtn").addEventListener("click", function() {
-            document.getElementById("fileInput").click();
-        });
+        document.getElementById("uploadBtn").addEventListener("click", function() { document.getElementById("fileInput").click(); });
 
         document.getElementById("fileInput").addEventListener("change", function(e) {
             var file = e.target.files[0];
             if (!file) return;
-            if (file.size > 5 * 1024 * 1024) {
-                showToast("File terlalu besar (maks 5MB)");
-                this.value = "";
-                return;
-            }
+            if (file.size > 5 * 1024 * 1024) { showToast("File terlalu besar (maks 5MB)"); this.value = ""; return; }
             selectedFile = file;
             tampilPreviewFile(file);
         });
@@ -386,7 +560,6 @@
             setTimeout(function() { t.classList.remove("show"); }, 2500);
         }
 
-        // ===== WELCOME =====
         document.getElementById("welcomeInput").addEventListener("keypress", function(e) {
             if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); kirimDariWelcome(); }
         });
@@ -400,7 +573,6 @@
             kirim();
         }
 
-        // ===== CHAT INPUT =====
         document.getElementById("btnKirim").addEventListener("click", kirim);
 
         document.getElementById("input").addEventListener("keypress", function(e) {
@@ -449,38 +621,18 @@
                 tampilTyping();
                 fetch("/upload", { method: "POST", body: formData })
                 .then(function(res) { return res.json(); })
-                .then(function(data) {
-                    hapusTyping();
-                    loadingSelesai();
-                    tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego");
-                })
-                .catch(function() {
-                    hapusTyping();
-                    loadingSelesai();
-                    tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego");
-                });
+                .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
+                .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego"); });
             } else {
                 tampilPesan(pesan, "user");
                 document.getElementById("input").value = "";
                 document.getElementById("input").style.height = "auto";
                 loadingMulai();
                 tampilTyping();
-                fetch("/chat", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({pesan: pesan})
-                })
+                fetch("/chat", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({pesan: pesan}) })
                 .then(function(res) { return res.json(); })
-                .then(function(data) {
-                    hapusTyping();
-                    loadingSelesai();
-                    tampilPesan(data.jawaban, "kaego");
-                })
-                .catch(function() {
-                    hapusTyping();
-                    loadingSelesai();
-                    tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego");
-                });
+                .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.jawaban, "kaego"); })
+                .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
             }
         }
 
