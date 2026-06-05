@@ -254,18 +254,23 @@ def download_rpm():
     if "user_id" not in session:
         return jsonify({"error": "Tidak terlogin"}), 401
     try:
+        import re
         konten = request.json.get("konten", "")
+        # Bersihkan tag HTML
+        konten = re.sub(r'<[^>]+>', '', konten)
+        konten = konten.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>').replace('&nbsp;', ' ')
         doc = Document()
         doc.add_heading("RENCANA PEMBELAJARAN MENDALAM (RPM)", 0)
         for baris in konten.split("\n"):
-            if baris.strip() == "":
-                doc.add_paragraph("")
+            baris = baris.strip()
+            if baris == "":
+                continue
             elif baris.startswith("##"):
                 doc.add_heading(baris.replace("##", "").strip(), 2)
             elif baris.startswith("#"):
                 doc.add_heading(baris.replace("#", "").strip(), 1)
             elif baris.isupper() and len(baris) > 3:
-                doc.add_heading(baris.strip(), 2)
+                doc.add_heading(baris, 2)
             else:
                 doc.add_paragraph(baris)
         buf = io.BytesIO()
