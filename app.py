@@ -82,14 +82,27 @@ def chat():
         session["obrolan_id"] = result.data[0]["id"]
 
     riwayat.append({"role": "user", "content": pesan_user})
-    response = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=8192,
-        timeout=120,
-        system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Selalu sapa dengan 'Halo Kak {session.get('nama')}!' di awal percakapan. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan",
-        tools=[{"type": "web_search_20250305", "name": "web_search"}],
-        messages=riwayat
-    )
+
+    # RPM butuh token banyak, tidak pakai web search
+    is_rpm = "RPM" in pesan_user or "Rencana Pembelajaran" in pesan_user
+
+    if is_rpm:
+        response = client.messages.create(
+            model="claude-sonnet-4-5",
+            max_tokens=8192,
+            timeout=180,
+            system=f"Namamu adalah Kaego, asisten AI pendidikan yang ramah. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat RPM, selesaikan SELURUH format hingga bagian Refleksi tanpa terpotong.",
+            messages=riwayat
+        )
+    else:
+        response = client.messages.create(
+            model="claude-sonnet-4-5",
+            max_tokens=4096,
+            timeout=120,
+            system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Selalu sapa dengan 'Halo Kak {session.get('nama')}!' di awal percakapan. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan",
+            tools=[{"type": "web_search_20250305", "name": "web_search"}],
+            messages=riwayat
+        )
 
     jawaban = ""
     for block in response.content:
