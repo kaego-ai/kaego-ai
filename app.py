@@ -111,7 +111,12 @@ def chat():
 def get_riwayat():
     if "user_id" not in session:
         return jsonify({"error": "Tidak terlogin"}), 401
-    result = supabase.table("riwayat_chat").select("*").eq("user_id", session["user_id"]).order("created_at").execute()
+    
+    obrolan_id = session.get("obrolan_id")
+    if not obrolan_id:
+        return jsonify({"riwayat": []})
+    
+    result = supabase.table("riwayat_chat").select("*").eq("obrolan_id", obrolan_id).order("created_at").execute()
     return jsonify({"riwayat": result.data})
 
 @app.route("/daftar_obrolan", methods=["GET"])

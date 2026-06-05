@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="Kaego AI">
     <meta name="theme-color" content="#0f0f0f">
     <title>Kaego AI</title>
-    <meta name="theme-color" content="#0f0f0f">
-<title>Kaego AI</title>
-<link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; overflow: hidden; }
@@ -43,7 +41,7 @@
     /* ===== MODAL PROFIL ===== */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; }
     .modal-overlay.show { display: flex; }
-    .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; width: 90%; max-width: 400px; }
+    .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
     .modal-title { font-size: 17px; font-weight: 600; color: #fff; }
     .modal-close { background: transparent; border: none; cursor: pointer; color: #666; font-size: 20px; line-height: 1; transition: color 0.2s; }
@@ -58,6 +56,11 @@
     .modal-select:focus { border-color: #1a6bff; }
     .modal-btn { width: 100%; padding: 12px; background: #1a6bff; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; transition: background 0.2s; }
     .modal-btn:hover { background: #0055dd; }
+
+    /* ===== TOMBOL SHORTCUT PENDIDIKAN ===== */
+    .shortcut-area { max-width: 800px; margin: 0 auto; padding: 8px 24px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+    .shortcut-btn { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; color: #aaa; font-size: 12px; padding: 6px 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
+    .shortcut-btn:hover { background: #252525; color: #fff; border-color: #444; }
 
     /* ===== HEADER ===== */
     .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 100; }
@@ -80,7 +83,7 @@
     .bubble p { margin: 3px 0; font-size: 15px; }
 
     /* ===== INPUT ===== */
-    .input-area { padding: 16px 24px; background: #0f0f0f; border-top: 1px solid #1a1a1a; position: sticky; bottom: 0; z-index: 100; }
+    .input-area { padding: 8px 24px 16px; background: #0f0f0f; border-top: 1px solid #1a1a1a; position: sticky; bottom: 0; z-index: 100; }
     .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
     .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; min-width: 0; padding-top: 0; align-self: center; }
@@ -191,9 +194,9 @@
         </div>
         <div class="sidebar-footer">
             <button class="sidebar-footer-item" id="btnProfil">
-    <div id="avatarSidebar" style="width:24px;height:24px;border-radius:50%;background:#2a2a2a;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;">👤</div>
-    <span id="namaUserSidebar"></span>
-</button>
+                <div id="avatarSidebar" style="width:24px;height:24px;border-radius:50%;background:#2a2a2a;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;">👤</div>
+                <span id="namaUserSidebar"></span>
+            </button>
             <button class="sidebar-footer-item" id="sidebarNewBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Obrolan Baru
@@ -239,6 +242,15 @@
 
     <div class="chat-messages" id="messages"></div>
 
+    <!-- Tombol Shortcut Pendidikan -->
+    <div class="shortcut-area" id="shortcutArea">
+        <button class="shortcut-btn" onclick="isiShortcut('buat-soal')">📝 Buat Soal</button>
+        <button class="shortcut-btn" onclick="isiShortcut('buat-rpp')">📋 Buat RPP</button>
+        <button class="shortcut-btn" onclick="isiShortcut('rangkuman')">📚 Rangkuman</button>
+        <button class="shortcut-btn" onclick="isiShortcut('koreksi')">✅ Koreksi</button>
+        <button class="shortcut-btn" onclick="isiShortcut('latihan')">🎯 Latihan Soal</button>
+    </div>
+
     <div class="input-area">
         <div class="input-box" id="inputBox">
             <div class="file-preview" id="filePreview" style="display:none;">
@@ -276,14 +288,32 @@
         document.getElementById("welcomeGreeting").textContent = getSapaan();
         document.getElementById("welcomeName").textContent = namaUser;
         document.getElementById("namaUserSidebar").textContent = namaUser;
+
         // Load foto profil di sidebar
-fetch("/profil")
-.then(function(res) { return res.json(); })
-.then(function(data) {
-    if (data.profil && data.profil.foto_profil) {
-        document.getElementById("avatarSidebar").innerHTML = '<img src="' + data.profil.foto_profil + '" style="width:100%;height:100%;object-fit:cover;">';
-    }
-});
+        fetch("/profil")
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.profil && data.profil.foto_profil) {
+                document.getElementById("avatarSidebar").innerHTML = '<img src="' + data.profil.foto_profil + '" style="width:100%;height:100%;object-fit:cover;">';
+            }
+        });
+
+        // ===== SHORTCUT PENDIDIKAN =====
+        function isiShortcut(tipe) {
+            var input = document.getElementById("input");
+            var template = {
+                "buat-soal": "Buatkan 10 soal pilihan ganda mata pelajaran [isi mata pelajaran] kelas [isi kelas] tentang materi [isi materi]. Sertakan kunci jawaban.",
+                "buat-rpp": "Buatkan RPP (Rencana Pelaksanaan Pembelajaran) mata pelajaran [isi mata pelajaran] kelas [isi kelas] materi [isi materi] untuk [jumlah] pertemuan.",
+                "rangkuman": "Buatkan rangkuman materi [isi materi] untuk siswa kelas [isi kelas] dengan bahasa yang mudah dipahami.",
+                "koreksi": "Tolong koreksi jawaban siswa berikut dan berikan nilai serta penjelasan untuk setiap jawaban yang salah:\n\nSoal: [isi soal]\nJawaban siswa: [isi jawaban]",
+                "latihan": "Buatkan 5 soal latihan beserta pembahasannya untuk materi [isi materi] kelas [isi kelas]."
+            };
+            input.value = template[tipe] || "";
+            input.style.height = "auto";
+            input.style.height = Math.min(input.scrollHeight, 120) + "px";
+            input.focus();
+            sembunyikanWelcome();
+        }
 
         // ===== SIDEBAR =====
         var sidebar = document.getElementById("sidebar");
@@ -344,21 +374,15 @@ fetch("/profil")
                     document.getElementById("profilEmail").textContent = p.email || "-";
                     document.getElementById("profilNama").value = p.nama || "";
                     document.getElementById("profilFont").value = p.gaya_font || "default";
-
                     var wrap = document.getElementById("profilAvatarWrap");
                     if (p.foto_profil) {
                         wrap.innerHTML = '<img class="profil-avatar" src="' + p.foto_profil + '" alt="Foto Profil">';
                     } else {
-                        // Coba ambil dari Gravatar pakai email
                         var emailHash = p.email ? p.email.trim().toLowerCase() : "";
                         var gravatarUrl = "https://www.gravatar.com/avatar/" + md5(emailHash) + "?d=404&s=80";
                         var img = new Image();
-                        img.onload = function() {
-                            wrap.innerHTML = '<img class="profil-avatar" src="' + gravatarUrl + '" alt="Foto Profil">';
-                        };
-                        img.onerror = function() {
-                            wrap.innerHTML = '<div class="profil-avatar-placeholder">👤</div>';
-                        };
+                        img.onload = function() { wrap.innerHTML = '<img class="profil-avatar" src="' + gravatarUrl + '" alt="Foto Profil">'; };
+                        img.onerror = function() { wrap.innerHTML = '<div class="profil-avatar-placeholder">👤</div>'; };
                         img.src = gravatarUrl;
                     }
                 }
@@ -366,7 +390,6 @@ fetch("/profil")
             document.getElementById("modalProfil").classList.add("show");
         }
 
-        // Ganti foto profil
         document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
             var file = e.target.files[0];
             if (!file) return;
@@ -374,39 +397,21 @@ fetch("/profil")
             reader.onload = function(ev) {
                 var base64 = ev.target.result;
                 document.getElementById("profilAvatarWrap").innerHTML = '<img class="profil-avatar" src="' + base64 + '">';
-                // Simpan ke server
-                fetch("/profil/update", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({foto_profil: base64})
-                });
+                fetch("/profil/update", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({foto_profil: base64}) });
             };
             reader.readAsDataURL(file);
         });
 
-        // Simpan profil
         document.getElementById("simpanProfil").addEventListener("click", function() {
             var nama = document.getElementById("profilNama").value.trim();
             var font = document.getElementById("profilFont").value;
             if (!nama) { showToast("Nama tidak boleh kosong!"); return; }
-
-            fetch("/profil/update", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({nama: nama, gaya_font: font})
-            })
+            fetch("/profil/update", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({nama: nama, gaya_font: font}) })
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
-                    // Update font
-                    var fontMap = {
-                        "default": "'Segoe UI', Arial, sans-serif",
-                        "serif": "Georgia, serif",
-                        "mono": "'Courier New', monospace",
-                        "rounded": "'Varela Round', sans-serif"
-                    };
+                    var fontMap = { "default": "'Segoe UI', Arial, sans-serif", "serif": "Georgia, serif", "mono": "'Courier New', monospace", "rounded": "'Varela Round', sans-serif" };
                     document.body.style.fontFamily = fontMap[font] || fontMap["default"];
-                    // Update nama
                     namaUser = nama;
                     document.getElementById("welcomeName").textContent = nama;
                     document.getElementById("namaUserSidebar").textContent = nama;
@@ -416,9 +421,7 @@ fetch("/profil")
             });
         });
 
-        // MD5 sederhana untuk Gravatar
         function md5(str) {
-            // Fungsi md5 mini
             function safeAdd(x, y) { var lsw=(x&0xFFFF)+(y&0xFFFF); var msw=(x>>16)+(y>>16)+(lsw>>16); return (msw<<16)|(lsw&0xFFFF); }
             function bitRotateLeft(num, cnt) { return (num<<cnt)|(num>>>(32-cnt)); }
             function md5cmn(q,a,b,x,s,t) { return safeAdd(bitRotateLeft(safeAdd(safeAdd(a,q),safeAdd(x,t)),s),b); }
@@ -462,10 +465,7 @@ fetch("/profil")
             .then(function(data) {
                 var list = document.getElementById("sidebarList");
                 list.innerHTML = "";
-                if (!data.obrolan || data.obrolan.length === 0) {
-                    list.innerHTML = '<div class="sidebar-empty">Belum ada obrolan</div>';
-                    return;
-                }
+                if (!data.obrolan || data.obrolan.length === 0) { list.innerHTML = '<div class="sidebar-empty">Belum ada obrolan</div>'; return; }
                 data.obrolan.forEach(function(item) {
                     var div = document.createElement("div");
                     div.className = "sidebar-item";
@@ -483,10 +483,7 @@ fetch("/profil")
                 var messages = document.getElementById("messages");
                 messages.innerHTML = "";
                 if (data.riwayat) {
-                    data.riwayat.forEach(function(item) {
-                        tampilPesan(item.pesan, "user");
-                        tampilPesan(item.jawaban, "kaego");
-                    });
+                    data.riwayat.forEach(function(item) { tampilPesan(item.pesan, "user"); tampilPesan(item.jawaban, "kaego"); });
                     messages.scrollTop = messages.scrollHeight;
                 }
                 tutupSidebar();
@@ -499,10 +496,7 @@ fetch("/profil")
             fetch("/reset", { method: "POST" })
             .then(function(res) { return res.json(); })
             .then(function(data) {
-                if (data.success) {
-                    document.getElementById("messages").innerHTML = "";
-                    showToast("Obrolan baru dimulai!");
-                }
+                if (data.success) { document.getElementById("messages").innerHTML = ""; showToast("Obrolan baru dimulai!"); }
             });
         }
 
@@ -510,18 +504,13 @@ fetch("/profil")
         .then(function(res) { return res.json(); })
         .then(function(data) {
             if (data.riwayat && data.riwayat.length > 0) {
-                data.riwayat.forEach(function(item) {
-                    tampilPesan(item.pesan, "user");
-                    tampilPesan(item.jawaban, "kaego");
-                });
+                data.riwayat.forEach(function(item) { tampilPesan(item.pesan, "user"); tampilPesan(item.jawaban, "kaego"); });
                 document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
             }
         });
 
         var selectedFile = null;
-
         document.getElementById("uploadBtn").addEventListener("click", function() { document.getElementById("fileInput").click(); });
-
         document.getElementById("fileInput").addEventListener("change", function(e) {
             var file = e.target.files[0];
             if (!file) return;
@@ -536,23 +525,15 @@ fetch("/profil")
             var thumb = document.getElementById("previewThumb");
             thumb.innerHTML = "";
             if (file.type.startsWith("image/")) {
-                var img = document.createElement("img");
-                img.className = "file-preview-thumb";
-                img.src = URL.createObjectURL(file);
-                thumb.appendChild(img);
+                var img = document.createElement("img"); img.className = "file-preview-thumb"; img.src = URL.createObjectURL(file); thumb.appendChild(img);
             } else {
-                var pdfIcon = document.createElement("div");
-                pdfIcon.className = "file-preview-pdf";
-                pdfIcon.textContent = "📄";
-                thumb.appendChild(pdfIcon);
+                var pdfIcon = document.createElement("div"); pdfIcon.className = "file-preview-pdf"; pdfIcon.textContent = "📄"; thumb.appendChild(pdfIcon);
             }
             document.getElementById("filePreview").style.display = "flex";
         }
 
         document.getElementById("removeFile").addEventListener("click", function() {
-            selectedFile = null;
-            document.getElementById("fileInput").value = "";
-            document.getElementById("filePreview").style.display = "none";
+            selectedFile = null; document.getElementById("fileInput").value = ""; document.getElementById("filePreview").style.display = "none";
         });
 
         function formatBytes(bytes) {
@@ -562,9 +543,7 @@ fetch("/profil")
         }
 
         function showToast(msg) {
-            var t = document.getElementById("toast");
-            t.textContent = msg;
-            t.classList.add("show");
+            var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
             setTimeout(function() { t.classList.remove("show"); }, 2500);
         }
 
@@ -582,14 +561,11 @@ fetch("/profil")
         }
 
         document.getElementById("btnKirim").addEventListener("click", kirim);
-
         document.getElementById("input").addEventListener("keypress", function(e) {
             if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); kirim(); }
         });
-
         document.getElementById("input").addEventListener("input", function() {
-            this.style.height = "auto";
-            this.style.height = Math.min(this.scrollHeight, 120) + "px";
+            this.style.height = "auto"; this.style.height = Math.min(this.scrollHeight, 120) + "px";
         });
 
         function sembunyikanWelcome() {
@@ -597,17 +573,8 @@ fetch("/profil")
             setTimeout(function() { document.getElementById("welcomeScreen").style.display = "none"; }, 500);
         }
 
-        function loadingMulai() {
-            var btn = document.getElementById("btnKirim");
-            btn.classList.add("loading");
-            btn.disabled = true;
-        }
-
-        function loadingSelesai() {
-            var btn = document.getElementById("btnKirim");
-            btn.classList.remove("loading");
-            btn.disabled = false;
-        }
+        function loadingMulai() { var btn = document.getElementById("btnKirim"); btn.classList.add("loading"); btn.disabled = true; }
+        function loadingSelesai() { var btn = document.getElementById("btnKirim"); btn.classList.remove("loading"); btn.disabled = false; }
 
         function kirim() {
             var pesan = document.getElementById("input").value.trim();
@@ -617,26 +584,18 @@ fetch("/profil")
             if (selectedFile) {
                 var pesanFinal = pesan || "Tolong analisis file ini";
                 tampilPesanFile(selectedFile, pesanFinal);
-                document.getElementById("input").value = "";
-                document.getElementById("input").style.height = "auto";
-                document.getElementById("filePreview").style.display = "none";
-                var formData = new FormData();
-                formData.append("file", selectedFile);
-                formData.append("pesan", pesanFinal);
-                selectedFile = null;
-                document.getElementById("fileInput").value = "";
-                loadingMulai();
-                tampilTyping();
+                document.getElementById("input").value = ""; document.getElementById("input").style.height = "auto"; document.getElementById("filePreview").style.display = "none";
+                var formData = new FormData(); formData.append("file", selectedFile); formData.append("pesan", pesanFinal);
+                selectedFile = null; document.getElementById("fileInput").value = "";
+                loadingMulai(); tampilTyping();
                 fetch("/upload", { method: "POST", body: formData })
                 .then(function(res) { return res.json(); })
                 .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
                 .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego"); });
             } else {
                 tampilPesan(pesan, "user");
-                document.getElementById("input").value = "";
-                document.getElementById("input").style.height = "auto";
-                loadingMulai();
-                tampilTyping();
+                document.getElementById("input").value = ""; document.getElementById("input").style.height = "auto";
+                loadingMulai(); tampilTyping();
                 fetch("/chat", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({pesan: pesan}) })
                 .then(function(res) { return res.json(); })
                 .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.jawaban, "kaego"); })
@@ -646,78 +605,45 @@ fetch("/profil")
 
         function tampilPesanFile(file, pesan) {
             var messages = document.getElementById("messages");
-            var wrapper = document.createElement("div");
-            wrapper.className = "message user";
-            var avatar = document.createElement("div");
-            avatar.className = "avatar user";
-            avatar.textContent = "👤";
-            var bubble = document.createElement("div");
-            bubble.className = "bubble user";
-            bubble.style.padding = "10px 12px";
+            var wrapper = document.createElement("div"); wrapper.className = "message user";
+            var avatar = document.createElement("div"); avatar.className = "avatar user"; avatar.textContent = "👤";
+            var bubble = document.createElement("div"); bubble.className = "bubble user"; bubble.style.padding = "10px 12px";
             if (file.type.startsWith("image/")) {
-                var img = document.createElement("img");
-                img.className = "chat-img";
-                img.src = URL.createObjectURL(file);
-                bubble.appendChild(img);
+                var img = document.createElement("img"); img.className = "chat-img"; img.src = URL.createObjectURL(file); bubble.appendChild(img);
             } else {
-                var label = document.createElement("div");
-                label.className = "file-label";
-                label.innerHTML = "📄 " + file.name;
-                bubble.appendChild(label);
+                var label = document.createElement("div"); label.className = "file-label"; label.innerHTML = "📄 " + file.name; bubble.appendChild(label);
             }
             if (pesan && pesan !== "Tolong analisis file ini") {
-                var teksEl = document.createElement("div");
-                teksEl.style.fontSize = "15px";
-                teksEl.textContent = pesan;
-                bubble.appendChild(teksEl);
+                var teksEl = document.createElement("div"); teksEl.style.fontSize = "15px"; teksEl.textContent = pesan; bubble.appendChild(teksEl);
             }
-            wrapper.appendChild(avatar);
-            wrapper.appendChild(bubble);
-            messages.appendChild(wrapper);
-            messages.scrollTop = messages.scrollHeight;
+            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper); messages.scrollTop = messages.scrollHeight;
         }
 
         function tampilPesan(teks, tipe) {
             var messages = document.getElementById("messages");
-            var wrapper = document.createElement("div");
-            wrapper.className = "message " + tipe;
-            var avatar = document.createElement("div");
-            avatar.className = "avatar " + tipe;
+            var wrapper = document.createElement("div"); wrapper.className = "message " + tipe;
+            var avatar = document.createElement("div"); avatar.className = "avatar " + tipe;
             if (tipe === "kaego") {
                 avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;">';
-            } else {
-                avatar.textContent = "👤";
-            }
-            var bubble = document.createElement("div");
-            bubble.className = "bubble " + tipe;
+            } else { avatar.textContent = "👤"; }
+            var bubble = document.createElement("div"); bubble.className = "bubble " + tipe;
             if (tipe === "kaego") {
                 teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:600">$1</span>');
                 teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
                 teks = teks.replace(/^[\-\*]\s*/gm, '');
                 bubble.innerHTML = teks.split('\n').map(function(line) { return '<p>' + line + '</p>'; }).join('');
-            } else {
-                bubble.textContent = teks;
-            }
-            wrapper.appendChild(avatar);
-            wrapper.appendChild(bubble);
-            messages.appendChild(wrapper);
-            messages.scrollTop = messages.scrollHeight;
+            } else { bubble.textContent = teks; }
+            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper); messages.scrollTop = messages.scrollHeight;
         }
 
         function tampilTyping() {
             var messages = document.getElementById("messages");
-            var div = document.createElement("div");
-            div.id = "typing";
-            div.className = "message";
+            var div = document.createElement("div"); div.id = "typing"; div.className = "message";
             div.innerHTML = '<div class="avatar kaego"><img src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
-            messages.appendChild(div);
-            messages.scrollTop = messages.scrollHeight;
+            messages.appendChild(div); messages.scrollTop = messages.scrollHeight;
         }
 
-        function hapusTyping() {
-            var typing = document.getElementById("typing");
-            if (typing) typing.remove();
-        }
+        function hapusTyping() { var typing = document.getElementById("typing"); if (typing) typing.remove(); }
     </script>
 </body>
 </html>
