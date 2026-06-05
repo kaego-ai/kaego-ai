@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -12,7 +13,8 @@
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; overflow: hidden; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; }
 
     /* ===== SIDEBAR ===== */
     .sidebar { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: #111; border-right: 1px solid #222; z-index: 1002; transform: translateX(-100%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
@@ -32,45 +34,71 @@
     .sidebar-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-item.active { background: #1a2a3a; color: #4a9eff; }
     .sidebar-empty { font-size: 13px; color: #555; text-align: center; padding: 16px 0; }
+
+    /* ===== FITUR PENDIDIKAN DI SIDEBAR ===== */
+    .fitur-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #1a1a1a; border: none; border-radius: 10px; color: #ccc; font-size: 13px; cursor: pointer; font-family: inherit; transition: background 0.2s; margin-bottom: 4px; margin-top: 8px; }
+    .fitur-toggle:hover { background: #222; color: #fff; }
+    .fitur-toggle.open svg.chevron { transform: rotate(180deg); }
+    .fitur-toggle svg.chevron { transition: transform 0.2s; }
+    .fitur-list { display: none; flex-direction: column; gap: 4px; padding: 4px 0 8px 0; }
+    .fitur-list.open { display: flex; }
+    .fitur-item { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; color: #aaa; transition: background 0.2s, color 0.2s; border: none; background: transparent; font-family: inherit; width: 100%; text-align: left; }
+    .fitur-item:hover { background: #1a1a1a; color: #fff; }
+    .fitur-item .fitur-icon { font-size: 15px; flex-shrink: 0; }
+
+    /* ===== MODAL FITUR PENDIDIKAN ===== */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px 20px 0 0; padding: 24px; width: 100%; max-width: 500px; }
+    .modal-fitur { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px 20px 0 0; padding: 24px; width: 100%; max-width: 500px; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .modal-title { font-size: 16px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .modal-close { background: transparent; border: none; cursor: pointer; color: #666; font-size: 20px; line-height: 1; transition: color 0.2s; }
+    .modal-close:hover { color: #fff; }
+    .modal-label { font-size: 12px; color: #888; margin-bottom: 6px; margin-top: 12px; }
+    .modal-label:first-of-type { margin-top: 0; }
+    .modal-input { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; }
+    .modal-input:focus { border-color: #1a6bff; }
+    .modal-select { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; cursor: pointer; }
+    .modal-select:focus { border-color: #1a6bff; }
+    .modal-row { display: flex; gap: 8px; }
+    .modal-row .modal-input, .modal-row .modal-select { margin-bottom: 0; }
+    .modal-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 600; margin-top: 20px; transition: opacity 0.2s; }
+    .modal-btn:hover { opacity: 0.85; }
+    .modal-btn-rangkuman { background: #1a6bff; color: white; }
+    .modal-btn-soal { background: #f0b429; color: #0f0f08; }
+    .modal-btn-rpp { background: #34d399; color: #080f0b; }
+
+    /* ===== MODAL PROFIL ===== */
+    .modal-profil-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; }
+    .modal-profil-overlay.show { display: flex; }
+    .modal-profil { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+    .profil-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 20px; border: 2px solid #333; background: #2a2a2a; }
+    .profil-avatar-placeholder { width: 80px; height: 80px; border-radius: 50%; background: #2a2a2a; border: 2px solid #333; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; }
+    .profil-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .profil-value { font-size: 14px; color: #ccc; background: #111; padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; }
+    .profil-input { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 16px; }
+    .profil-input:focus { border-color: #1a6bff; }
+    .profil-select { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 20px; cursor: pointer; }
+    .profil-btn { width: 100%; padding: 12px; background: #1a6bff; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; }
+    .profil-btn:hover { background: #0055dd; }
+
     .sidebar-footer { padding: 12px 8px; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 4px; }
     .sidebar-footer-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; font-size: 13px; color: #888; cursor: pointer; background: transparent; border: none; font-family: inherit; transition: background 0.2s, color 0.2s; width: 100%; text-align: left; text-decoration: none; }
     .sidebar-footer-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; display: none; pointer-events: none; }
     .sidebar-overlay.show { display: block; }
 
-    /* ===== MODAL PROFIL ===== */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; }
-    .modal-overlay.show { display: flex; }
-    .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-    .modal-title { font-size: 17px; font-weight: 600; color: #fff; }
-    .modal-close { background: transparent; border: none; cursor: pointer; color: #666; font-size: 20px; line-height: 1; transition: color 0.2s; }
-    .modal-close:hover { color: #fff; }
-    .profil-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 20px; border: 2px solid #333; background: #2a2a2a; }
-    .profil-avatar-placeholder { width: 80px; height: 80px; border-radius: 50%; background: #2a2a2a; border: 2px solid #333; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; }
-    .modal-label { font-size: 12px; color: #888; margin-bottom: 6px; }
-    .modal-value { font-size: 14px; color: #ccc; background: #111; padding: 10px 14px; border-radius: 10px; margin-bottom: 16px; }
-    .modal-input { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 16px; }
-    .modal-input:focus { border-color: #1a6bff; }
-    .modal-select { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 20px; cursor: pointer; }
-    .modal-select:focus { border-color: #1a6bff; }
-    .modal-btn { width: 100%; padding: 12px; background: #1a6bff; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; transition: background 0.2s; }
-    .modal-btn:hover { background: #0055dd; }
-
-    /* ===== TOMBOL SHORTCUT PENDIDIKAN ===== */
-    .shortcut-area { max-width: 800px; margin: 0 auto; padding: 8px 24px 0; display: flex; gap: 8px; flex-wrap: wrap; }
-    .shortcut-btn { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; color: #aaa; font-size: 12px; padding: 6px 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
-    .shortcut-btn:hover { background: #252525; color: #fff; border-color: #444; }
-
     /* ===== HEADER ===== */
-    .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 100; }
+    .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; flex-shrink: 0; z-index: 100; }
     .header img.logo { height: 40px; width: auto; max-width: 150px; }
     .menu-btn { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
     .menu-btn:hover { color: #fff; }
     .menu-btn svg { width: 22px; height: 22px; }
 
     /* ===== CHAT ===== */
-    .chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; margin: 0 auto; }
+    .chat-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 0; }
+    .chat-messages { padding: 24px; display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; margin: 0 auto; }
     .message { display: flex; gap: 12px; align-items: flex-start; }
     .message.user { flex-direction: row-reverse; }
     .avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; }
@@ -83,7 +111,7 @@
     .bubble p { margin: 3px 0; font-size: 15px; }
 
     /* ===== INPUT ===== */
-    .input-area { padding: 8px 24px 16px; background: #0f0f0f; border-top: 1px solid #1a1a1a; position: sticky; bottom: 0; z-index: 100; }
+    .input-area { padding: 8px 24px 16px; background: #0f0f0f; border-top: 1px solid #1a1a1a; flex-shrink: 0; z-index: 100; }
     .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
     .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; min-width: 0; padding-top: 0; align-self: center; }
@@ -93,16 +121,10 @@
     .upload-btn svg { width: 20px; height: 20px; }
     .send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
     .send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-    .send-btn svg { display: none; }
     .send-btn:hover::before { opacity: 0.8; }
     .send-btn.loading::before { animation: spin 0.8s linear infinite; }
     .send-btn:not(.loading)::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .welcome-send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
-    .welcome-send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-    .welcome-send-btn svg { display: none; }
-    .welcome-send-btn::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
-    .welcome-send-btn:hover::before { opacity: 0.8; }
     .file-preview { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 4px 0 4px; border-top: 1px solid #2a2a2a; margin-top: 4px; }
     .file-preview-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid #333; background: #2a2a2a; flex-shrink: 0; }
     .file-preview-pdf { width: 48px; height: 48px; border-radius: 8px; background: #2a1a1a; border: 1px solid #4a2a2a; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
@@ -113,7 +135,6 @@
     .file-preview-remove:hover { color: #ff4444; }
     .bubble img.chat-img { max-width: 100%; border-radius: 10px; display: block; margin-bottom: 8px; border: 1px solid #333; }
     .bubble .file-label { font-size: 12px; color: #888; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
-    .typing { color: #555; font-size: 14px; font-style: italic; padding: 4px 0; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0f0f0f; }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
@@ -129,7 +150,11 @@
     .welcome-input-box:focus-within { border-color: #1a6bff; }
     .welcome-input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; align-self: center; }
     .welcome-input-box textarea::placeholder { color: #555; }
-    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .welcome-send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; padding: 0; }
+    .welcome-send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    .welcome-send-btn::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
+    .welcome-send-btn:hover::before { opacity: 0.8; }
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
     .toast.show { opacity: 1; }
     </style>
 </head>
@@ -139,31 +164,38 @@
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
     <input type="file" id="fotoProfilInput" accept="image/*" style="display:none">
 
+    <!-- Modal Fitur Pendidikan -->
+    <div class="modal-overlay" id="modalFitur">
+        <div class="modal-fitur" id="modalFiturBox">
+            <!-- diisi dinamis -->
+        </div>
+    </div>
+
     <!-- Modal Profil -->
-    <div class="modal-overlay" id="modalProfil">
-        <div class="modal">
+    <div class="modal-profil-overlay" id="modalProfil">
+        <div class="modal-profil">
             <div class="modal-header">
                 <span class="modal-title">Profil Saya</span>
                 <button class="modal-close" id="tutupProfil">✕</button>
             </div>
             <div id="profilAvatarWrap">
-                <div class="profil-avatar-placeholder" id="profilAvatarPlaceholder">👤</div>
+                <div class="profil-avatar-placeholder">👤</div>
             </div>
             <div style="text-align:center;margin-bottom:16px;">
                 <button onclick="document.getElementById('fotoProfilInput').click()" style="background:transparent;border:1px solid #333;color:#888;font-size:12px;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:inherit;">Ganti Foto</button>
             </div>
-            <div class="modal-label">Email</div>
-            <div class="modal-value" id="profilEmail">-</div>
-            <div class="modal-label">Nama</div>
-            <input class="modal-input" id="profilNama" type="text" placeholder="Nama kamu">
-            <div class="modal-label">Gaya Font</div>
-            <select class="modal-select" id="profilFont">
+            <div class="profil-label">Email</div>
+            <div class="profil-value" id="profilEmail">-</div>
+            <div class="profil-label">Nama</div>
+            <input class="profil-input" id="profilNama" type="text" placeholder="Nama kamu">
+            <div class="profil-label">Gaya Font</div>
+            <select class="profil-select" id="profilFont">
                 <option value="default">Default (Segoe UI)</option>
                 <option value="serif">Serif (Georgia)</option>
                 <option value="mono">Monospace (Courier)</option>
                 <option value="rounded">Rounded (Varela Round)</option>
             </select>
-            <button class="modal-btn" id="simpanProfil">Simpan</button>
+            <button class="profil-btn" id="simpanProfil">Simpan</button>
         </div>
     </div>
 
@@ -174,13 +206,13 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button class="sidebar-back" id="backBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 18l-6-6 6-6"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <img src="/static/logo.png" style="height:32px;width:auto;max-width:140px;">
         </div>
         <div class="sidebar-body">
+
+            <!-- Riwayat Obrolan -->
             <button class="riwayat-toggle" id="toggleRiwayat">
                 <span style="display:flex;align-items:center;gap:8px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -191,6 +223,33 @@
             <div class="sidebar-list" id="sidebarList">
                 <div class="sidebar-empty">Belum ada obrolan</div>
             </div>
+
+            <!-- Fitur Pendidikan -->
+            <button class="fitur-toggle" id="toggleFitur">
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Fitur Pendidikan
+                </span>
+                <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="fitur-list" id="fiturList">
+                <button class="fitur-item" onclick="bukaModalFitur('rangkuman')">
+                    <span class="fitur-icon">📚</span> Rangkuman Materi
+                </button>
+                <button class="fitur-item" onclick="bukaModalFitur('soal')">
+                    <span class="fitur-icon">📝</span> Buat Soal Otomatis
+                </button>
+                <button class="fitur-item" onclick="bukaModalFitur('rpp')">
+                    <span class="fitur-icon">📋</span> Buat RPP
+                </button>
+                <button class="fitur-item" onclick="bukaModalFitur('koreksi')">
+                    <span class="fitur-icon">✅</span> Koreksi Jawaban
+                </button>
+                <button class="fitur-item" onclick="bukaModalFitur('latihan')">
+                    <span class="fitur-icon">🎯</span> Latihan Soal
+                </button>
+            </div>
+
         </div>
         <div class="sidebar-footer">
             <button class="sidebar-footer-item" id="btnProfil">
@@ -212,11 +271,7 @@
     <div class="welcome-screen" id="welcomeScreen">
         <div class="welcome-top">
             <button class="menu-btn" id="menuBtnWelcome">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <line x1="3" y1="6" x2="21" y2="6"/>
-                    <line x1="3" y1="12" x2="21" y2="12"/>
-                    <line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
         <img src="/static/avatar.gif" class="welcome-logo" alt="Kaego">
@@ -231,24 +286,13 @@
     <!-- Header -->
     <div class="header">
         <button class="menu-btn" id="menuBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <line x1="3" y1="12" x2="21" y2="12"/>
-                <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <img src="/static/logo.png" alt="Kaego Logo" class="logo">
     </div>
 
-    <div class="chat-messages" id="messages"></div>
-
-    <!-- Tombol Shortcut Pendidikan -->
-    <div class="shortcut-area" id="shortcutArea">
-        <button class="shortcut-btn" onclick="isiShortcut('buat-soal')">📝 Buat Soal</button>
-        <button class="shortcut-btn" onclick="isiShortcut('buat-rpp')">📋 Buat RPP</button>
-        <button class="shortcut-btn" onclick="isiShortcut('rangkuman')">📚 Rangkuman</button>
-        <button class="shortcut-btn" onclick="isiShortcut('koreksi')">✅ Koreksi</button>
-        <button class="shortcut-btn" onclick="isiShortcut('latihan')">🎯 Latihan Soal</button>
+    <div class="chat-area" id="chatArea">
+        <div class="chat-messages" id="messages"></div>
     </div>
 
     <div class="input-area">
@@ -263,19 +307,13 @@
             </div>
             <textarea id="input" placeholder="Tanya Kaego apa saja..." rows="1"></textarea>
             <button class="upload-btn" id="uploadBtn" title="Upload foto atau PDF">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.42 16.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.42 16.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
             </button>
             <button class="send-btn" id="btnKirim"></button>
         </div>
     </div>
 
     <script>
-        function setHeight() { document.body.style.height = window.innerHeight + 'px'; }
-        setHeight();
-        window.addEventListener('resize', setHeight);
-
         function getSapaan() {
             var jam = new Date().getHours();
             if (jam >= 5 && jam < 11) return "Selamat pagi ☀️";
@@ -289,50 +327,179 @@
         document.getElementById("welcomeName").textContent = namaUser;
         document.getElementById("namaUserSidebar").textContent = namaUser;
 
-        // Load foto profil di sidebar
-        fetch("/profil")
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
+        fetch("/profil").then(r=>r.json()).then(function(data) {
             if (data.profil && data.profil.foto_profil) {
                 document.getElementById("avatarSidebar").innerHTML = '<img src="' + data.profil.foto_profil + '" style="width:100%;height:100%;object-fit:cover;">';
             }
         });
 
-        // ===== SHORTCUT PENDIDIKAN =====
-        function isiShortcut(tipe) {
-            var input = document.getElementById("input");
-            var template = {
-                "buat-soal": "Buatkan 10 soal pilihan ganda mata pelajaran [isi mata pelajaran] kelas [isi kelas] tentang materi [isi materi]. Sertakan kunci jawaban.",
-                "buat-rpp": "Buatkan RPP (Rencana Pelaksanaan Pembelajaran) mata pelajaran [isi mata pelajaran] kelas [isi kelas] materi [isi materi] untuk [jumlah] pertemuan.",
-                "rangkuman": "Buatkan rangkuman materi [isi materi] untuk siswa kelas [isi kelas] dengan bahasa yang mudah dipahami.",
-                "koreksi": "Tolong koreksi jawaban siswa berikut dan berikan nilai serta penjelasan untuk setiap jawaban yang salah:\n\nSoal: [isi soal]\nJawaban siswa: [isi jawaban]",
-                "latihan": "Buatkan 5 soal latihan beserta pembahasannya untuk materi [isi materi] kelas [isi kelas]."
-            };
-            input.value = template[tipe] || "";
-            input.style.height = "auto";
-            input.style.height = Math.min(input.scrollHeight, 120) + "px";
-            input.focus();
-            sembunyikanWelcome();
+        // ===== MODAL FITUR PENDIDIKAN =====
+        var modalFitur = document.getElementById("modalFitur");
+        var modalFiturBox = document.getElementById("modalFiturBox");
+
+        var kontenFitur = {
+            rangkuman: {
+                judul: "📚 Rangkuman Materi",
+                html: `
+                    <div class="modal-label">Materi</div>
+                    <input class="modal-input" id="fRangkumanMateri" type="text" placeholder="Contoh: Fotosintesis">
+                    <div class="modal-label">Kelas</div>
+                    <input class="modal-input" id="fRangkumanKelas" type="text" placeholder="Contoh: 7 SMP">
+                    <button class="modal-btn modal-btn-rangkuman" onclick="kirimFitur('rangkuman')">Buat Rangkuman</button>`,
+                kirim: function() {
+                    var materi = document.getElementById("fRangkumanMateri").value.trim();
+                    var kelas = document.getElementById("fRangkumanKelas").value.trim();
+                    if (!materi) { showToast("Isi nama materi dulu!"); return; }
+                    var prompt = "Buatkan rangkuman materi " + materi;
+                    if (kelas) prompt += " untuk siswa kelas " + kelas;
+                    prompt += " dengan bahasa yang mudah dipahami. Sertakan poin-poin penting.";
+                    return prompt;
+                }
+            },
+            soal: {
+                judul: "📝 Buat Soal Otomatis",
+                html: `
+                    <div class="modal-label">Mata Pelajaran</div>
+                    <input class="modal-input" id="fSoalMapel" type="text" placeholder="Contoh: IPA">
+                    <div class="modal-label">Materi</div>
+                    <input class="modal-input" id="fSoalMateri" type="text" placeholder="Contoh: Sistem Pencernaan">
+                    <div class="modal-label">Kelas & Tipe Soal</div>
+                    <div class="modal-row" style="gap:8px;">
+                        <input class="modal-input" id="fSoalKelas" type="text" placeholder="Kelas" style="max-width:90px;">
+                        <select class="modal-select" id="fSoalTipe">
+                            <option value="pilihan ganda">Pilihan Ganda</option>
+                            <option value="essay">Essay</option>
+                            <option value="benar salah">Benar/Salah</option>
+                            <option value="isian singkat">Isian Singkat</option>
+                        </select>
+                        <select class="modal-select" id="fSoalJumlah" style="max-width:90px;">
+                            <option value="5">5 soal</option>
+                            <option value="10" selected>10 soal</option>
+                            <option value="15">15 soal</option>
+                            <option value="20">20 soal</option>
+                        </select>
+                    </div>
+                    <button class="modal-btn modal-btn-soal" onclick="kirimFitur('soal')">Buat Soal ✨</button>`,
+                kirim: function() {
+                    var mapel = document.getElementById("fSoalMapel").value.trim();
+                    var materi = document.getElementById("fSoalMateri").value.trim();
+                    var kelas = document.getElementById("fSoalKelas").value.trim();
+                    var tipe = document.getElementById("fSoalTipe").value;
+                    var jumlah = document.getElementById("fSoalJumlah").value;
+                    if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
+                    var prompt = "Buatkan " + jumlah + " soal " + tipe + " mata pelajaran " + mapel;
+                    if (kelas) prompt += " kelas " + kelas;
+                    prompt += " tentang materi " + materi + ". Sertakan kunci jawaban di akhir.";
+                    return prompt;
+                }
+            },
+            rpp: {
+                judul: "📋 Buat RPP",
+                html: `
+                    <div class="modal-label">Mata Pelajaran</div>
+                    <input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika">
+                    <div class="modal-label">Materi Pokok</div>
+                    <input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear">
+                    <div class="modal-label">Kelas & Kurikulum</div>
+                    <div class="modal-row" style="gap:8px;">
+                        <input class="modal-input" id="fRppKelas" type="text" placeholder="Kelas" style="max-width:90px;">
+                        <select class="modal-select" id="fRppKurikulum">
+                            <option value="Kurikulum Merdeka">Kurikulum Merdeka</option>
+                            <option value="K13">Kurikulum K13</option>
+                        </select>
+                        <select class="modal-select" id="fRppPertemuan" style="max-width:110px;">
+                            <option value="1">1 pertemuan</option>
+                            <option value="2" selected>2 pertemuan</option>
+                            <option value="3">3 pertemuan</option>
+                            <option value="4">4 pertemuan</option>
+                        </select>
+                    </div>
+                    <button class="modal-btn modal-btn-rpp" onclick="kirimFitur('rpp')">Buat RPP 📋</button>`,
+                kirim: function() {
+                    var mapel = document.getElementById("fRppMapel").value.trim();
+                    var materi = document.getElementById("fRppMateri").value.trim();
+                    var kelas = document.getElementById("fRppKelas").value.trim();
+                    var kurikulum = document.getElementById("fRppKurikulum").value;
+                    var pertemuan = document.getElementById("fRppPertemuan").value;
+                    if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
+                    var prompt = "Buatkan RPP " + kurikulum + " mata pelajaran " + mapel;
+                    if (kelas) prompt += " kelas " + kelas;
+                    prompt += " materi " + materi + " untuk " + pertemuan + " pertemuan. Lengkap dengan tujuan pembelajaran, kegiatan, dan penilaian.";
+                    return prompt;
+                }
+            },
+            koreksi: {
+                judul: "✅ Koreksi Jawaban",
+                html: `
+                    <div class="modal-label">Soal</div>
+                    <textarea class="modal-input" id="fKoreksiSoal" rows="3" placeholder="Tulis soalnya di sini..." style="resize:vertical;"></textarea>
+                    <div class="modal-label">Jawaban Siswa</div>
+                    <textarea class="modal-input" id="fKoreksiJawaban" rows="3" placeholder="Tulis jawaban siswa di sini..." style="resize:vertical;"></textarea>
+                    <button class="modal-btn modal-btn-rangkuman" onclick="kirimFitur('koreksi')">Koreksi Sekarang ✅</button>`,
+                kirim: function() {
+                    var soal = document.getElementById("fKoreksiSoal").value.trim();
+                    var jawaban = document.getElementById("fKoreksiJawaban").value.trim();
+                    if (!soal || !jawaban) { showToast("Isi soal dan jawaban siswa!"); return; }
+                    return "Tolong koreksi jawaban siswa berikut dan berikan nilai serta penjelasan:\n\nSoal: " + soal + "\n\nJawaban siswa: " + jawaban;
+                }
+            },
+            latihan: {
+                judul: "🎯 Latihan Soal",
+                html: `
+                    <div class="modal-label">Materi</div>
+                    <input class="modal-input" id="fLatihanMateri" type="text" placeholder="Contoh: Perang Dunia II">
+                    <div class="modal-label">Kelas</div>
+                    <input class="modal-input" id="fLatihanKelas" type="text" placeholder="Contoh: 11 SMA">
+                    <button class="modal-btn modal-btn-soal" onclick="kirimFitur('latihan')">Buat Latihan 🎯</button>`,
+                kirim: function() {
+                    var materi = document.getElementById("fLatihanMateri").value.trim();
+                    var kelas = document.getElementById("fLatihanKelas").value.trim();
+                    if (!materi) { showToast("Isi materi dulu!"); return; }
+                    var prompt = "Buatkan 5 soal latihan beserta pembahasannya untuk materi " + materi;
+                    if (kelas) prompt += " kelas " + kelas;
+                    return prompt;
+                }
+            }
+        };
+
+        var fiturAktif = null;
+
+        function bukaModalFitur(tipe) {
+            fiturAktif = tipe;
+            var f = kontenFitur[tipe];
+            modalFiturBox.innerHTML = `
+                <div class="modal-header">
+                    <span class="modal-title">${f.judul}</span>
+                    <button class="modal-close" onclick="tutupModalFitur()">✕</button>
+                </div>
+                ${f.html}`;
+            modalFitur.classList.add("show");
+            tutupSidebar();
         }
+
+        function tutupModalFitur() {
+            modalFitur.classList.remove("show");
+            fiturAktif = null;
+        }
+
+        function kirimFitur(tipe) {
+            var prompt = kontenFitur[tipe].kirim();
+            if (!prompt) return;
+            tutupModalFitur();
+            sembunyikanWelcome();
+            kirimPesan(prompt);
+        }
+
+        modalFitur.addEventListener("click", function(e) {
+            if (e.target === this) tutupModalFitur();
+        });
 
         // ===== SIDEBAR =====
         var sidebar = document.getElementById("sidebar");
         var overlay = document.getElementById("sidebarOverlay");
-        sidebar.classList.remove("open");
-        overlay.classList.remove("show");
 
-        function bukaSidebar() {
-            sidebar.classList.add("open");
-            overlay.classList.add("show");
-            overlay.style.pointerEvents = "all";
-            muatDaftarObrolan();
-        }
-
-        function tutupSidebar() {
-            sidebar.classList.remove("open");
-            overlay.classList.remove("show");
-            overlay.style.pointerEvents = "none";
-        }
+        function bukaSidebar() { sidebar.classList.add("open"); overlay.classList.add("show"); overlay.style.pointerEvents = "all"; muatDaftarObrolan(); }
+        function tutupSidebar() { sidebar.classList.remove("open"); overlay.classList.remove("show"); overlay.style.pointerEvents = "none"; }
 
         document.getElementById("menuBtn").addEventListener("click", bukaSidebar);
         document.getElementById("menuBtnWelcome").addEventListener("click", bukaSidebar);
@@ -340,35 +507,24 @@
         overlay.addEventListener("click", tutupSidebar);
 
         document.getElementById("toggleRiwayat").addEventListener("click", function() {
-            var list = document.getElementById("sidebarList");
-            var btn = document.getElementById("toggleRiwayat");
-            list.classList.toggle("open");
-            btn.classList.toggle("open");
+            document.getElementById("sidebarList").classList.toggle("open");
+            this.classList.toggle("open");
         });
 
-        document.getElementById("sidebarNewBtn").addEventListener("click", function() {
-            mulaiObrolanBaru();
-            tutupSidebar();
+        document.getElementById("toggleFitur").addEventListener("click", function() {
+            document.getElementById("fiturList").classList.toggle("open");
+            this.classList.toggle("open");
         });
+
+        document.getElementById("sidebarNewBtn").addEventListener("click", function() { mulaiObrolanBaru(); tutupSidebar(); });
 
         // ===== PROFIL =====
-        document.getElementById("btnProfil").addEventListener("click", function() {
-            bukaProfil();
-            tutupSidebar();
-        });
-
-        document.getElementById("tutupProfil").addEventListener("click", function() {
-            document.getElementById("modalProfil").classList.remove("show");
-        });
-
-        document.getElementById("modalProfil").addEventListener("click", function(e) {
-            if (e.target === this) this.classList.remove("show");
-        });
+        document.getElementById("btnProfil").addEventListener("click", function() { bukaProfil(); tutupSidebar(); });
+        document.getElementById("tutupProfil").addEventListener("click", function() { document.getElementById("modalProfil").classList.remove("show"); });
+        document.getElementById("modalProfil").addEventListener("click", function(e) { if (e.target === this) this.classList.remove("show"); });
 
         function bukaProfil() {
-            fetch("/profil")
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
+            fetch("/profil").then(r=>r.json()).then(function(data) {
                 if (data.profil) {
                     var p = data.profil;
                     document.getElementById("profilEmail").textContent = p.email || "-";
@@ -376,14 +532,9 @@
                     document.getElementById("profilFont").value = p.gaya_font || "default";
                     var wrap = document.getElementById("profilAvatarWrap");
                     if (p.foto_profil) {
-                        wrap.innerHTML = '<img class="profil-avatar" src="' + p.foto_profil + '" alt="Foto Profil">';
+                        wrap.innerHTML = '<img class="profil-avatar" src="' + p.foto_profil + '">';
                     } else {
-                        var emailHash = p.email ? p.email.trim().toLowerCase() : "";
-                        var gravatarUrl = "https://www.gravatar.com/avatar/" + md5(emailHash) + "?d=404&s=80";
-                        var img = new Image();
-                        img.onload = function() { wrap.innerHTML = '<img class="profil-avatar" src="' + gravatarUrl + '" alt="Foto Profil">'; };
-                        img.onerror = function() { wrap.innerHTML = '<div class="profil-avatar-placeholder">👤</div>'; };
-                        img.src = gravatarUrl;
+                        wrap.innerHTML = '<div class="profil-avatar-placeholder">👤</div>';
                     }
                 }
             });
@@ -391,13 +542,12 @@
         }
 
         document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
-            var file = e.target.files[0];
-            if (!file) return;
+            var file = e.target.files[0]; if (!file) return;
             var reader = new FileReader();
             reader.onload = function(ev) {
                 var base64 = ev.target.result;
                 document.getElementById("profilAvatarWrap").innerHTML = '<img class="profil-avatar" src="' + base64 + '">';
-                fetch("/profil/update", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({foto_profil: base64}) });
+                fetch("/profil/update", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto_profil:base64})});
             };
             reader.readAsDataURL(file);
         });
@@ -406,11 +556,10 @@
             var nama = document.getElementById("profilNama").value.trim();
             var font = document.getElementById("profilFont").value;
             if (!nama) { showToast("Nama tidak boleh kosong!"); return; }
-            fetch("/profil/update", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({nama: nama, gaya_font: font}) })
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
+            fetch("/profil/update", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nama:nama,gaya_font:font})})
+            .then(r=>r.json()).then(function(data) {
                 if (data.success) {
-                    var fontMap = { "default": "'Segoe UI', Arial, sans-serif", "serif": "Georgia, serif", "mono": "'Courier New', monospace", "rounded": "'Varela Round', sans-serif" };
+                    var fontMap = {"default":"'Segoe UI', Arial, sans-serif","serif":"Georgia, serif","mono":"'Courier New', monospace","rounded":"'Varela Round', sans-serif"};
                     document.body.style.fontFamily = fontMap[font] || fontMap["default"];
                     namaUser = nama;
                     document.getElementById("welcomeName").textContent = nama;
@@ -421,54 +570,13 @@
             });
         });
 
-        function md5(str) {
-            function safeAdd(x, y) { var lsw=(x&0xFFFF)+(y&0xFFFF); var msw=(x>>16)+(y>>16)+(lsw>>16); return (msw<<16)|(lsw&0xFFFF); }
-            function bitRotateLeft(num, cnt) { return (num<<cnt)|(num>>>(32-cnt)); }
-            function md5cmn(q,a,b,x,s,t) { return safeAdd(bitRotateLeft(safeAdd(safeAdd(a,q),safeAdd(x,t)),s),b); }
-            function md5ff(a,b,c,d,x,s,t) { return md5cmn((b&c)|((~b)&d),a,b,x,s,t); }
-            function md5gg(a,b,c,d,x,s,t) { return md5cmn((b&d)|(c&(~d)),a,b,x,s,t); }
-            function md5hh(a,b,c,d,x,s,t) { return md5cmn(b^c^d,a,b,x,s,t); }
-            function md5ii(a,b,c,d,x,s,t) { return md5cmn(c^(b|(~d)),a,b,x,s,t); }
-            var m=[], i, hex='', str2=unescape(encodeURIComponent(str));
-            var length8=str2.length*8;
-            for(i=0;i<str2.length;i++){m[i>>2]|=str2.charCodeAt(i)<<((i%4)*8);}
-            m[length8>>5]|=0x80<<(length8%32);m[(((length8+64)>>>9)<<4)+14]=length8;
-            var a=1732584193,b=-271733879,c=-1732584194,d=271733878;
-            for(i=0;i<m.length;i+=16){
-                var aa=a,bb=b,cc=c,dd=d;
-                a=md5ff(a,b,c,d,m[i+0],7,-680876936);d=md5ff(d,a,b,c,m[i+1],12,-389564586);c=md5ff(c,d,a,b,m[i+2],17,606105819);b=md5ff(b,c,d,a,m[i+3],22,-1044525330);
-                a=md5ff(a,b,c,d,m[i+4],7,-176418897);d=md5ff(d,a,b,c,m[i+5],12,1200080426);c=md5ff(c,d,a,b,m[i+6],17,-1473231341);b=md5ff(b,c,d,a,m[i+7],22,-45705983);
-                a=md5ff(a,b,c,d,m[i+8],7,1770035416);d=md5ff(d,a,b,c,m[i+9],12,-1958414417);c=md5ff(c,d,a,b,m[i+10],17,-42063);b=md5ff(b,c,d,a,m[i+11],22,-1990404162);
-                a=md5ff(a,b,c,d,m[i+12],7,1804603682);d=md5ff(d,a,b,c,m[i+13],12,-40341101);c=md5ff(c,d,a,b,m[i+14],17,-1502002290);b=md5ff(b,c,d,a,m[i+15],22,1236535329);
-                a=md5gg(a,b,c,d,m[i+1],5,-165796510);d=md5gg(d,a,b,c,m[i+6],9,-1069501632);c=md5gg(c,d,a,b,m[i+11],14,643717713);b=md5gg(b,c,d,a,m[i+0],20,-373897302);
-                a=md5gg(a,b,c,d,m[i+5],5,-701558691);d=md5gg(d,a,b,c,m[i+10],9,38016083);c=md5gg(c,d,a,b,m[i+15],14,-660478335);b=md5gg(b,c,d,a,m[i+4],20,-405537848);
-                a=md5gg(a,b,c,d,m[i+9],5,568446438);d=md5gg(d,a,b,c,m[i+14],9,-1019803690);c=md5gg(c,d,a,b,m[i+3],14,-187363961);b=md5gg(b,c,d,a,m[i+8],20,1163531501);
-                a=md5gg(a,b,c,d,m[i+13],5,-1444681467);d=md5gg(d,a,b,c,m[i+2],9,-51403784);c=md5gg(c,d,a,b,m[i+7],14,1735328473);b=md5gg(b,c,d,a,m[i+12],20,-1926607734);
-                a=md5hh(a,b,c,d,m[i+5],4,-378558);d=md5hh(d,a,b,c,m[i+8],11,-2022574463);c=md5hh(c,d,a,b,m[i+11],16,1839030562);b=md5hh(b,c,d,a,m[i+14],23,-35309556);
-                a=md5hh(a,b,c,d,m[i+1],4,-1530992060);d=md5hh(d,a,b,c,m[i+4],11,1272893353);c=md5hh(c,d,a,b,m[i+7],16,-155497632);b=md5hh(b,c,d,a,m[i+10],23,-1094730640);
-                a=md5hh(a,b,c,d,m[i+13],4,681279174);d=md5hh(d,a,b,c,m[i+0],11,-358537222);c=md5hh(c,d,a,b,m[i+3],16,-722521979);b=md5hh(b,c,d,a,m[i+6],23,76029189);
-                a=md5hh(a,b,c,d,m[i+9],4,-640364487);d=md5hh(d,a,b,c,m[i+12],11,-421815835);c=md5hh(c,d,a,b,m[i+15],16,530742520);b=md5hh(b,c,d,a,m[i+2],23,-995338651);
-                a=md5ii(a,b,c,d,m[i+0],6,-198630844);d=md5ii(d,a,b,c,m[i+7],10,1126891415);c=md5ii(c,d,a,b,m[i+14],15,-1416354905);b=md5ii(b,c,d,a,m[i+5],21,-57434055);
-                a=md5ii(a,b,c,d,m[i+12],6,1700485571);d=md5ii(d,a,b,c,m[i+3],10,-1894986606);c=md5ii(c,d,a,b,m[i+10],15,-1051523);b=md5ii(b,c,d,a,m[i+1],21,-2054922799);
-                a=md5ii(a,b,c,d,m[i+8],6,1873313359);d=md5ii(d,a,b,c,m[i+15],10,-30611744);c=md5ii(c,d,a,b,m[i+6],15,-1560198380);b=md5ii(b,c,d,a,m[i+13],21,1309151649);
-                a=md5ii(a,b,c,d,m[i+4],6,-145523070);d=md5ii(d,a,b,c,m[i+11],10,-1120210379);c=md5ii(c,d,a,b,m[i+2],15,718787259);b=md5ii(b,c,d,a,m[i+9],21,-343485551);
-                a=safeAdd(a,aa);b=safeAdd(b,bb);c=safeAdd(c,cc);d=safeAdd(d,dd);
-            }
-            var result=[a,b,c,d];
-            for(i=0;i<result.length;i++){var n=result[i];for(var j=0;j<4;j++){hex+=(((n>>>(j*8+4))&0x0F)).toString(16)+(((n>>>(j*8))&0x0F)).toString(16);}}
-            return hex;
-        }
-
         function muatDaftarObrolan() {
-            fetch("/daftar_obrolan")
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
+            fetch("/daftar_obrolan").then(r=>r.json()).then(function(data) {
                 var list = document.getElementById("sidebarList");
                 list.innerHTML = "";
                 if (!data.obrolan || data.obrolan.length === 0) { list.innerHTML = '<div class="sidebar-empty">Belum ada obrolan</div>'; return; }
                 data.obrolan.forEach(function(item) {
-                    var div = document.createElement("div");
-                    div.className = "sidebar-item";
+                    var div = document.createElement("div"); div.className = "sidebar-item";
                     div.textContent = item.judul || "Obrolan";
                     div.addEventListener("click", function() { bukaObrolan(item.id, item.judul); });
                     list.appendChild(div);
@@ -477,14 +585,12 @@
         }
 
         function bukaObrolan(id, judul) {
-            fetch("/buka_obrolan/" + id)
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
+            fetch("/buka_obrolan/" + id).then(r=>r.json()).then(function(data) {
                 var messages = document.getElementById("messages");
                 messages.innerHTML = "";
                 if (data.riwayat) {
                     data.riwayat.forEach(function(item) { tampilPesan(item.pesan, "user"); tampilPesan(item.jawaban, "kaego"); });
-                    messages.scrollTop = messages.scrollHeight;
+                    scrollKeBawah();
                 }
                 tutupSidebar();
                 sembunyikanWelcome();
@@ -493,41 +599,35 @@
         }
 
         function mulaiObrolanBaru() {
-            fetch("/reset", { method: "POST" })
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
+            fetch("/reset", {method:"POST"}).then(r=>r.json()).then(function(data) {
                 if (data.success) { document.getElementById("messages").innerHTML = ""; showToast("Obrolan baru dimulai!"); }
             });
         }
 
-        fetch("/riwayat")
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
+        fetch("/riwayat").then(r=>r.json()).then(function(data) {
             if (data.riwayat && data.riwayat.length > 0) {
                 data.riwayat.forEach(function(item) { tampilPesan(item.pesan, "user"); tampilPesan(item.jawaban, "kaego"); });
-                document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+                scrollKeBawah();
             }
         });
 
+        // Upload file
         var selectedFile = null;
         document.getElementById("uploadBtn").addEventListener("click", function() { document.getElementById("fileInput").click(); });
         document.getElementById("fileInput").addEventListener("change", function(e) {
-            var file = e.target.files[0];
-            if (!file) return;
+            var file = e.target.files[0]; if (!file) return;
             if (file.size > 5 * 1024 * 1024) { showToast("File terlalu besar (maks 5MB)"); this.value = ""; return; }
-            selectedFile = file;
-            tampilPreviewFile(file);
+            selectedFile = file; tampilPreviewFile(file);
         });
 
         function tampilPreviewFile(file) {
             document.getElementById("previewName").textContent = file.name;
             document.getElementById("previewSize").textContent = formatBytes(file.size);
-            var thumb = document.getElementById("previewThumb");
-            thumb.innerHTML = "";
+            var thumb = document.getElementById("previewThumb"); thumb.innerHTML = "";
             if (file.type.startsWith("image/")) {
                 var img = document.createElement("img"); img.className = "file-preview-thumb"; img.src = URL.createObjectURL(file); thumb.appendChild(img);
             } else {
-                var pdfIcon = document.createElement("div"); pdfIcon.className = "file-preview-pdf"; pdfIcon.textContent = "📄"; thumb.appendChild(pdfIcon);
+                var pdf = document.createElement("div"); pdf.className = "file-preview-pdf"; pdf.textContent = "📄"; thumb.appendChild(pdf);
             }
             document.getElementById("filePreview").style.display = "flex";
         }
@@ -545,6 +645,16 @@
         function showToast(msg) {
             var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
             setTimeout(function() { t.classList.remove("show"); }, 2500);
+        }
+
+        function scrollKeBawah() {
+            var chatArea = document.getElementById("chatArea");
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function sembunyikanWelcome() {
+            document.getElementById("welcomeScreen").classList.add("hidden");
+            setTimeout(function() { document.getElementById("welcomeScreen").style.display = "none"; }, 500);
         }
 
         document.getElementById("welcomeInput").addEventListener("keypress", function(e) {
@@ -568,13 +678,17 @@
             this.style.height = "auto"; this.style.height = Math.min(this.scrollHeight, 120) + "px";
         });
 
-        function sembunyikanWelcome() {
-            document.getElementById("welcomeScreen").classList.add("hidden");
-            setTimeout(function() { document.getElementById("welcomeScreen").style.display = "none"; }, 500);
-        }
-
         function loadingMulai() { var btn = document.getElementById("btnKirim"); btn.classList.add("loading"); btn.disabled = true; }
         function loadingSelesai() { var btn = document.getElementById("btnKirim"); btn.classList.remove("loading"); btn.disabled = false; }
+
+        function kirimPesan(teks) {
+            tampilPesan(teks, "user");
+            loadingMulai(); tampilTyping();
+            fetch("/chat", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pesan:teks})})
+            .then(r=>r.json())
+            .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.jawaban, "kaego"); })
+            .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+        }
 
         function kirim() {
             var pesan = document.getElementById("input").value.trim();
@@ -588,18 +702,14 @@
                 var formData = new FormData(); formData.append("file", selectedFile); formData.append("pesan", pesanFinal);
                 selectedFile = null; document.getElementById("fileInput").value = "";
                 loadingMulai(); tampilTyping();
-                fetch("/upload", { method: "POST", body: formData })
-                .then(function(res) { return res.json(); })
+                fetch("/upload", {method:"POST",body:formData})
+                .then(r=>r.json())
                 .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
                 .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego"); });
             } else {
-                tampilPesan(pesan, "user");
+                var teks = pesan;
                 document.getElementById("input").value = ""; document.getElementById("input").style.height = "auto";
-                loadingMulai(); tampilTyping();
-                fetch("/chat", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({pesan: pesan}) })
-                .then(function(res) { return res.json(); })
-                .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.jawaban, "kaego"); })
-                .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+                kirimPesan(teks);
             }
         }
 
@@ -616,7 +726,7 @@
             if (pesan && pesan !== "Tolong analisis file ini") {
                 var teksEl = document.createElement("div"); teksEl.style.fontSize = "15px"; teksEl.textContent = pesan; bubble.appendChild(teksEl);
             }
-            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper); messages.scrollTop = messages.scrollHeight;
+            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper); scrollKeBawah();
         }
 
         function tampilPesan(teks, tipe) {
@@ -633,14 +743,14 @@
                 teks = teks.replace(/^[\-\*]\s*/gm, '');
                 bubble.innerHTML = teks.split('\n').map(function(line) { return '<p>' + line + '</p>'; }).join('');
             } else { bubble.textContent = teks; }
-            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper); messages.scrollTop = messages.scrollHeight;
+            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper); scrollKeBawah();
         }
 
         function tampilTyping() {
             var messages = document.getElementById("messages");
             var div = document.createElement("div"); div.id = "typing"; div.className = "message";
             div.innerHTML = '<div class="avatar kaego"><img src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
-            messages.appendChild(div); messages.scrollTop = messages.scrollHeight;
+            messages.appendChild(div); scrollKeBawah();
         }
 
         function hapusTyping() { var typing = document.getElementById("typing"); if (typing) typing.remove(); }
