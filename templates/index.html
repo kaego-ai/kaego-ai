@@ -41,7 +41,7 @@
     .sidebar-overlay.show { display: block; }
 
     /* ===== MODAL PROFIL ===== */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: none; align-items: center; justify-content: center; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; }
     .modal-overlay.show { display: flex; }
     .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; width: 90%; max-width: 400px; }
     .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
@@ -191,9 +191,9 @@
         </div>
         <div class="sidebar-footer">
             <button class="sidebar-footer-item" id="btnProfil">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span id="namaUserSidebar"></span>
-            </button>
+    <div id="avatarSidebar" style="width:24px;height:24px;border-radius:50%;background:#2a2a2a;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;">👤</div>
+    <span id="namaUserSidebar"></span>
+</button>
             <button class="sidebar-footer-item" id="sidebarNewBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Obrolan Baru
@@ -276,6 +276,14 @@
         document.getElementById("welcomeGreeting").textContent = getSapaan();
         document.getElementById("welcomeName").textContent = namaUser;
         document.getElementById("namaUserSidebar").textContent = namaUser;
+        // Load foto profil di sidebar
+fetch("/profil")
+.then(function(res) { return res.json(); })
+.then(function(data) {
+    if (data.profil && data.profil.foto_profil) {
+        document.getElementById("avatarSidebar").innerHTML = '<img src="' + data.profil.foto_profil + '" style="width:100%;height:100%;object-fit:cover;">';
+    }
+});
 
         // ===== SIDEBAR =====
         var sidebar = document.getElementById("sidebar");
