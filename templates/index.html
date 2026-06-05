@@ -240,8 +240,8 @@
                     <span class="fitur-icon">📝</span> Buat Soal Otomatis
                 </button>
                 <button class="fitur-item" onclick="bukaModalFitur('rpp')">
-                    <span class="fitur-icon">📋</span> Buat RPP
-                </button>
+    <span class="fitur-icon">📋</span> Buat RPM
+</button>
                 <button class="fitur-item" onclick="bukaModalFitur('koreksi')">
                     <span class="fitur-icon">✅</span> Koreksi Jawaban
                 </button>
@@ -394,41 +394,84 @@
                 }
             },
             rpp: {
-                judul: "📋 Buat RPP",
-                html: `
-                    <div class="modal-label">Mata Pelajaran</div>
-                    <input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika">
-                    <div class="modal-label">Materi Pokok</div>
-                    <input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear">
-                    <div class="modal-label">Kelas & Kurikulum</div>
-                    <div class="modal-row" style="gap:8px;">
-                        <input class="modal-input" id="fRppKelas" type="text" placeholder="Kelas" style="max-width:90px;">
-                        <select class="modal-select" id="fRppKurikulum">
-                            <option value="Kurikulum Merdeka">Kurikulum Merdeka</option>
-                            <option value="K13">Kurikulum K13</option>
-                        </select>
-                        <select class="modal-select" id="fRppPertemuan" style="max-width:110px;">
-                            <option value="1">1 pertemuan</option>
-                            <option value="2" selected>2 pertemuan</option>
-                            <option value="3">3 pertemuan</option>
-                            <option value="4">4 pertemuan</option>
-                        </select>
-                    </div>
-                    <button class="modal-btn modal-btn-rpp" onclick="kirimFitur('rpp')">Buat RPP 📋</button>`,
-                kirim: function() {
-                    var mapel = document.getElementById("fRppMapel").value.trim();
-                    var materi = document.getElementById("fRppMateri").value.trim();
-                    var kelas = document.getElementById("fRppKelas").value.trim();
-                    var kurikulum = document.getElementById("fRppKurikulum").value;
-                    var pertemuan = document.getElementById("fRppPertemuan").value;
-                    if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
-                    var prompt = "Buatkan RPP " + kurikulum + " mata pelajaran " + mapel;
-                    if (kelas) prompt += " kelas " + kelas;
-                    prompt += " materi " + materi + " untuk " + pertemuan + " pertemuan. Lengkap dengan tujuan pembelajaran, kegiatan, dan penilaian.";
-                    return prompt;
-                }
-            },
-            koreksi: {
+    judul: "📋 Buat RPM",
+    html: `
+        <div class="modal-label">Mata Pelajaran</div>
+        <input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika">
+        <div class="modal-label">Materi Pokok</div>
+        <input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear">
+        <div class="modal-label">Kelas / Fase</div>
+        <div class="modal-row" style="gap:8px;">
+            <input class="modal-input" id="fRppKelas" type="text" placeholder="Contoh: 4 / Fase B" style="flex:1;">
+            <select class="modal-select" id="fRppPertemuan" style="max-width:120px;">
+                <option value="1">1 pertemuan</option>
+                <option value="2" selected>2 pertemuan</option>
+                <option value="3">3 pertemuan</option>
+                <option value="4">4 pertemuan</option>
+            </select>
+        </div>
+        <div class="modal-label">Nama Guru & Sekolah</div>
+        <input class="modal-input" id="fRppGuru" type="text" placeholder="Nama Guru">
+        <input class="modal-input" id="fRppSekolah" type="text" placeholder="Nama Sekolah" style="margin-top:8px;">
+        <button class="modal-btn modal-btn-rpp" onclick="kirimFitur('rpp')">Buat RPM 📋</button>`,
+    kirim: function() {
+        var mapel = document.getElementById("fRppMapel").value.trim();
+        var materi = document.getElementById("fRppMateri").value.trim();
+        var kelas = document.getElementById("fRppKelas").value.trim();
+        var pertemuan = document.getElementById("fRppPertemuan").value;
+        var guru = document.getElementById("fRppGuru").value.trim();
+        var sekolah = document.getElementById("fRppSekolah").value.trim();
+        if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
+        var prompt = `Buatkan RPM (Rencana Pembelajaran Mendalam) dengan format lengkap berikut:
+
+IDENTITAS:
+- Satuan Pendidikan: ${sekolah || "[nama sekolah]"}
+- Semester/Tahun: [semester/tahun]
+- Mata Pelajaran: ${mapel}
+- Kelas/Fase: ${kelas || "[kelas/fase]"}
+- Alokasi Waktu: ${pertemuan} pertemuan
+- Guru: ${guru || "[nama guru]"}
+
+IDENTIFIKASI MATA PELAJARAN:
+- Materi: ${materi}
+- Peserta Didik (Prasyarat): [isi prasyarat]
+- Dimensi Profil Lulusan: [pilih dari 8 profil]
+- Capaian Pembelajaran: [isi CP]
+- Lintas Disiplin Ilmu: [isi]
+- Tujuan Pembelajaran: [isi tujuan]
+- Topik Pembelajaran: [isi topik]
+
+EMPAT KERANGKA PEMBELAJARAN MENDALAM:
+1. Praktis Pedagogis: [isi]
+2. Kemitraan Pembelajaran: [isi]
+3. Lingkungan Pembelajaran: [isi]
+4. Pemanfaatan Digital: [isi]
+
+TABEL CAPAIAN DAN PROFIL LULUSAN:
+(NO | CAPAIAN PEMBELAJARAN | TUJUAN PEMBELAJARAN | 8 DIMENSI PROFIL LULUSAN)
+
+PENGALAMAN BELAJAR / LANGKAH-LANGKAH:
+- Awal/Apersepsi: [isi]
+- Inti: [isi langkah pembelajaran]
+- Penutup: [isi]
+
+ASESMEN:
+- Diagnostik: [isi]
+- Formatif: [isi]
+- Sumatif: [isi]
+
+PENGAYAAN DAN REMEDIAL:
+- Pengayaan: [isi]
+- Remedial: [isi]
+
+REFLEKSI:
+- Refleksi Peserta Didik: [isi]
+- Refleksi Pendidik: [isi]
+
+Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.`;
+        return prompt;
+    }
+},
                 judul: "✅ Koreksi Jawaban",
                 html: `
                     <div class="modal-label">Soal</div>
