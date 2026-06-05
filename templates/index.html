@@ -144,7 +144,7 @@
     <div class="toast" id="toast"></div>
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
     <input type="file" id="fotoProfilInput" accept="image/*" style="display:none">
-
+<input type="file" id="fotoKoreksiInput" accept="image/*" style="display:none">
     <div class="modal-overlay" id="modalFitur">
         <div class="modal-fitur" id="modalFiturBox"></div>
     </div>
@@ -372,16 +372,11 @@
                     return prompt;
                 }
             },
-            koreksi: {
-                judul: "✅ Koreksi Jawaban",
-                html: '<div class="modal-label">Soal</div><textarea class="modal-input" id="fKoreksiSoal" rows="3" placeholder="Tulis soalnya di sini..." style="resize:vertical;"></textarea><div class="modal-label">Jawaban Siswa</div><textarea class="modal-input" id="fKoreksiJawaban" rows="3" placeholder="Tulis jawaban siswa di sini..." style="resize:vertical;"></textarea><button class="modal-btn modal-btn-rangkuman" onclick="kirimFitur(\'koreksi\')">Koreksi Sekarang ✅</button>',
-                kirim: function() {
-                    var soal = document.getElementById("fKoreksiSoal").value.trim();
-                    var jawaban = document.getElementById("fKoreksiJawaban").value.trim();
-                    if (!soal || !jawaban) { showToast("Isi soal dan jawaban siswa!"); return; }
-                    return "Tolong koreksi jawaban siswa berikut dan berikan nilai serta penjelasan:\n\nSoal: " + soal + "\n\nJawaban siswa: " + jawaban;
-                }
-            },
+           koreksi: {
+    judul: "✅ Koreksi Jawaban Siswa",
+    html: '<div class="modal-label">Kunci Jawaban (simpan sekali, pakai berkali-kali)</div><textarea class="modal-input" id="fKoreksiKunci" rows="4" placeholder="Tulis kunci jawaban di sini..." style="resize:vertical;"></textarea><button onclick="simpanKunci()" style="background:#34d399;color:#080f0b;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;margin-top:8px;width:100%;">💾 Simpan Kunci Jawaban</button><div style="border-top:1px solid #333;margin:16px 0;"></div><div class="modal-label">Upload Foto Tugas Siswa</div><div class="modal-label">Nama Siswa</div><input class="modal-input" id="fKoreksiNama" type="text" placeholder="Contoh: Budi"><div style="margin-top:10px;"><button onclick="document.getElementById(\'fotoKoreksiInput\').click()" style="background:#1a6bff;color:white;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;width:100%;">📸 Pilih Foto Tugas Siswa</button></div><div id="previewKoreksi" style="margin-top:8px;display:none;"><img id="imgKoreksiPreview" style="max-width:100%;border-radius:8px;border:1px solid #333;"></div><button class="modal-btn modal-btn-rangkuman" onclick="kirimKoreksi()" style="margin-top:16px;">✅ Koreksi Sekarang</button>',
+    kirim: function() { return null; }
+},
             latihan: {
                 judul: "🎯 Latihan Soal",
                 html: '<div class="modal-label">Materi</div><input class="modal-input" id="fLatihanMateri" type="text" placeholder="Contoh: Perang Dunia II"><div class="modal-label">Kelas</div><input class="modal-input" id="fLatihanKelas" type="text" placeholder="Contoh: 11 SMA"><button class="modal-btn modal-btn-soal" onclick="kirimFitur(\'latihan\')">Buat Latihan 🎯</button>',
@@ -464,6 +459,16 @@
         }
 
         document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
+            document.getElementById("fotoKoreksiInput").addEventListener("change", function(e) {
+    var file = e.target.files[0]; if (!file) return;
+    fotoKoreksiFile = file;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+        document.getElementById("imgKoreksiPreview").src = ev.target.result;
+        document.getElementById("previewKoreksi").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+});
             var file = e.target.files[0]; if (!file) return;
             var reader = new FileReader();
             reader.onload = function(ev) {
@@ -700,7 +705,39 @@
             div.innerHTML = '<div class="avatar kaego"><img src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
             messages.appendChild(div); scrollKeBawah();
         }
+function simpanKunci() {
+    var kunci = document.getElementById("fKoreksiKunci").value.trim();
+    if (!kunci) { showToast("Isi kunci jawaban dulu!"); return; }
+    fetch("/simpan_kunci", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({kunci: kunci})
+    })
+    .then(function(r){return r.json();})
+    .then(function(data) {
+        if (data.success) showToast("Kunci jawaban tersimpan! ✅");
+    });
+}
 
+var fotoKoreksiFile = null;
+
+function kirimKoreksi() {
+    var nama = document.getElementById("fKoreksiNama").value.trim() || "Siswa";
+    if (!fotoKoreksiFile) { showToast("Pilih foto tugas siswa dulu!"); return; }
+    tutupModalFitur();
+    sembunyikanWelcome();
+    var pesanKoreksi = "Tolong koreksi jawaban siswa bernama " + nama + " pada foto ini. Berikan nilai (0-100) dan penjelasan untuk setiap jawaban yang salah.";
+    tampilPesanFile(fotoKoreksiFile, pesanKoreksi);
+    var formData = new FormData();
+    formData.append("file", fotoKoreksiFile);
+    formData.append("pesan", pesanKoreksi);
+    fotoKoreksiFile = null;
+    loadingMulai(); tampilTyping();
+    fetch("/upload", {method:"POST", body:formData})
+    .then(function(r){return r.json();})
+    .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
+    .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+}
         function hapusTyping() { var typing = document.getElementById("typing"); if (typing) typing.remove(); }
     </script>
 </body>
