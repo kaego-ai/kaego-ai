@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -34,8 +33,6 @@
     .sidebar-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-item.active { background: #1a2a3a; color: #4a9eff; }
     .sidebar-empty { font-size: 13px; color: #555; text-align: center; padding: 16px 0; }
-
-    /* ===== FITUR PENDIDIKAN DI SIDEBAR ===== */
     .fitur-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #1a1a1a; border: none; border-radius: 10px; color: #ccc; font-size: 13px; cursor: pointer; font-family: inherit; transition: background 0.2s; margin-bottom: 4px; margin-top: 8px; }
     .fitur-toggle:hover { background: #222; color: #fff; }
     .fitur-toggle.open svg.chevron { transform: rotate(180deg); }
@@ -45,31 +42,24 @@
     .fitur-item { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; color: #aaa; transition: background 0.2s, color 0.2s; border: none; background: transparent; font-family: inherit; width: 100%; text-align: left; }
     .fitur-item:hover { background: #1a1a1a; color: #fff; }
     .fitur-item .fitur-icon { font-size: 15px; flex-shrink: 0; }
-
-    /* ===== MODAL FITUR PENDIDIKAN ===== */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
     .modal-overlay.show { display: flex; }
-    .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px 20px 0 0; padding: 24px; width: 100%; max-width: 500px; }
-    .modal-fitur { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px 20px 0 0; padding: 24px; width: 100%; max-width: 500px; }
+    .modal-fitur { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px 20px 0 0; padding: 24px; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; }
     .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
     .modal-title { font-size: 16px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 8px; }
     .modal-close { background: transparent; border: none; cursor: pointer; color: #666; font-size: 20px; line-height: 1; transition: color 0.2s; }
     .modal-close:hover { color: #fff; }
     .modal-label { font-size: 12px; color: #888; margin-bottom: 6px; margin-top: 12px; }
-    .modal-label:first-of-type { margin-top: 0; }
     .modal-input { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; }
     .modal-input:focus { border-color: #1a6bff; }
     .modal-select { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; cursor: pointer; }
     .modal-select:focus { border-color: #1a6bff; }
     .modal-row { display: flex; gap: 8px; }
-    .modal-row .modal-input, .modal-row .modal-select { margin-bottom: 0; }
     .modal-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 600; margin-top: 20px; transition: opacity 0.2s; }
     .modal-btn:hover { opacity: 0.85; }
     .modal-btn-rangkuman { background: #1a6bff; color: white; }
     .modal-btn-soal { background: #f0b429; color: #0f0f08; }
     .modal-btn-rpp { background: #34d399; color: #080f0b; }
-
-    /* ===== MODAL PROFIL ===== */
     .modal-profil-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; }
     .modal-profil-overlay.show { display: flex; }
     .modal-profil { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
@@ -82,21 +72,16 @@
     .profil-select { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 20px; cursor: pointer; }
     .profil-btn { width: 100%; padding: 12px; background: #1a6bff; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; }
     .profil-btn:hover { background: #0055dd; }
-
     .sidebar-footer { padding: 12px 8px; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 4px; }
     .sidebar-footer-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; font-size: 13px; color: #888; cursor: pointer; background: transparent; border: none; font-family: inherit; transition: background 0.2s, color 0.2s; width: 100%; text-align: left; text-decoration: none; }
     .sidebar-footer-item:hover { background: #1a1a1a; color: #fff; }
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; display: none; pointer-events: none; }
     .sidebar-overlay.show { display: block; }
-
-    /* ===== HEADER ===== */
     .header { padding: 8px 20px; display: flex; align-items: center; gap: 8px; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; flex-shrink: 0; z-index: 100; }
     .header img.logo { height: 40px; width: auto; max-width: 150px; }
     .menu-btn { background: transparent; border: none; cursor: pointer; color: #888; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 8px; transition: color 0.2s; flex-shrink: 0; }
     .menu-btn:hover { color: #fff; }
     .menu-btn svg { width: 22px; height: 22px; }
-
-    /* ===== CHAT ===== */
     .chat-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 0; }
     .chat-messages { padding: 24px; display: flex; flex-direction: column; gap: 20px; max-width: 800px; width: 100%; margin: 0 auto; }
     .message { display: flex; gap: 12px; align-items: flex-start; }
@@ -109,8 +94,6 @@
     .bubble.user { background: #1a6bff; color: white; border-bottom-right-radius: 4px; }
     .bubble.kaego { background: #1e1e1e; color: #e0e0e0; border-bottom-left-radius: 4px; border: 1px solid #2a2a2a; }
     .bubble p { margin: 3px 0; font-size: 15px; }
-
-    /* ===== INPUT ===== */
     .input-area { padding: 8px 24px 16px; background: #0f0f0f; border-top: 1px solid #1a1a1a; flex-shrink: 0; z-index: 100; }
     .input-box { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
@@ -138,8 +121,6 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0f0f0f; }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-
-    /* ===== HALAMAN SAMBUTAN ===== */
     .welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; transition: opacity 0.5s ease; pointer-events: all; }
     .welcome-screen.hidden { opacity: 0; pointer-events: none; }
     .welcome-top { position: absolute; top: 16px; left: 16px; z-index: 1001; pointer-events: all; }
@@ -164,23 +145,17 @@
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
     <input type="file" id="fotoProfilInput" accept="image/*" style="display:none">
 
-    <!-- Modal Fitur Pendidikan -->
     <div class="modal-overlay" id="modalFitur">
-        <div class="modal-fitur" id="modalFiturBox">
-            <!-- diisi dinamis -->
-        </div>
+        <div class="modal-fitur" id="modalFiturBox"></div>
     </div>
 
-    <!-- Modal Profil -->
     <div class="modal-profil-overlay" id="modalProfil">
         <div class="modal-profil">
             <div class="modal-header">
                 <span class="modal-title">Profil Saya</span>
                 <button class="modal-close" id="tutupProfil">✕</button>
             </div>
-            <div id="profilAvatarWrap">
-                <div class="profil-avatar-placeholder">👤</div>
-            </div>
+            <div id="profilAvatarWrap"><div class="profil-avatar-placeholder">👤</div></div>
             <div style="text-align:center;margin-bottom:16px;">
                 <button onclick="document.getElementById('fotoProfilInput').click()" style="background:transparent;border:1px solid #333;color:#888;font-size:12px;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:inherit;">Ganti Foto</button>
             </div>
@@ -199,10 +174,8 @@
         </div>
     </div>
 
-    <!-- Sidebar overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button class="sidebar-back" id="backBtn">
@@ -211,8 +184,6 @@
             <img src="/static/logo.png" style="height:32px;width:auto;max-width:140px;">
         </div>
         <div class="sidebar-body">
-
-            <!-- Riwayat Obrolan -->
             <button class="riwayat-toggle" id="toggleRiwayat">
                 <span style="display:flex;align-items:center;gap:8px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -223,8 +194,6 @@
             <div class="sidebar-list" id="sidebarList">
                 <div class="sidebar-empty">Belum ada obrolan</div>
             </div>
-
-            <!-- Fitur Pendidikan -->
             <button class="fitur-toggle" id="toggleFitur">
                 <span style="display:flex;align-items:center;gap:8px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -233,23 +202,12 @@
                 <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="fitur-list" id="fiturList">
-                <button class="fitur-item" onclick="bukaModalFitur('rangkuman')">
-                    <span class="fitur-icon">📚</span> Rangkuman Materi
-                </button>
-                <button class="fitur-item" onclick="bukaModalFitur('soal')">
-                    <span class="fitur-icon">📝</span> Buat Soal Otomatis
-                </button>
-                <button class="fitur-item" onclick="bukaModalFitur('rpp')">
-    <span class="fitur-icon">📋</span> Buat RPM
-</button>
-                <button class="fitur-item" onclick="bukaModalFitur('koreksi')">
-                    <span class="fitur-icon">✅</span> Koreksi Jawaban
-                </button>
-                <button class="fitur-item" onclick="bukaModalFitur('latihan')">
-                    <span class="fitur-icon">🎯</span> Latihan Soal
-                </button>
+                <button class="fitur-item" onclick="bukaModalFitur('rangkuman')"><span class="fitur-icon">📚</span> Rangkuman Materi</button>
+                <button class="fitur-item" onclick="bukaModalFitur('soal')"><span class="fitur-icon">📝</span> Buat Soal Otomatis</button>
+                <button class="fitur-item" onclick="bukaModalFitur('rpp')"><span class="fitur-icon">📋</span> Buat RPM</button>
+                <button class="fitur-item" onclick="bukaModalFitur('koreksi')"><span class="fitur-icon">✅</span> Koreksi Jawaban</button>
+                <button class="fitur-item" onclick="bukaModalFitur('latihan')"><span class="fitur-icon">🎯</span> Latihan Soal</button>
             </div>
-
         </div>
         <div class="sidebar-footer">
             <button class="sidebar-footer-item" id="btnProfil">
@@ -267,7 +225,6 @@
         </div>
     </div>
 
-    <!-- Halaman Sambutan -->
     <div class="welcome-screen" id="welcomeScreen">
         <div class="welcome-top">
             <button class="menu-btn" id="menuBtnWelcome">
@@ -283,7 +240,6 @@
         </div>
     </div>
 
-    <!-- Header -->
     <div class="header">
         <button class="menu-btn" id="menuBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -327,7 +283,7 @@
         document.getElementById("welcomeName").textContent = namaUser;
         document.getElementById("namaUserSidebar").textContent = namaUser;
 
-        fetch("/profil").then(r=>r.json()).then(function(data) {
+        fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             if (data.profil && data.profil.foto_profil) {
                 document.getElementById("avatarSidebar").innerHTML = '<img src="' + data.profil.foto_profil + '" style="width:100%;height:100%;object-fit:cover;">';
             }
@@ -340,12 +296,7 @@
         var kontenFitur = {
             rangkuman: {
                 judul: "📚 Rangkuman Materi",
-                html: `
-                    <div class="modal-label">Materi</div>
-                    <input class="modal-input" id="fRangkumanMateri" type="text" placeholder="Contoh: Fotosintesis">
-                    <div class="modal-label">Kelas</div>
-                    <input class="modal-input" id="fRangkumanKelas" type="text" placeholder="Contoh: 7 SMP">
-                    <button class="modal-btn modal-btn-rangkuman" onclick="kirimFitur('rangkuman')">Buat Rangkuman</button>`,
+                html: '<div class="modal-label">Materi</div><input class="modal-input" id="fRangkumanMateri" type="text" placeholder="Contoh: Fotosintesis"><div class="modal-label">Kelas</div><input class="modal-input" id="fRangkumanKelas" type="text" placeholder="Contoh: 7 SMP"><button class="modal-btn modal-btn-rangkuman" onclick="kirimFitur(\'rangkuman\')">Buat Rangkuman</button>',
                 kirim: function() {
                     var materi = document.getElementById("fRangkumanMateri").value.trim();
                     var kelas = document.getElementById("fRangkumanKelas").value.trim();
@@ -358,28 +309,7 @@
             },
             soal: {
                 judul: "📝 Buat Soal Otomatis",
-                html: `
-                    <div class="modal-label">Mata Pelajaran</div>
-                    <input class="modal-input" id="fSoalMapel" type="text" placeholder="Contoh: IPA">
-                    <div class="modal-label">Materi</div>
-                    <input class="modal-input" id="fSoalMateri" type="text" placeholder="Contoh: Sistem Pencernaan">
-                    <div class="modal-label">Kelas & Tipe Soal</div>
-                    <div class="modal-row" style="gap:8px;">
-                        <input class="modal-input" id="fSoalKelas" type="text" placeholder="Kelas" style="max-width:90px;">
-                        <select class="modal-select" id="fSoalTipe">
-                            <option value="pilihan ganda">Pilihan Ganda</option>
-                            <option value="essay">Essay</option>
-                            <option value="benar salah">Benar/Salah</option>
-                            <option value="isian singkat">Isian Singkat</option>
-                        </select>
-                        <select class="modal-select" id="fSoalJumlah" style="max-width:90px;">
-                            <option value="5">5 soal</option>
-                            <option value="10" selected>10 soal</option>
-                            <option value="15">15 soal</option>
-                            <option value="20">20 soal</option>
-                        </select>
-                    </div>
-                    <button class="modal-btn modal-btn-soal" onclick="kirimFitur('soal')">Buat Soal ✨</button>`,
+                html: '<div class="modal-label">Mata Pelajaran</div><input class="modal-input" id="fSoalMapel" type="text" placeholder="Contoh: IPA"><div class="modal-label">Materi</div><input class="modal-input" id="fSoalMateri" type="text" placeholder="Contoh: Sistem Pencernaan"><div class="modal-label">Kelas & Tipe Soal</div><div class="modal-row" style="gap:8px;"><input class="modal-input" id="fSoalKelas" type="text" placeholder="Kelas" style="max-width:90px;"><select class="modal-select" id="fSoalTipe"><option value="pilihan ganda">Pilihan Ganda</option><option value="essay">Essay</option><option value="benar salah">Benar/Salah</option><option value="isian singkat">Isian Singkat</option></select><select class="modal-select" id="fSoalJumlah" style="max-width:90px;"><option value="5">5 soal</option><option value="10" selected>10 soal</option><option value="15">15 soal</option><option value="20">20 soal</option></select></div><button class="modal-btn modal-btn-soal" onclick="kirimFitur(\'soal\')">Buat Soal ✨</button>',
                 kirim: function() {
                     var mapel = document.getElementById("fSoalMapel").value.trim();
                     var materi = document.getElementById("fSoalMateri").value.trim();
@@ -394,91 +324,58 @@
                 }
             },
             rpp: {
-    judul: "📋 Buat RPM",
-    html: `
-        <div class="modal-label">Mata Pelajaran</div>
-        <input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika">
-        <div class="modal-label">Materi Pokok</div>
-        <input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear">
-        <div class="modal-label">Kelas / Fase</div>
-        <div class="modal-row" style="gap:8px;">
-            <input class="modal-input" id="fRppKelas" type="text" placeholder="Contoh: 4 / Fase B" style="flex:1;">
-            <select class="modal-select" id="fRppPertemuan" style="max-width:120px;">
-                <option value="1">1 pertemuan</option>
-                <option value="2" selected>2 pertemuan</option>
-                <option value="3">3 pertemuan</option>
-                <option value="4">4 pertemuan</option>
-            </select>
-        </div>
-        <div class="modal-label">Nama Guru & Sekolah</div>
-        <input class="modal-input" id="fRppGuru" type="text" placeholder="Nama Guru">
-        <input class="modal-input" id="fRppSekolah" type="text" placeholder="Nama Sekolah" style="margin-top:8px;">
-        <button class="modal-btn modal-btn-rpp" onclick="kirimFitur('rpp')">Buat RPM 📋</button>`,
-    kirim: function() {
-        var mapel = document.getElementById("fRppMapel").value.trim();
-        var materi = document.getElementById("fRppMateri").value.trim();
-        var kelas = document.getElementById("fRppKelas").value.trim();
-        var pertemuan = document.getElementById("fRppPertemuan").value;
-        var guru = document.getElementById("fRppGuru").value.trim();
-        var sekolah = document.getElementById("fRppSekolah").value.trim();
-        if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
-        var prompt = `Buatkan RPM (Rencana Pembelajaran Mendalam) dengan format lengkap berikut:
-
-IDENTITAS:
-- Satuan Pendidikan: ${sekolah || "[nama sekolah]"}
-- Semester/Tahun: [semester/tahun]
-- Mata Pelajaran: ${mapel}
-- Kelas/Fase: ${kelas || "[kelas/fase]"}
-- Alokasi Waktu: ${pertemuan} pertemuan
-- Guru: ${guru || "[nama guru]"}
-
-IDENTIFIKASI MATA PELAJARAN:
-- Materi: ${materi}
-- Peserta Didik (Prasyarat): [isi prasyarat]
-- Dimensi Profil Lulusan: [pilih dari 8 profil]
-- Capaian Pembelajaran: [isi CP]
-- Lintas Disiplin Ilmu: [isi]
-- Tujuan Pembelajaran: [isi tujuan]
-- Topik Pembelajaran: [isi topik]
-
-EMPAT KERANGKA PEMBELAJARAN MENDALAM:
-1. Praktis Pedagogis: [isi]
-2. Kemitraan Pembelajaran: [isi]
-3. Lingkungan Pembelajaran: [isi]
-4. Pemanfaatan Digital: [isi]
-
-TABEL CAPAIAN DAN PROFIL LULUSAN:
-(NO | CAPAIAN PEMBELAJARAN | TUJUAN PEMBELAJARAN | 8 DIMENSI PROFIL LULUSAN)
-
-PENGALAMAN BELAJAR / LANGKAH-LANGKAH:
-- Awal/Apersepsi: [isi]
-- Inti: [isi langkah pembelajaran]
-- Penutup: [isi]
-
-ASESMEN:
-- Diagnostik: [isi]
-- Formatif: [isi]
-- Sumatif: [isi]
-
-PENGAYAAN DAN REMEDIAL:
-- Pengayaan: [isi]
-- Remedial: [isi]
-
-REFLEKSI:
-- Refleksi Peserta Didik: [isi]
-- Refleksi Pendidik: [isi]
-
-Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.`;
-        return prompt;
-    }
-},
+                judul: "📋 Buat RPM",
+                html: '<div class="modal-label">Mata Pelajaran</div><input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika"><div class="modal-label">Materi Pokok</div><input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear"><div class="modal-label">Kelas / Fase</div><div class="modal-row" style="gap:8px;"><input class="modal-input" id="fRppKelas" type="text" placeholder="Contoh: 4 / Fase B" style="flex:1;"><select class="modal-select" id="fRppPertemuan" style="max-width:120px;"><option value="1">1 pertemuan</option><option value="2" selected>2 pertemuan</option><option value="3">3 pertemuan</option><option value="4">4 pertemuan</option></select></div><div class="modal-label">Nama Guru</div><input class="modal-input" id="fRppGuru" type="text" placeholder="Nama Guru"><div class="modal-label">Nama Sekolah</div><input class="modal-input" id="fRppSekolah" type="text" placeholder="Nama Sekolah"><button class="modal-btn modal-btn-rpp" onclick="kirimFitur(\'rpp\')">Buat RPM 📋</button>',
+                kirim: function() {
+                    var mapel = document.getElementById("fRppMapel").value.trim();
+                    var materi = document.getElementById("fRppMateri").value.trim();
+                    var kelas = document.getElementById("fRppKelas").value.trim();
+                    var pertemuan = document.getElementById("fRppPertemuan").value;
+                    var guru = document.getElementById("fRppGuru").value.trim();
+                    var sekolah = document.getElementById("fRppSekolah").value.trim();
+                    if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
+                    var prompt = "Buatkan RPM (Rencana Pembelajaran Mendalam) lengkap dengan format berikut:\n\n";
+                    prompt += "IDENTITAS:\n";
+                    prompt += "- Satuan Pendidikan: " + (sekolah || "[nama sekolah]") + "\n";
+                    prompt += "- Semester/Tahun: [semester/tahun]\n";
+                    prompt += "- Mata Pelajaran: " + mapel + "\n";
+                    prompt += "- Kelas/Fase: " + (kelas || "[kelas/fase]") + "\n";
+                    prompt += "- Alokasi Waktu: " + pertemuan + " pertemuan\n";
+                    prompt += "- Guru: " + (guru || "[nama guru]") + "\n\n";
+                    prompt += "IDENTIFIKASI MATA PELAJARAN:\n";
+                    prompt += "- Materi: " + materi + "\n";
+                    prompt += "- Peserta Didik (Prasyarat): [isi]\n";
+                    prompt += "- Dimensi Profil Lulusan: [pilih dari 8 profil]\n";
+                    prompt += "- Capaian Pembelajaran: [isi CP]\n";
+                    prompt += "- Lintas Disiplin Ilmu: [isi]\n";
+                    prompt += "- Tujuan Pembelajaran: [isi tujuan]\n";
+                    prompt += "- Topik Pembelajaran: [isi topik]\n\n";
+                    prompt += "EMPAT KERANGKA PEMBELAJARAN MENDALAM:\n";
+                    prompt += "1. Praktis Pedagogis: [isi]\n";
+                    prompt += "2. Kemitraan Pembelajaran: [isi]\n";
+                    prompt += "3. Lingkungan Pembelajaran: [isi]\n";
+                    prompt += "4. Pemanfaatan Digital: [isi]\n\n";
+                    prompt += "PENGALAMAN BELAJAR:\n";
+                    prompt += "- Awal/Apersepsi: [isi]\n";
+                    prompt += "- Inti: [isi langkah pembelajaran]\n";
+                    prompt += "- Penutup: [isi]\n\n";
+                    prompt += "ASESMEN:\n";
+                    prompt += "- Diagnostik: [isi]\n";
+                    prompt += "- Formatif: [isi]\n";
+                    prompt += "- Sumatif: [isi]\n\n";
+                    prompt += "PENGAYAAN DAN REMEDIAL:\n";
+                    prompt += "- Pengayaan: [isi]\n";
+                    prompt += "- Remedial: [isi]\n\n";
+                    prompt += "REFLEKSI:\n";
+                    prompt += "- Refleksi Peserta Didik: [isi]\n";
+                    prompt += "- Refleksi Pendidik: [isi]\n\n";
+                    prompt += "Tolong lengkapi semua bagian dengan konten yang sesuai materi " + materi + ".";
+                    return prompt;
+                }
+            },
+            koreksi: {
                 judul: "✅ Koreksi Jawaban",
-                html: `
-                    <div class="modal-label">Soal</div>
-                    <textarea class="modal-input" id="fKoreksiSoal" rows="3" placeholder="Tulis soalnya di sini..." style="resize:vertical;"></textarea>
-                    <div class="modal-label">Jawaban Siswa</div>
-                    <textarea class="modal-input" id="fKoreksiJawaban" rows="3" placeholder="Tulis jawaban siswa di sini..." style="resize:vertical;"></textarea>
-                    <button class="modal-btn modal-btn-rangkuman" onclick="kirimFitur('koreksi')">Koreksi Sekarang ✅</button>`,
+                html: '<div class="modal-label">Soal</div><textarea class="modal-input" id="fKoreksiSoal" rows="3" placeholder="Tulis soalnya di sini..." style="resize:vertical;"></textarea><div class="modal-label">Jawaban Siswa</div><textarea class="modal-input" id="fKoreksiJawaban" rows="3" placeholder="Tulis jawaban siswa di sini..." style="resize:vertical;"></textarea><button class="modal-btn modal-btn-rangkuman" onclick="kirimFitur(\'koreksi\')">Koreksi Sekarang ✅</button>',
                 kirim: function() {
                     var soal = document.getElementById("fKoreksiSoal").value.trim();
                     var jawaban = document.getElementById("fKoreksiJawaban").value.trim();
@@ -488,12 +385,7 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
             },
             latihan: {
                 judul: "🎯 Latihan Soal",
-                html: `
-                    <div class="modal-label">Materi</div>
-                    <input class="modal-input" id="fLatihanMateri" type="text" placeholder="Contoh: Perang Dunia II">
-                    <div class="modal-label">Kelas</div>
-                    <input class="modal-input" id="fLatihanKelas" type="text" placeholder="Contoh: 11 SMA">
-                    <button class="modal-btn modal-btn-soal" onclick="kirimFitur('latihan')">Buat Latihan 🎯</button>`,
+                html: '<div class="modal-label">Materi</div><input class="modal-input" id="fLatihanMateri" type="text" placeholder="Contoh: Perang Dunia II"><div class="modal-label">Kelas</div><input class="modal-input" id="fLatihanKelas" type="text" placeholder="Contoh: 11 SMA"><button class="modal-btn modal-btn-soal" onclick="kirimFitur(\'latihan\')">Buat Latihan 🎯</button>',
                 kirim: function() {
                     var materi = document.getElementById("fLatihanMateri").value.trim();
                     var kelas = document.getElementById("fLatihanKelas").value.trim();
@@ -510,20 +402,12 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
         function bukaModalFitur(tipe) {
             fiturAktif = tipe;
             var f = kontenFitur[tipe];
-            modalFiturBox.innerHTML = `
-                <div class="modal-header">
-                    <span class="modal-title">${f.judul}</span>
-                    <button class="modal-close" onclick="tutupModalFitur()">✕</button>
-                </div>
-                ${f.html}`;
+            modalFiturBox.innerHTML = '<div class="modal-header"><span class="modal-title">' + f.judul + '</span><button class="modal-close" onclick="tutupModalFitur()">✕</button></div>' + f.html;
             modalFitur.classList.add("show");
             tutupSidebar();
         }
 
-        function tutupModalFitur() {
-            modalFitur.classList.remove("show");
-            fiturAktif = null;
-        }
+        function tutupModalFitur() { modalFitur.classList.remove("show"); fiturAktif = null; }
 
         function kirimFitur(tipe) {
             var prompt = kontenFitur[tipe].kirim();
@@ -533,11 +417,8 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
             kirimPesan(prompt);
         }
 
-        modalFitur.addEventListener("click", function(e) {
-            if (e.target === this) tutupModalFitur();
-        });
+        modalFitur.addEventListener("click", function(e) { if (e.target === this) tutupModalFitur(); });
 
-        // ===== SIDEBAR =====
         var sidebar = document.getElementById("sidebar");
         var overlay = document.getElementById("sidebarOverlay");
 
@@ -561,13 +442,12 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
 
         document.getElementById("sidebarNewBtn").addEventListener("click", function() { mulaiObrolanBaru(); tutupSidebar(); });
 
-        // ===== PROFIL =====
         document.getElementById("btnProfil").addEventListener("click", function() { bukaProfil(); tutupSidebar(); });
         document.getElementById("tutupProfil").addEventListener("click", function() { document.getElementById("modalProfil").classList.remove("show"); });
         document.getElementById("modalProfil").addEventListener("click", function(e) { if (e.target === this) this.classList.remove("show"); });
 
         function bukaProfil() {
-            fetch("/profil").then(r=>r.json()).then(function(data) {
+            fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                 if (data.profil) {
                     var p = data.profil;
                     document.getElementById("profilEmail").textContent = p.email || "-";
@@ -600,7 +480,7 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
             var font = document.getElementById("profilFont").value;
             if (!nama) { showToast("Nama tidak boleh kosong!"); return; }
             fetch("/profil/update", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nama:nama,gaya_font:font})})
-            .then(r=>r.json()).then(function(data) {
+            .then(function(r){return r.json();}).then(function(data) {
                 if (data.success) {
                     var fontMap = {"default":"'Segoe UI', Arial, sans-serif","serif":"Georgia, serif","mono":"'Courier New', monospace","rounded":"'Varela Round', sans-serif"};
                     document.body.style.fontFamily = fontMap[font] || fontMap["default"];
@@ -614,7 +494,7 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
         });
 
         function muatDaftarObrolan() {
-            fetch("/daftar_obrolan").then(r=>r.json()).then(function(data) {
+            fetch("/daftar_obrolan").then(function(r){return r.json();}).then(function(data) {
                 var list = document.getElementById("sidebarList");
                 list.innerHTML = "";
                 if (!data.obrolan || data.obrolan.length === 0) { list.innerHTML = '<div class="sidebar-empty">Belum ada obrolan</div>'; return; }
@@ -628,33 +508,31 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
         }
 
         function bukaObrolan(id, judul) {
-            fetch("/buka_obrolan/" + id).then(r=>r.json()).then(function(data) {
+            fetch("/buka_obrolan/" + id).then(function(r){return r.json();}).then(function(data) {
                 var messages = document.getElementById("messages");
                 messages.innerHTML = "";
                 if (data.riwayat) {
                     data.riwayat.forEach(function(item) { tampilPesan(item.pesan, "user"); tampilPesan(item.jawaban, "kaego"); });
                     scrollKeBawah();
                 }
-                tutupSidebar();
-                sembunyikanWelcome();
+                tutupSidebar(); sembunyikanWelcome();
                 showToast("Membuka: " + (judul || "Obrolan"));
             });
         }
 
         function mulaiObrolanBaru() {
-            fetch("/reset", {method:"POST"}).then(r=>r.json()).then(function(data) {
+            fetch("/reset", {method:"POST"}).then(function(r){return r.json();}).then(function(data) {
                 if (data.success) { document.getElementById("messages").innerHTML = ""; showToast("Obrolan baru dimulai!"); }
             });
         }
 
-        fetch("/riwayat").then(r=>r.json()).then(function(data) {
+        fetch("/riwayat").then(function(r){return r.json();}).then(function(data) {
             if (data.riwayat && data.riwayat.length > 0) {
                 data.riwayat.forEach(function(item) { tampilPesan(item.pesan, "user"); tampilPesan(item.jawaban, "kaego"); });
                 scrollKeBawah();
             }
         });
 
-        // Upload file
         var selectedFile = null;
         document.getElementById("uploadBtn").addEventListener("click", function() { document.getElementById("fileInput").click(); });
         document.getElementById("fileInput").addEventListener("change", function(e) {
@@ -690,10 +568,7 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
             setTimeout(function() { t.classList.remove("show"); }, 2500);
         }
 
-        function scrollKeBawah() {
-            var chatArea = document.getElementById("chatArea");
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
+        function scrollKeBawah() { document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight; }
 
         function sembunyikanWelcome() {
             document.getElementById("welcomeScreen").classList.add("hidden");
@@ -728,7 +603,7 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
             tampilPesan(teks, "user");
             loadingMulai(); tampilTyping();
             fetch("/chat", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pesan:teks})})
-            .then(r=>r.json())
+            .then(function(r){return r.json();})
             .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.jawaban, "kaego"); })
             .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
         }
@@ -737,7 +612,6 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
             var pesan = document.getElementById("input").value.trim();
             if (!pesan && !selectedFile) return;
             sembunyikanWelcome();
-
             if (selectedFile) {
                 var pesanFinal = pesan || "Tolong analisis file ini";
                 tampilPesanFile(selectedFile, pesanFinal);
@@ -746,7 +620,7 @@ Tolong lengkapi semua bagian di atas dengan konten yang sesuai materi ${materi}.
                 selectedFile = null; document.getElementById("fileInput").value = "";
                 loadingMulai(); tampilTyping();
                 fetch("/upload", {method:"POST",body:formData})
-                .then(r=>r.json())
+                .then(function(r){return r.json();})
                 .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
                 .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego"); });
             } else {
