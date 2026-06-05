@@ -662,8 +662,8 @@
             wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
 
             // Tombol download jika jawaban adalah RPM
-            if (tipe === "kaego" && teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1) {
-                var kontenAsli = teks;
+           if (tipe === "kaego" && teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1) {
+    var kontenAsli = bubble.innerText;
                 var btn = document.createElement("button");
                 btn.className = "btn-download-rpm";
                 btn.textContent = "📥 Download Word (.docx)";
