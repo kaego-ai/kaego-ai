@@ -5,7 +5,10 @@ import base64
 import hashlib
 from supabase import create_client
 from dotenv import load_dotenv
-
+from docx import Document
+from docx.shared import Pt
+import io
+from flask import send_file
 load_dotenv()
 
 app = Flask(__name__)
@@ -246,7 +249,31 @@ def update_profil():
     if update_data:
         supabase.table("users").update(update_data).eq("id", session["user_id"]).execute()
     return jsonify({"success": True})
-
+@app.route("/download_rpm", methods=["POST"])
+def download_rpm():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    try:
+        konten = request.json.get("konten", "")
+        doc = Document()
+        doc.add_heading("RENCANA PEMBELAJARAN MENDALAM (RPM)", 0)
+        for baris in konten.split("\n"):
+            if baris.strip() == "":
+                doc.add_paragraph("")
+            elif baris.startswith("##"):
+                doc.add_heading(baris.replace("##", "").strip(), 2)
+            elif baris.startswith("#"):
+                doc.add_heading(baris.replace("#", "").strip(), 1)
+            elif baris.isupper() and len(baris) > 3:
+                doc.add_heading(baris.strip(), 2)
+            else:
+                doc.add_paragraph(baris)
+        buf = io.BytesIO()
+        doc.save(buf)
+        buf.seek(0)
+        return send_file(buf, as_attachment=True, download_name="RPM_Kaego.docx", mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
