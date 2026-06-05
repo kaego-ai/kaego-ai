@@ -73,7 +73,6 @@ def chat():
     pesan_user = request.json.get("pesan")
     riwayat = session["riwayat"]
 
-    # Buat obrolan baru jika belum ada
     if not session.get("obrolan_id"):
         judul = pesan_user[:40] + ("..." if len(pesan_user) > 40 else "")
         result = supabase.table("obrolan").insert({
@@ -142,12 +141,10 @@ def upload():
         file_data = file.read()
         file_base64 = base64.b64encode(file_data).decode("utf-8")
         file_type = file.content_type
-        print(f"File: {file.filename}, type: {file_type}, size: {len(file_data)}")
         if "riwayat" not in session:
             session["riwayat"] = []
         riwayat = session["riwayat"]
 
-        # Buat obrolan baru jika belum ada
         if not session.get("obrolan_id"):
             judul = f"[File] {file.filename[:35]}"
             result = supabase.table("obrolan").insert({
@@ -200,6 +197,7 @@ def reset():
     session["riwayat"] = []
     session["obrolan_id"] = None
     return jsonify({"success": True})
+
 @app.route("/profil", methods=["GET"])
 def get_profil():
     if "user_id" not in session:
@@ -220,9 +218,12 @@ def update_profil():
         session["nama"] = data["nama"]
     if "gaya_font" in data:
         update_data["gaya_font"] = data["gaya_font"]
+    if "foto_profil" in data:
+        update_data["foto_profil"] = data["foto_profil"]
     if update_data:
         supabase.table("users").update(update_data).eq("id", session["user_id"]).execute()
     return jsonify({"success": True})
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
