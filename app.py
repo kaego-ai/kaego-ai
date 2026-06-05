@@ -162,8 +162,11 @@ def upload():
     try:
         file = request.files.get("file")
         pesan = request.form.get("pesan", "Tolong analisis file ini")
-        if not file:
-            return jsonify({"error": "Tidak ada file"}), 400
+kunci = session.get("kunci_jawaban", "")
+if kunci and "koreksi" in pesan.lower():
+    pesan = pesan + "\n\nKunci Jawaban:\n" + kunci
+if not file:
+    return jsonify({"error": "Tidak ada file"}), 400
         file_data = file.read()
         file_base64 = base64.b64encode(file_data).decode("utf-8")
         file_type = file.content_type
@@ -215,7 +218,19 @@ def upload():
     except Exception as e:
         print(f"ERROR upload: {str(e)}")
         return jsonify({"error": str(e)}), 500
+@app.route("/simpan_kunci", methods=["POST"])
+def simpan_kunci():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    data = request.json
+    session["kunci_jawaban"] = data.get("kunci", "")
+    return jsonify({"success": True})
 
+@app.route("/get_kunci", methods=["GET"])
+def get_kunci():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    return jsonify({"kunci": session.get("kunci_jawaban", "")})
 @app.route("/reset", methods=["POST"])
 def reset():
     if "user_id" not in session:
