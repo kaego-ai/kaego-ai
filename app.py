@@ -90,7 +90,7 @@ def chat():
         response = client.messages.create(
             model="claude-sonnet-4-5",
             max_tokens=8192,
-            timeout=180,
+            timeout=300,
             system=f"Namamu adalah Kaego, asisten AI pendidikan yang ramah. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat RPM, selesaikan SELURUH format hingga bagian Refleksi tanpa terpotong.",
             messages=riwayat
         )
