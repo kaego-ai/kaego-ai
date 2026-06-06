@@ -1,0 +1,22 @@
+{
+    "name": "Kaego AI",
+    "short_name": "Kaego",
+    "description": "Asisten AI Pendidikan untuk Guru Indonesia",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f0f0f",
+    "theme_color": "#0f0f0f",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/static/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/static/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
