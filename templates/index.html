@@ -609,7 +609,15 @@
             loadingMulai(); tampilTyping();
             fetch("/chat", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pesan:teks})})
             .then(function(r){return r.json();})
-            .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.jawaban, "kaego"); })
+            .then(function(data) {
+    hapusTyping();
+    loadingSelesai();
+    if (data.error === "quota_habis") {
+        tampilNotifikasiQuota(data.pesan);
+    } else {
+        tampilPesan(data.jawaban, "kaego");
+    }
+})
             .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
         }
 
@@ -738,6 +746,22 @@ function kirimKoreksi() {
     .then(function(r){return r.json();})
     .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
     .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+}function tampilNotifikasiQuota(pesan) {
+    var messages = document.getElementById("messages");
+    var div = document.createElement("div");
+    div.style.cssText = "background:#2a1a1a;border:1px solid #ff5555;border-radius:16px;padding:16px;margin:8px 0;text-align:center;";
+    div.innerHTML = '<div style="font-size:24px;margin-bottom:8px;">⏳</div>' +
+        '<div style="color:#ff8888;font-size:14px;margin-bottom:12px;">' + pesan + '</div>' +
+        '<div style="display:flex;gap:8px;justify-content:center;">' +
+        '<button onclick="this.parentElement.parentElement.remove()" style="background:#333;color:#aaa;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;">Tutup</button>' +
+        '<button onclick="bukaHalamanPaket()" style="background:#f0b429;color:#0f0f08;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;">⬆️ Upgrade Paket</button>' +
+        '</div>';
+    messages.appendChild(div);
+    scrollKeBawah();
+}
+
+function bukaHalamanPaket() {
+    showToast("Fitur upgrade paket segera hadir!");
 }
         function hapusTyping() { var typing = document.getElementById("typing"); if (typing) typing.remove(); }
     </script>
