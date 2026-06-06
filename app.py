@@ -334,8 +334,7 @@ def download_rpm():
         return send_file(buf, as_attachment=True, download_name="RPM_Kaego.docx", mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     except Exception as e:
         
-        return redirect(url_for("login"))
-    return render_template("paket.html")
+       return jsonify({"error": str(e)}), 500
 @app.route("/paket")
 def halaman_paket():
     if "user_id" not in session:
