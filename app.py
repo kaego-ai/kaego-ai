@@ -80,12 +80,25 @@ def chat():
         paket = u.get("paket", "free")
         pesan_hari_ini = u.get("pesan_hari_ini", 0)
         reset_tanggal = u.get("reset_tanggal")
-        hari_ini = str(date.today())
+        from datetime import datetime, timedelta
+        sekarang = datetime.now()
 
-        # Reset counter jika hari baru
-        if reset_tanggal != hari_ini:
-            supabase.table("users").update({"pesan_hari_ini": 0, "reset_tanggal": hari_ini}).eq("id", session["user_id"]).execute()
-            pesan_hari_ini = 0
+        # Reset counter jika sudah 6 jam
+        if reset_tanggal:
+            try:
+                waktu_reset = datetime.fromisoformat(str(reset_tanggal))
+                if sekarang >= waktu_reset:
+                    supabase.table("users").update({
+                        "pesan_hari_ini": 0,
+                        "reset_tanggal": str(sekarang + timedelta(hours=6))
+                    }).eq("id", session["user_id"]).execute()
+                    pesan_hari_ini = 0
+            except:
+                pass
+        else:
+            supabase.table("users").update({
+                "reset_tanggal": str(sekarang + timedelta(hours=6))
+            }).eq("id", session["user_id"]).execute()
 
         # Cek batas quota
         batas = {"free": 10, "basic": 100, "pro": 999999}
@@ -95,7 +108,7 @@ def chat():
             return jsonify({
                 "error": "quota_habis",
                 "paket": paket,
-                "pesan": f"Quota harian kamu sudah habis ({limit} pesan/hari). Upgrade paket untuk pesan lebih banyak!"
+                "pesan": f"Quota kamu sudah habis ({limit} pesan per 6 jam). Tunggu 6 jam atau upgrade paket!"
             }), 429
 
         # Tambah counter
