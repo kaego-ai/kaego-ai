@@ -236,19 +236,19 @@ def upload():
             return jsonify({"error": f"Format tidak didukung: {file_type}"}), 400
 
        # Buat pesan sementara tanpa simpan foto di session
-pesan_sementara = riwayat + [{"role": "user", "content": content}]
-response = client.messages.create(
-    model="claude-sonnet-4-5",
-    max_tokens=4096,
-    timeout=120,
-    system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
-    messages=pesan_sementara
-)
-jawaban = response.content[0].text
-# Simpan teks saja di session, bukan foto
-riwayat.append({"role": "user", "content": pesan})
-riwayat.append({"role": "assistant", "content": jawaban})
-session["riwayat"] = riwayat
+        pesan_sementara = riwayat + [{"role": "user", "content": content}]
+        response = client.messages.create(
+            model="claude-sonnet-4-5",
+            max_tokens=4096,
+            timeout=120,
+            system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
+            messages=pesan_sementara
+        )
+        jawaban = response.content[0].text
+        # Simpan teks saja di session, bukan foto
+        riwayat.append({"role": "user", "content": pesan})
+        riwayat.append({"role": "assistant", "content": jawaban})
+        session["riwayat"] = riwayat
 
         supabase.table("riwayat_chat").insert({
             "user_id": session["user_id"],
@@ -260,7 +260,7 @@ session["riwayat"] = riwayat
         return jsonify({"jawaban": jawaban})
     except Exception as e:
         print(f"ERROR upload: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+       return jsonify({"error": str(e)}), 500
 @app.route("/simpan_kunci", methods=["POST"])
 def simpan_kunci():
     if "user_id" not in session:
