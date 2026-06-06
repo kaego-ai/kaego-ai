@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Paket - Kaego AI</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; }
+    .header { padding: 16px 24px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #1a1a1a; }
+    .header img { height: 36px; }
+    .header a { color: #888; text-decoration: none; font-size: 14px; margin-left: auto; }
+    .header a:hover { color: #fff; }
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+    .title { text-align: center; margin-bottom: 8px; }
+    .title h1 { font-size: 28px; color: #fff; }
+    .title p { color: #888; font-size: 15px; margin-top: 8px; }
+    .paket-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 40px; }
+    .paket-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 28px; position: relative; }
+    .paket-card.popular { border-color: #f0b429; }
+    .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #f0b429; color: #0f0f08; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: 20px; white-space: nowrap; }
+    .paket-nama { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .paket-harga { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .paket-harga span { font-size: 14px; color: #888; font-weight: 400; }
+    .paket-desc { font-size: 13px; color: #888; margin-bottom: 20px; }
+    .paket-fitur { list-style: none; margin-bottom: 24px; }
+    .paket-fitur li { font-size: 13px; color: #ccc; padding: 6px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 8px; }
+    .paket-fitur li:last-child { border-bottom: none; }
+    .paket-fitur li.ada { color: #ccc; }
+    .paket-fitur li.tidak { color: #555; }
+    .btn-pilih { width: 100%; padding: 12px; border: none; border-radius: 12px; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 600; transition: opacity 0.2s; }
+    .btn-free { background: #2a2a2a; color: #888; cursor: default; }
+    .btn-basic { background: #1a6bff; color: white; }
+    .btn-basic:hover { opacity: 0.85; }
+    .btn-pro { background: #f0b429; color: #0f0f08; }
+    .btn-pro:hover { opacity: 0.85; }
+    .paket-aktif { background: #1a2a1a; border-color: #34d399; }
+    .aktif-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #34d399; color: #080f0b; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: 20px; white-space: nowrap; }
+    .info-box { background: #1a1a2a; border: 1px solid #2a2a4a; border-radius: 12px; padding: 16px; margin-top: 32px; text-align: center; }
+    .info-box p { font-size: 13px; color: #888; }
+    .info-box strong { color: #4a9eff; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="/static/logo.png" alt="Kaego">
+        <a href="/">← Kembali ke Kaego</a>
+    </div>
+
+    <div class="container">
+        <div class="title">
+            <h1>Pilih Paket Kaego AI 🚀</h1>
+            <p>Tingkatkan pengalaman belajar mengajar dengan paket yang sesuai kebutuhanmu</p>
+        </div>
+
+        <div class="paket-grid">
+
+            <!-- GRATIS -->
+            <div class="paket-card" id="cardFree">
+                <div class="paket-nama">🆓 Gratis</div>
+                <div class="paket-harga">Rp 0 <span>/bulan</span></div>
+                <div class="paket-desc">Untuk mencoba fitur dasar Kaego</div>
+                <ul class="paket-fitur">
+                    <li class="ada">✅ 10 pesan per hari</li>
+                    <li class="ada">✅ Buat soal otomatis</li>
+                    <li class="ada">✅ Rangkuman materi</li>
+                    <li class="tidak">❌ RPM otomatis</li>
+                    <li class="tidak">❌ Koreksi foto tugas</li>
+                    <li class="tidak">❌ Download Word</li>
+                    <li class="tidak">❌ Web search</li>
+                </ul>
+                <button class="btn-pilih btn-free" disabled>Paket Saat Ini</button>
+            </div>
+
+            <!-- BASIC -->
+            <div class="paket-card popular" id="cardBasic">
+                <div class="popular-badge">⭐ Paling Populer</div>
+                <div class="paket-nama">📚 Basic</div>
+                <div class="paket-harga">Rp 15.000 <span>/bulan</span></div>
+                <div class="paket-desc">Untuk guru yang aktif mengajar setiap hari</div>
+                <ul class="paket-fitur">
+                    <li class="ada">✅ 100 pesan per hari</li>
+                    <li class="ada">✅ Buat soal otomatis</li>
+                    <li class="ada">✅ Rangkuman materi</li>
+                    <li class="ada">✅ RPM otomatis</li>
+                    <li class="ada">✅ Koreksi foto tugas</li>
+                    <li class="ada">✅ Download Word</li>
+                    <li class="ada">✅ Web search terkini</li>
+                </ul>
+                <button class="btn-pilih btn-basic" onclick="pilihPaket('basic')">Pilih Basic</button>
+            </div>
+
+            <!-- PRO -->
+            <div class="paket-card" id="cardPro">
+                <div class="paket-nama">🚀 Pro</div>
+                <div class="paket-harga">Rp 49.000 <span>/bulan</span></div>
+                <div class="paket-desc">Untuk guru profesional tanpa batas</div>
+                <ul class="paket-fitur">
+                    <li class="ada">✅ Pesan unlimited</li>
+                    <li class="ada">✅ Semua fitur Basic</li>
+                    <li class="ada">✅ Narasi rapor otomatis</li>
+                    <li class="ada">✅ Analisis nilai kelas</li>
+                    <li class="ada">✅ Model AI terbaru</li>
+                    <li class="ada">✅ Prioritas response</li>
+                    <li class="ada">✅ Support prioritas</li>
+                </ul>
+                <button class="btn-pilih btn-pro" onclick="pilihPaket('pro')">Pilih Pro</button>
+            </div>
+
+        </div>
+
+        <div class="info-box">
+            <p>💳 Sistem pembayaran <strong>segera hadir</strong> — QRIS, Transfer Bank, GoPay, OVO, Dana</p>
+            <p style="margin-top:8px;">Untuk upgrade sementara hubungi: <strong>kaego.ai@gmail.com</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function pilihPaket(paket) {
+            alert("Sistem pembayaran segera hadir! Hubungi kaego.ai@gmail.com untuk upgrade manual.");
+        }
+    </script>
+</body>
+</html>
