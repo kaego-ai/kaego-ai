@@ -232,7 +232,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
-        <img src="/static/avatar.gif" class="welcome-logo" alt="Kaego">
+        <video src="/static/avatar.mp4" class="welcome-logo" autoplay loop muted playsinline></video>
         <div class="welcome-greeting" id="welcomeGreeting">Selamat pagi</div>
         <div class="welcome-name" id="welcomeName">nama</div>
         <div class="welcome-input-box">
@@ -711,7 +711,7 @@
         function tampilTyping() {
             var messages = document.getElementById("messages");
             var div = document.createElement("div"); div.id = "typing"; div.className = "message";
-            div.innerHTML = '<div class="avatar kaego"><img src="/static/avatar.gif" alt="K" style="width:36px;height:36px;border-radius:50%;object-fit:contain;"></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
+            div.innerHTML = '<div class="avatar kaego"><video src="/static/avatar.mp4" style="width:36px;height:36px;border-radius:50%;object-fit:contain;" autoplay loop muted playsinline></video></div>
             messages.appendChild(div); scrollKeBawah();
         }
 function simpanKunci() {
