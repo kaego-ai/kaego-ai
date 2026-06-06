@@ -351,7 +351,27 @@ def privacy():
 def terms():
     return render_template("terms.html")
 
+@app.route("/chat-tamu")
+def chat_tamu():
+    return render_template("tamu.html")
 
+@app.route("/chat-tamu/kirim", methods=["POST"])
+def chat_tamu_kirim():
+    try:
+        pesan = request.json.get("pesan")
+        riwayat = request.json.get("riwayat", [])
+        riwayat.append({"role": "user", "content": pesan})
+        response = client.messages.create(
+            model="claude-sonnet-4-5",
+            max_tokens=1024,
+            timeout=60,
+            system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan ceria. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
+            messages=riwayat
+        )
+        jawaban = response.content[0].text
+        return jsonify({"jawaban": jawaban})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)

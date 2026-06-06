@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaego AI - Mode Tamu</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; }
+    .header { padding: 8px 20px; display: flex; align-items: center; justify-content: space-between; background: #0f0f0f; border-bottom: 1px solid #1a1a1a; flex-shrink: 0; z-index: 100; }
+    .header img { height: 36px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-masuk { padding: 7px 16px; background: transparent; border: 1px solid #333; border-radius: 20px; color: #ccc; font-size: 13px; cursor: pointer; font-family: inherit; text-decoration: none; transition: all 0.2s; }
+    .btn-masuk:hover { border-color: #14b8a6; color: #14b8a6; }
+    .btn-daftar { padding: 7px 16px; background: linear-gradient(90deg, #f97316, #14b8a6); border: none; border-radius: 20px; color: #fff; font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 600; text-decoration: none; }
+    .quota-bar { background: #1a1a1a; border-bottom: 1px solid #222; padding: 8px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .quota-text { font-size: 12px; color: #888; }
+    .quota-text span { color: #14b8a6; font-weight: 600; }
+    .chat-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 0; }
+    .chat-messages { padding: 16px; display: flex; flex-direction: column; gap: 16px; max-width: 100%; width: 100%; margin: 0; }
+    .message { display: flex; gap: 12px; align-items: flex-start; }
+    .message.user { flex-direction: row-reverse; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .avatar.kaego { background: transparent; }
+    .avatar.kaego img { width: 36px; height: 36px; border-radius: 50%; object-fit: contain; }
+    .avatar.user { background: #2a2a2a; color: #aaa; }
+    .bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; word-wrap: break-word; }
+    .bubble.user { background: #1a6bff; color: white; border-bottom-right-radius: 4px; }
+    .bubble.kaego { background: #1e1e1e; color: #e0e0e0; border-bottom-left-radius: 4px; border: 1px solid #2a2a2a; }
+    .bubble p { margin: 3px 0; font-size: 15px; }
+    .input-area { padding: 8px 16px 16px; background: #0f0f0f; border-top: 1px solid #1a1a1a; flex-shrink: 0; }
+    .input-box { display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; }
+    .input-box:focus-within { border-color: #1a6bff; }
+    .input-box textarea { flex: 1; border: none; background: transparent; outline: none; font-size: 15px; font-family: inherit; resize: none; max-height: 120px; line-height: 1.5; color: #e0e0e0; }
+    .input-box textarea::placeholder { color: #555; }
+    .send-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; flex-shrink: 0; position: relative; padding: 0; }
+    .send-btn::before { content: ''; position: absolute; inset: 0; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, #f97316, #14b8a6, #3b82f6, #f97316); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    .send-btn::after { content: ''; position: absolute; width: 10px; height: 10px; border-right: 2.5px solid #14b8a6; border-top: 2.5px solid #14b8a6; border-radius: 1px; transform: rotate(45deg) translate(-1px, 1px); }
+    .send-btn.loading::before { animation: spin 0.8s linear infinite; }
+    .send-btn.loading::after { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .modal-daftar { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; display: none; align-items: center; justify-content: center; }
+    .modal-daftar.show { display: flex; }
+    .modal-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 32px; width: 90%; max-width: 400px; text-align: center; }
+    .modal-box h2 { font-size: 20px; color: #fff; margin-bottom: 12px; }
+    .modal-box p { font-size: 14px; color: #888; margin-bottom: 24px; line-height: 1.6; }
+    .modal-box .btn-daftar-modal { display: block; padding: 12px; background: linear-gradient(90deg, #f97316, #14b8a6); border: none; border-radius: 12px; color: #fff; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 700; text-decoration: none; margin-bottom: 12px; }
+    .modal-box .btn-masuk-modal { display: block; padding: 12px; background: transparent; border: 1px solid #333; border-radius: 12px; color: #ccc; font-size: 14px; cursor: pointer; font-family: inherit; text-decoration: none; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f0f0f; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    .typing-bubble { background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 18px; border-bottom-left-radius: 4px; padding: 12px 16px; font-size: 14px; color: #555; font-style: italic; opacity: 0.7; max-width: 85%; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="/static/logo.png" alt="Kaego">
+        <div class="header-btns">
+            <a href="/login" class="btn-masuk">Masuk</a>
+            <a href="/daftar" class="btn-daftar">Daftar Gratis</a>
+        </div>
+    </div>
+
+    <div class="quota-bar">
+        <div class="quota-text">Mode Tamu · Sisa pesan: <span id="sisaPesan">5</span>/5</div>
+        <a href="/daftar" style="font-size:12px;color:#14b8a6;text-decoration:none;">Daftar untuk pesan unlimited →</a>
+    </div>
+
+    <div class="modal-daftar" id="modalDaftar">
+        <div class="modal-box">
+            <div style="font-size:40px;margin-bottom:12px;">🎉</div>
+            <h2>Kamu suka Kaego AI?</h2>
+            <p>Daftar gratis untuk mendapatkan lebih banyak pesan dan fitur lengkap seperti RPM, koreksi foto tugas, dan download Word!</p>
+            <a href="/daftar" class="btn-daftar-modal">🚀 Daftar Gratis Sekarang</a>
+            <a href="/login" class="btn-masuk-modal">Sudah punya akun? Masuk</a>
+        </div>
+    </div>
+
+    <div class="chat-area" id="chatArea">
+        <div class="chat-messages" id="messages"></div>
+    </div>
+
+    <div class="input-area">
+        <div class="input-box">
+            <textarea id="input" placeholder="Tanya Kaego apa saja..." rows="1"></textarea>
+            <button class="send-btn" id="btnKirim"></button>
+        </div>
+    </div>
+
+    <script>
+        var riwayat = [];
+        var sisaPesan = 5;
+        var sedangLoading = false;
+
+        // Sapaan awal
+        tampilPesan("Halo! Saya Kaego AI 👋 Saya asisten pendidikan yang siap membantu kamu. Tanya apa saja ya! (Mode tamu: 5 pesan gratis)", "kaego");
+
+        document.getElementById("btnKirim").addEventListener("click", kirim);
+        document.getElementById("input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); kirim(); }
+        });
+        document.getElementById("input").addEventListener("input", function() {
+            this.style.height = "auto"; this.style.height = Math.min(this.scrollHeight, 120) + "px";
+        });
+
+        function kirim() {
+            if (sedangLoading) return;
+            var pesan = document.getElementById("input").value.trim();
+            if (!pesan) return;
+
+            if (sisaPesan <= 0) {
+                document.getElementById("modalDaftar").classList.add("show");
+                return;
+            }
+
+            tampilPesan(pesan, "user");
+            document.getElementById("input").value = "";
+            document.getElementById("input").style.height = "auto";
+
+            sisaPesan--;
+            document.getElementById("sisaPesan").textContent = sisaPesan;
+
+            if (sisaPesan === 0) {
+                setTimeout(function() {
+                    document.getElementById("modalDaftar").classList.add("show");
+                }, 2000);
+            }
+
+            sedangLoading = true;
+            var btn = document.getElementById("btnKirim");
+            btn.classList.add("loading");
+
+            riwayat.push({"role": "user", "content": pesan});
+
+            fetch("/chat-tamu/kirim", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({pesan: pesan, riwayat: riwayat.slice(-6)})
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                sedangLoading = false;
+                btn.classList.remove("loading");
+                hapusTyping();
+                if (data.jawaban) {
+                    riwayat.push({"role": "assistant", "content": data.jawaban});
+                    tampilPesan(data.jawaban, "kaego");
+                }
+            })
+            .catch(function() {
+                sedangLoading = false;
+                btn.classList.remove("loading");
+                hapusTyping();
+                tampilPesan("Maaf terjadi error, coba lagi ya!", "kaego");
+            });
+
+            tampilTyping();
+        }
+
+        function tampilPesan(teks, tipe) {
+            var messages = document.getElementById("messages");
+            var wrapper = document.createElement("div"); wrapper.className = "message " + tipe;
+            var avatar = document.createElement("div"); avatar.className = "avatar " + tipe;
+            if (tipe === "kaego") {
+                avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K">';
+            } else { avatar.textContent = "👤"; }
+            var bubble = document.createElement("div"); bubble.className = "bubble " + tipe;
+            if (tipe === "kaego") {
+                teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:600">$1</span>');
+                teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                teks = teks.replace(/^[\-\*]\s*/gm, '');
+                bubble.innerHTML = teks.split('\n').map(function(line) { return '<p>' + line + '</p>'; }).join('');
+            } else { bubble.textContent = teks; }
+            wrapper.appendChild(avatar); wrapper.appendChild(bubble);
+            messages.appendChild(wrapper);
+            document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
+        }
+
+        function tampilTyping() {
+            var messages = document.getElementById("messages");
+            var wrapper = document.createElement("div"); wrapper.className = "message kaego"; wrapper.id = "typing";
+            var avatar = document.createElement("div"); avatar.className = "avatar kaego";
+            avatar.innerHTML = '<img src="/static/avatar-static.png" alt="K">';
+            var bubble = document.createElement("div"); bubble.className = "typing-bubble";
+            bubble.textContent = "Kaego sedang mengetik...";
+            wrapper.appendChild(avatar); wrapper.appendChild(bubble);
+            messages.appendChild(wrapper);
+            document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
+        }
+
+        function hapusTyping() {
+            var t = document.getElementById("typing"); if (t) t.remove();
+        }
+    </script>
+</body>
+</html>
