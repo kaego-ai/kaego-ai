@@ -64,7 +64,7 @@ def daftar():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    return redirect(url_for("home"))
 
 @app.route("/chat", methods=["POST"])
 def chat():
