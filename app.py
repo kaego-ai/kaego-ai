@@ -26,7 +26,7 @@ def static_files(filename):
 @app.route("/")
 def home():
     if "user_id" not in session:
-        return redirect(url_for("login"))
+        return render_template("landing.html")
     if "riwayat" not in session:
         session["riwayat"] = []
         session["obrolan_id"] = None
