@@ -260,7 +260,7 @@ def upload():
         return jsonify({"jawaban": jawaban})
     except Exception as e:
         print(f"ERROR upload: {str(e)}")
-       return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 @app.route("/simpan_kunci", methods=["POST"])
 def simpan_kunci():
     if "user_id" not in session:
