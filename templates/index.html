@@ -460,8 +460,18 @@
             document.getElementById("modalProfil").classList.add("show");
         }
 
-        document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
-            document.getElementById("fotoKoreksiInput").addEventListener("change", function(e) {
+       document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
+    var file = e.target.files[0]; if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+        var base64 = ev.target.result;
+        document.getElementById("profilAvatarWrap").innerHTML = '<img class="profil-avatar" src="' + base64 + '">';
+        fetch("/profil/update", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto_profil:base64})});
+    };
+    reader.readAsDataURL(file);
+});
+
+document.getElementById("fotoKoreksiInput").addEventListener("change", function(e) {
     var file = e.target.files[0]; if (!file) return;
     fotoKoreksiFile = file;
     var reader = new FileReader();
