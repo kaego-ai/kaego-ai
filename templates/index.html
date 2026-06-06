@@ -711,7 +711,7 @@
         function tampilTyping() {
     var messages = document.getElementById("messages");
     var div = document.createElement("div"); div.id = "typing"; div.className = "message";
-    div.innerHTML = '<div class="avatar kaego"><video src="/static/avatar.mp4" style="width:36px;height:36px;border-radius:50%;object-fit:contain;" autoplay loop muted playsinline></video></div><div class="bubble kaego">Kaego sedang mengetik...</div>';
+    div.innerHTML = '<div class="avatar kaego"><video src="/static/avatar.mp4" style="width:36px;height:36px;border-radius:50%;object-fit:contain;" autoplay loop muted playsinline></video></div><div class="bubble kaego" style="opacity:0.5;font-style:italic;">Kaego sedang mengetik...</div>';
     messages.appendChild(div); scrollKeBawah();
 }
 function simpanKunci() {
