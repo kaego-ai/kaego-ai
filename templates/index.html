@@ -8,8 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Kaego AI">
     <meta name="theme-color" content="#0f0f0f">
-<link rel="manifest" href="/static/manifest.json">
-<title>Kaego AI</title>
+    <link rel="manifest" href="/static/manifest.json">
+    <title>Kaego AI</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -141,12 +141,11 @@
     </style>
 </head>
 <body>
-
     <div class="toast" id="toast"></div>
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
     <input type="file" id="fotoProfilInput" accept="image/*" style="display:none">
     <input type="file" id="fotoKoreksiInput" accept="image/*" style="display:none">
-<input type="file" id="fotoKoreksiInput" accept="image/*" style="display:none">
+
     <div class="modal-overlay" id="modalFitur">
         <div class="modal-fitur" id="modalFiturBox"></div>
     </div>
@@ -336,49 +335,22 @@
                     var sekolah = document.getElementById("fRppSekolah").value.trim();
                     if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
                     var prompt = "Buatkan RPM (Rencana Pembelajaran Mendalam) lengkap dengan format berikut:\n\n";
-                    prompt += "IDENTITAS:\n";
-                    prompt += "- Satuan Pendidikan: " + (sekolah || "[nama sekolah]") + "\n";
-                    prompt += "- Semester/Tahun: [semester/tahun]\n";
-                    prompt += "- Mata Pelajaran: " + mapel + "\n";
-                    prompt += "- Kelas/Fase: " + (kelas || "[kelas/fase]") + "\n";
-                    prompt += "- Alokasi Waktu: " + pertemuan + " pertemuan\n";
-                    prompt += "- Guru: " + (guru || "[nama guru]") + "\n\n";
-                    prompt += "IDENTIFIKASI MATA PELAJARAN:\n";
-                    prompt += "- Materi: " + materi + "\n";
-                    prompt += "- Peserta Didik (Prasyarat): [isi]\n";
-                    prompt += "- Dimensi Profil Lulusan: [pilih dari 8 profil]\n";
-                    prompt += "- Capaian Pembelajaran: [isi CP]\n";
-                    prompt += "- Lintas Disiplin Ilmu: [isi]\n";
-                    prompt += "- Tujuan Pembelajaran: [isi tujuan]\n";
-                    prompt += "- Topik Pembelajaran: [isi topik]\n\n";
-                    prompt += "EMPAT KERANGKA PEMBELAJARAN MENDALAM:\n";
-                    prompt += "1. Praktis Pedagogis: [isi]\n";
-                    prompt += "2. Kemitraan Pembelajaran: [isi]\n";
-                    prompt += "3. Lingkungan Pembelajaran: [isi]\n";
-                    prompt += "4. Pemanfaatan Digital: [isi]\n\n";
-                    prompt += "PENGALAMAN BELAJAR:\n";
-                    prompt += "- Awal/Apersepsi: [isi]\n";
-                    prompt += "- Inti: [isi langkah pembelajaran]\n";
-                    prompt += "- Penutup: [isi]\n\n";
-                    prompt += "ASESMEN:\n";
-                    prompt += "- Diagnostik: [isi]\n";
-                    prompt += "- Formatif: [isi]\n";
-                    prompt += "- Sumatif: [isi]\n\n";
-                    prompt += "PENGAYAAN DAN REMEDIAL:\n";
-                    prompt += "- Pengayaan: [isi]\n";
-                    prompt += "- Remedial: [isi]\n\n";
-                    prompt += "REFLEKSI:\n";
-                    prompt += "- Refleksi Peserta Didik: [isi]\n";
-                    prompt += "- Refleksi Pendidik: [isi]\n\n";
+                    prompt += "IDENTITAS:\n- Satuan Pendidikan: " + (sekolah || "[nama sekolah]") + "\n- Semester/Tahun: [semester/tahun]\n- Mata Pelajaran: " + mapel + "\n- Kelas/Fase: " + (kelas || "[kelas/fase]") + "\n- Alokasi Waktu: " + pertemuan + " pertemuan\n- Guru: " + (guru || "[nama guru]") + "\n\n";
+                    prompt += "IDENTIFIKASI MATA PELAJARAN:\n- Materi: " + materi + "\n- Peserta Didik (Prasyarat): [isi]\n- Dimensi Profil Lulusan: [pilih dari 8 profil]\n- Capaian Pembelajaran: [isi CP]\n- Lintas Disiplin Ilmu: [isi]\n- Tujuan Pembelajaran: [isi tujuan]\n- Topik Pembelajaran: [isi topik]\n\n";
+                    prompt += "EMPAT KERANGKA PEMBELAJARAN MENDALAM:\n1. Praktis Pedagogis: [isi]\n2. Kemitraan Pembelajaran: [isi]\n3. Lingkungan Pembelajaran: [isi]\n4. Pemanfaatan Digital: [isi]\n\n";
+                    prompt += "PENGALAMAN BELAJAR:\n- Awal/Apersepsi: [isi]\n- Inti: [isi langkah pembelajaran]\n- Penutup: [isi]\n\n";
+                    prompt += "ASESMEN:\n- Diagnostik: [isi]\n- Formatif: [isi]\n- Sumatif: [isi]\n\n";
+                    prompt += "PENGAYAAN DAN REMEDIAL:\n- Pengayaan: [isi]\n- Remedial: [isi]\n\n";
+                    prompt += "REFLEKSI:\n- Refleksi Peserta Didik: [isi]\n- Refleksi Pendidik: [isi]\n\n";
                     prompt += "Tolong lengkapi semua bagian dengan konten yang sesuai materi " + materi + ". Buat ringkas tapi lengkap, maksimal 2-3 kalimat per bagian.";
                     return prompt;
                 }
             },
-           koreksi: {
-    judul: "✅ Koreksi Jawaban Siswa",
-    html: '<div class="modal-label">Kunci Jawaban (simpan sekali, pakai berkali-kali)</div><textarea class="modal-input" id="fKoreksiKunci" rows="4" placeholder="Tulis kunci jawaban di sini..." style="resize:vertical;"></textarea><button onclick="simpanKunci()" style="background:#34d399;color:#080f0b;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;margin-top:8px;width:100%;">💾 Simpan Kunci Jawaban</button><div style="border-top:1px solid #333;margin:16px 0;"></div><div class="modal-label">Upload Foto Tugas Siswa</div><div class="modal-label">Nama Siswa</div><input class="modal-input" id="fKoreksiNama" type="text" placeholder="Contoh: Budi"><div style="margin-top:10px;"><button onclick="document.getElementById(\'fotoKoreksiInput\').click()" style="background:#1a6bff;color:white;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;width:100%;">📸 Pilih Foto Tugas Siswa</button></div><div id="previewKoreksi" style="margin-top:8px;display:none;"><img id="imgKoreksiPreview" style="max-width:100%;border-radius:8px;border:1px solid #333;"></div><button class="modal-btn modal-btn-rangkuman" onclick="kirimKoreksi()" style="margin-top:16px;">✅ Koreksi Sekarang</button>',
-    kirim: function() { return null; }
-},
+            koreksi: {
+                judul: "✅ Koreksi Jawaban Siswa",
+                html: '<div class="modal-label">Kunci Jawaban (simpan sekali, pakai berkali-kali)</div><textarea class="modal-input" id="fKoreksiKunci" rows="4" placeholder="Tulis kunci jawaban di sini..." style="resize:vertical;"></textarea><button onclick="simpanKunci()" style="background:#34d399;color:#080f0b;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;margin-top:8px;width:100%;">💾 Simpan Kunci Jawaban</button><div style="border-top:1px solid #333;margin:16px 0;"></div><div class="modal-label">Nama Siswa</div><input class="modal-input" id="fKoreksiNama" type="text" placeholder="Contoh: Budi"><div style="margin-top:10px;"><button onclick="document.getElementById(\'fotoKoreksiInput\').click()" style="background:#1a6bff;color:white;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;width:100%;">📸 Pilih Foto Tugas Siswa</button></div><div id="previewKoreksi" style="margin-top:8px;display:none;"><img id="imgKoreksiPreview" style="max-width:100%;border-radius:8px;border:1px solid #333;"></div><button class="modal-btn modal-btn-rangkuman" onclick="kirimKoreksi()" style="margin-top:16px;">✅ Koreksi Sekarang</button>',
+                kirim: function() { return null; }
+            },
             latihan: {
                 judul: "🎯 Latihan Soal",
                 html: '<div class="modal-label">Materi</div><input class="modal-input" id="fLatihanMateri" type="text" placeholder="Contoh: Perang Dunia II"><div class="modal-label">Kelas</div><input class="modal-input" id="fLatihanKelas" type="text" placeholder="Contoh: 11 SMA"><button class="modal-btn modal-btn-soal" onclick="kirimFitur(\'latihan\')">Buat Latihan 🎯</button>',
@@ -460,33 +432,26 @@
             document.getElementById("modalProfil").classList.add("show");
         }
 
-       document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
-    var file = e.target.files[0]; if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-        var base64 = ev.target.result;
-        document.getElementById("profilAvatarWrap").innerHTML = '<img class="profil-avatar" src="' + base64 + '">';
-        fetch("/profil/update", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto_profil:base64})});
-    };
-    reader.readAsDataURL(file);
-});
-
-document.getElementById("fotoKoreksiInput").addEventListener("change", function(e) {
-    var file = e.target.files[0]; if (!file) return;
-    fotoKoreksiFile = file;
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-        document.getElementById("imgKoreksiPreview").src = ev.target.result;
-        document.getElementById("previewKoreksi").style.display = "block";
-    };
-    reader.readAsDataURL(file);
-});
+        document.getElementById("fotoProfilInput").addEventListener("change", function(e) {
             var file = e.target.files[0]; if (!file) return;
             var reader = new FileReader();
             reader.onload = function(ev) {
                 var base64 = ev.target.result;
                 document.getElementById("profilAvatarWrap").innerHTML = '<img class="profil-avatar" src="' + base64 + '">';
                 fetch("/profil/update", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({foto_profil:base64})});
+            };
+            reader.readAsDataURL(file);
+        });
+
+        var fotoKoreksiFile = null;
+
+        document.getElementById("fotoKoreksiInput").addEventListener("change", function(e) {
+            var file = e.target.files[0]; if (!file) return;
+            fotoKoreksiFile = file;
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                document.getElementById("imgKoreksiPreview").src = ev.target.result;
+                document.getElementById("previewKoreksi").style.display = "block";
             };
             reader.readAsDataURL(file);
         });
@@ -508,6 +473,32 @@ document.getElementById("fotoKoreksiInput").addEventListener("change", function(
                 }
             });
         });
+
+        function simpanKunci() {
+            var kunci = document.getElementById("fKoreksiKunci").value.trim();
+            if (!kunci) { showToast("Isi kunci jawaban dulu!"); return; }
+            fetch("/simpan_kunci", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kunci:kunci})})
+            .then(function(r){return r.json();})
+            .then(function(data) { if (data.success) showToast("Kunci jawaban tersimpan! ✅"); });
+        }
+
+        function kirimKoreksi() {
+            var nama = document.getElementById("fKoreksiNama").value.trim() || "Siswa";
+            if (!fotoKoreksiFile) { showToast("Pilih foto tugas siswa dulu!"); return; }
+            tutupModalFitur();
+            sembunyikanWelcome();
+            var pesanKoreksi = "Tolong koreksi jawaban siswa bernama " + nama + " pada foto ini. Berikan nilai (0-100) dan penjelasan untuk setiap jawaban yang salah.";
+            tampilPesanFile(fotoKoreksiFile, pesanKoreksi);
+            var formData = new FormData();
+            formData.append("file", fotoKoreksiFile);
+            formData.append("pesan", pesanKoreksi);
+            fotoKoreksiFile = null;
+            loadingMulai(); tampilTyping();
+            fetch("/upload", {method:"POST", body:formData})
+            .then(function(r){return r.json();})
+            .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
+            .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+        }
 
         function muatDaftarObrolan() {
             fetch("/daftar_obrolan").then(function(r){return r.json();}).then(function(data) {
@@ -621,14 +612,13 @@ document.getElementById("fotoKoreksiInput").addEventListener("change", function(
             fetch("/chat", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pesan:teks})})
             .then(function(r){return r.json();})
             .then(function(data) {
-    hapusTyping();
-    loadingSelesai();
-    if (data.error === "quota_habis") {
-        tampilNotifikasiQuota(data.pesan);
-    } else {
-        tampilPesan(data.jawaban, "kaego");
-    }
-})
+                hapusTyping(); loadingSelesai();
+                if (data.error === "quota_habis") {
+                    tampilNotifikasiQuota(data.pesan);
+                } else {
+                    tampilPesan(data.jawaban, "kaego");
+                }
+            })
             .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
         }
 
@@ -685,98 +675,56 @@ document.getElementById("fotoKoreksiInput").addEventListener("change", function(
                 bubble.innerHTML = teks.split('\n').map(function(line) { return '<p>' + line + '</p>'; }).join('');
             } else { bubble.textContent = teks; }
             wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
-
-            // Tombol download jika jawaban adalah RPM
-           if (tipe === "kaego" && teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1) {
-    var kontenAsli = bubble.innerText;
+            if (tipe === "kaego" && teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1) {
+                var kontenAsli = bubble.innerText;
                 var btn = document.createElement("button");
                 btn.className = "btn-download-rpm";
                 btn.textContent = "📥 Download Word (.docx)";
                 btn.addEventListener("click", function() { downloadRPM(kontenAsli); });
                 messages.appendChild(btn);
             }
-
             scrollKeBawah();
         }
 
         function downloadRPM(konten) {
             showToast("Menyiapkan file Word...");
-            fetch("/download_rpm", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({konten: konten})
-            })
+            fetch("/download_rpm", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({konten:konten})})
             .then(function(res) { return res.blob(); })
             .then(function(blob) {
                 var url = URL.createObjectURL(blob);
-                var a = document.createElement("a");
-                a.href = url;
-                a.download = "RPM_Kaego.docx";
-                a.click();
+                var a = document.createElement("a"); a.href = url; a.download = "RPM_Kaego.docx"; a.click();
                 URL.revokeObjectURL(url);
                 showToast("File berhasil didownload!");
             })
             .catch(function() { showToast("Gagal download, coba lagi!"); });
         }
 
+        function tampilNotifikasiQuota(pesan) {
+            var messages = document.getElementById("messages");
+            var div = document.createElement("div");
+            div.style.cssText = "background:#2a1a1a;border:1px solid #ff5555;border-radius:16px;padding:16px;margin:8px 0;text-align:center;";
+            div.innerHTML = '<div style="font-size:24px;margin-bottom:8px;">⏳</div>' +
+                '<div style="color:#ff8888;font-size:14px;margin-bottom:12px;">' + pesan + '</div>' +
+                '<div style="display:flex;gap:8px;justify-content:center;">' +
+                '<button onclick="this.parentElement.parentElement.remove()" style="background:#333;color:#aaa;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;">Tutup</button>' +
+                '<button onclick="bukaHalamanPaket()" style="background:#f0b429;color:#0f0f08;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;">⬆️ Upgrade Paket</button>' +
+                '</div>';
+            messages.appendChild(div);
+            scrollKeBawah();
+        }
+
+        function bukaHalamanPaket() { window.location.href = "/paket"; }
+
         function tampilTyping() {
-    var messages = document.getElementById("messages");
-    var div = document.createElement("div"); div.id = "typing"; div.className = "message";
-    div.innerHTML = '<div class="avatar kaego"><video src="/static/avatar.mp4" style="width:36px;height:36px;border-radius:50%;object-fit:contain;" autoplay loop muted playsinline></video></div><div class="bubble kaego" style="opacity:0.5;font-style:italic;">Kaego sedang mengetik...</div>';
-    messages.appendChild(div); scrollKeBawah();
-}
-function simpanKunci() {
-    var kunci = document.getElementById("fKoreksiKunci").value.trim();
-    if (!kunci) { showToast("Isi kunci jawaban dulu!"); return; }
-    fetch("/simpan_kunci", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({kunci: kunci})
-    })
-    .then(function(r){return r.json();})
-    .then(function(data) {
-        if (data.success) showToast("Kunci jawaban tersimpan! ✅");
-    });
-}
+            var messages = document.getElementById("messages");
+            var div = document.createElement("div"); div.id = "typing"; div.className = "message";
+            div.innerHTML = '<div class="avatar kaego"><video src="/static/avatar.mp4" style="width:36px;height:36px;border-radius:50%;object-fit:contain;" autoplay loop muted playsinline></video></div><div class="bubble kaego" style="opacity:0.5;font-style:italic;">Kaego sedang mengetik...</div>';
+            messages.appendChild(div); scrollKeBawah();
+        }
 
-var fotoKoreksiFile = null;
-
-function kirimKoreksi() {
-    var nama = document.getElementById("fKoreksiNama").value.trim() || "Siswa";
-    if (!fotoKoreksiFile) { showToast("Pilih foto tugas siswa dulu!"); return; }
-    tutupModalFitur();
-    sembunyikanWelcome();
-    var pesanKoreksi = "Tolong koreksi jawaban siswa bernama " + nama + " pada foto ini. Berikan nilai (0-100) dan penjelasan untuk setiap jawaban yang salah.";
-    tampilPesanFile(fotoKoreksiFile, pesanKoreksi);
-    var formData = new FormData();
-    formData.append("file", fotoKoreksiFile);
-    formData.append("pesan", pesanKoreksi);
-    fotoKoreksiFile = null;
-    loadingMulai(); tampilTyping();
-    fetch("/upload", {method:"POST", body:formData})
-    .then(function(r){return r.json();})
-    .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
-    .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
-}function tampilNotifikasiQuota(pesan) {
-    var messages = document.getElementById("messages");
-    var div = document.createElement("div");
-    div.style.cssText = "background:#2a1a1a;border:1px solid #ff5555;border-radius:16px;padding:16px;margin:8px 0;text-align:center;";
-    div.innerHTML = '<div style="font-size:24px;margin-bottom:8px;">⏳</div>' +
-        '<div style="color:#ff8888;font-size:14px;margin-bottom:12px;">' + pesan + '</div>' +
-        '<div style="display:flex;gap:8px;justify-content:center;">' +
-        '<button onclick="this.parentElement.parentElement.remove()" style="background:#333;color:#aaa;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;">Tutup</button>' +
-        '<button onclick="bukaHalamanPaket()" style="background:#f0b429;color:#0f0f08;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;">⬆️ Upgrade Paket</button>' +
-        '</div>';
-    messages.appendChild(div);
-    scrollKeBawah();
-}
-
-function bukaHalamanPaket() {
-    window.location.href = "/paket";
-}
         function hapusTyping() { var typing = document.getElementById("typing"); if (typing) typing.remove(); }
     </script>
-     <script>
+    <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/static/sw.js')
             .then(function(reg) { console.log('SW registered'); })
