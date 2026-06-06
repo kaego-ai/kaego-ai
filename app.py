@@ -72,7 +72,34 @@ def chat():
         return jsonify({"error": "Tidak terlogin"}), 401
     if "riwayat" not in session:
         session["riwayat"] = []
+# Cek quota harian
+    from datetime import date
+    user_data = supabase.table("users").select("paket, pesan_hari_ini, reset_tanggal").eq("id", session["user_id"]).execute()
+    if user_data.data:
+        u = user_data.data[0]
+        paket = u.get("paket", "free")
+        pesan_hari_ini = u.get("pesan_hari_ini", 0)
+        reset_tanggal = u.get("reset_tanggal")
+        hari_ini = str(date.today())
 
+        # Reset counter jika hari baru
+        if reset_tanggal != hari_ini:
+            supabase.table("users").update({"pesan_hari_ini": 0, "reset_tanggal": hari_ini}).eq("id", session["user_id"]).execute()
+            pesan_hari_ini = 0
+
+        # Cek batas quota
+        batas = {"free": 10, "basic": 100, "pro": 999999}
+        limit = batas.get(paket, 10)
+
+        if pesan_hari_ini >= limit:
+            return jsonify({
+                "error": "quota_habis",
+                "paket": paket,
+                "pesan": f"Quota harian kamu sudah habis ({limit} pesan/hari). Upgrade paket untuk pesan lebih banyak!"
+            }), 429
+
+        # Tambah counter
+        supabase.table("users").update({"pesan_hari_ini": pesan_hari_ini + 1}).eq("id", session["user_id"]).execute()
     pesan_user = request.json.get("pesan")
     riwayat = session["riwayat"]
 
