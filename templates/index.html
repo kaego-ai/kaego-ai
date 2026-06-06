@@ -8,7 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Kaego AI">
     <meta name="theme-color" content="#0f0f0f">
-    <title>Kaego AI</title>
+<link rel="manifest" href="/static/manifest.json">
+<title>Kaego AI</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -764,6 +765,13 @@ function bukaHalamanPaket() {
     window.location.href = "/paket";
 }
         function hapusTyping() { var typing = document.getElementById("typing"); if (typing) typing.remove(); }
+    </script>
+     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js')
+            .then(function(reg) { console.log('SW registered'); })
+            .catch(function(err) { console.log('SW error:', err); });
+        }
     </script>
 </body>
 </html>
