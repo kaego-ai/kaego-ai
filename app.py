@@ -101,7 +101,7 @@ def chat():
             }).eq("id", session["user_id"]).execute()
 
         # Cek batas quota
-        batas = {"free": 10, "basic": 100, "pro": 999999}
+        batas = {"free": 30, "basic": 200, "pro": 999999}
         limit = batas.get(paket, 10)
 
         if pesan_hari_ini >= limit:
