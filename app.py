@@ -252,7 +252,7 @@ def upload():
             model="claude-sonnet-4-5",
             max_tokens=4096,
             timeout=120,
-            system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
+             system=f"Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get('nama')}. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
             messages=pesan_sementara
         )
         jawaban = response.content[0].text
