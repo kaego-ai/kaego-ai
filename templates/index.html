@@ -11,7 +11,9 @@
     <link rel="manifest" href="/static/manifest.json">
     <title>Kaego AI</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <style>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; overflow: hidden; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; display: flex; flex-direction: column; color: #e0e0e0; }
@@ -676,13 +678,30 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
         avatar.textContent = "👤";
     }
 }
-            var bubble = document.createElement("div"); bubble.className = "bubble " + tipe;
+           var bubble = document.createElement("div"); bubble.className = "bubble " + tipe;
             if (tipe === "kaego") {
                 teks = teks.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight:600">$1</span>');
                 teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                teks = teks.replace(/^[\-\*]\s*/gm, '');
-                bubble.innerHTML = teks.split('\n').map(function(line) { return '<p>' + line + '</p>'; }).join('');
+                teks = teks.replace(/```(\w*)\n?([\s\S]*?)```/g, function(match, lang, code) {
+                    return '<pre style="background:#1a1a2e;border-radius:10px;padding:12px;margin:8px 0;overflow-x:auto;"><code class="' + (lang || '') + '">' + code.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code></pre>';
+                });
+                teks = teks.replace(/`([^`]+)`/g, '<code style="background:#2a2a3e;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13px;">$1</code>');
+                teks = teks.replace(/^[\-\*]\s*/gm, '• ');
+                var lines = teks.split('\n');
+                var html = '';
+                lines.forEach(function(line) {
+                    if (line.includes('<pre') || line.includes('</pre>') || line.includes('<code') || line.includes('</code>')) {
+                        html += line;
+                    } else {
+                        html += '<p>' + line + '</p>';
+                    }
+                });
+                bubble.innerHTML = html;
+                bubble.querySelectorAll('pre code').forEach(function(block) {
+                    hljs.highlightElement(block);
+                });
             } else { bubble.textContent = teks; }
+            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
             wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
             if (tipe === "kaego" && teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1) {
                 var kontenAsli = bubble.innerText;
