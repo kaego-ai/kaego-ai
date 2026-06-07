@@ -142,6 +142,10 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
     .welcome-send-btn:hover::before { opacity: 0.8; }
     .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
     .toast.show { opacity: 1; }
+    .sidebar-item-wrap { display: flex; align-items: center; gap: 4px; }
+    .sidebar-item-wrap .sidebar-item { flex: 1; }
+    .btn-hapus-obrolan { background: transparent; border: none; cursor: pointer; color: #444; font-size: 14px; padding: 4px 6px; border-radius: 6px; flex-shrink: 0; transition: color 0.2s; }
+    .btn-hapus-obrolan:hover { color: #ff5555; }
     pre code.hljs { background: transparent !important; }
     pre { background:#1e1e1e !important; border-radius: 6px !important; }
     .quota-badge { font-size: 11px; color: #666; margin-left: auto; padding: 3px 10px; background: #1a1a1a; border-radius: 20px; border: 1px solid #2a2a2a; white-space: nowrap; }
@@ -526,7 +530,10 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     var div = document.createElement("div"); div.className = "sidebar-item";
                     div.textContent = item.judul || "Obrolan";
                     div.addEventListener("click", function() { bukaObrolan(item.id, item.judul); });
-                    list.appendChild(div);
+                    var wrap = document.createElement("div"); wrap.className = "sidebar-item-wrap";
+                    var btnHapus = document.createElement("button"); btnHapus.className = "btn-hapus-obrolan"; btnHapus.textContent = "🗑️";
+                    btnHapus.addEventListener("click", function(e) { e.stopPropagation(); hapusObrolan(item.id, wrap); });
+                    wrap.appendChild(div); wrap.appendChild(btnHapus); list.appendChild(wrap);
                 });
             });
         }
@@ -756,6 +763,14 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
         }
 
         function bukaHalamanPaket() { window.location.href = "/paket"; }
+function hapusObrolan(id, elWrap) {
+            if (!confirm("Hapus obrolan ini?")) return;
+            fetch("/hapus_obrolan/" + id, {method: "DELETE"})
+            .then(function(r){return r.json();})
+            .then(function(data) {
+                if (data.success) { elWrap.remove(); showToast("Obrolan dihapus!"); }
+            });
+        }
 function updateQuotaBadge(sisa, limit) {
             var badge = document.getElementById("quotaBadge");
             if (sisa === undefined || sisa === null) return;

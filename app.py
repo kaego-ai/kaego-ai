@@ -297,6 +297,16 @@ def get_kunci():
     if "user_id" not in session:
         return jsonify({"error": "Tidak terlogin"}), 401
     return jsonify({"kunci": session.get("kunci_jawaban", "")})
+@app.route("/hapus_obrolan/<obrolan_id>", methods=["DELETE"])
+def hapus_obrolan(obrolan_id):
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    supabase.table("riwayat_chat").delete().eq("obrolan_id", obrolan_id).execute()
+    supabase.table("obrolan").delete().eq("id", obrolan_id).eq("user_id", session["user_id"]).execute()
+    if session.get("obrolan_id") == obrolan_id:
+        session["riwayat"] = []
+        session["obrolan_id"] = None
+    return jsonify({"success": True})
 @app.route("/reset", methods=["POST"])
 def reset():
     if "user_id" not in session:
