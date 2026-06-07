@@ -43,6 +43,8 @@ def home():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if "user_id" in session:
+        return redirect(url_for("home"))
     if request.method == "POST":
         email = request.json.get("email")
         password = hash_password(request.json.get("password"))
