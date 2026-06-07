@@ -695,7 +695,7 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                 teks = teks.replace(/\*(.*?)\*/g, '<em>$1</em>');
                 teks = teks.replace(/```(\w*)\r?\n?([\s\S]*?)```/g, function(match, lang, code) {
     code = code.replace(/\r\n/g, '\n');
-                    return '<pre style="background:#1a1a2e;border-radius:10px;padding:12px;margin:8px 0;overflow-x:auto;"><code class="' + (lang || '') + '">' + code.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '&#10;') + '</code></pre>';
+                    return '<pre style="background:#161616;border-left:3px solid #14b8a6;border-radius:8px;padding:14px 16px;margin:8px 0;overflow-x:auto;"><code class="' + (lang || '') + '">' + code.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '&#10;') + '</code></pre>';
                 });
                 teks = teks.replace(/`([^`]+)`/g, '<code style="background:#2a2a3e;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13px;">$1</code>');
                 teks = teks.replace(/^[\-\*]\s*/gm, '• ');
