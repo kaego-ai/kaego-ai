@@ -184,7 +184,8 @@ def chat():
         "jawaban": jawaban
     }).execute()
 
-    return jsonify({"jawaban": jawaban})
+    sisa = limit - (pesan_hari_ini + 1)
+    return jsonify({"jawaban": jawaban, "sisa_quota": sisa, "limit_quota": limit})
 @app.route("/riwayat", methods=["GET"])
 def get_riwayat():
     if "user_id" not in session:

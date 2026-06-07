@@ -142,6 +142,9 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
     .welcome-send-btn:hover::before { opacity: 0.8; }
     .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #333; color: #eee; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
     .toast.show { opacity: 1; }
+    .quota-badge { font-size: 11px; color: #666; margin-left: auto; padding: 3px 10px; background: #1a1a1a; border-radius: 20px; border: 1px solid #2a2a2a; white-space: nowrap; }
+    .quota-badge.rendah { color: #f0b429; border-color: #3a2a00; }
+    .quota-badge.kritis { color: #ff5555; border-color: #3a0000; }
     </style>
 </head>
 <body>
@@ -254,6 +257,7 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <img src="/static/logo.png" alt="Kaego Logo" class="logo">
+        <span class="quota-badge" id="quotaBadge" style="display:none;"></span>
     </div>
 
     <div class="chat-area" id="chatArea">
@@ -628,6 +632,7 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     tampilNotifikasiQuota(data.pesan);
                 } else {
                     tampilPesan(data.jawaban, "kaego");
+                    updateQuotaBadge(data.sisa_quota, data.limit_quota);
                 }
             })
             .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
@@ -749,7 +754,15 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
         }
 
         function bukaHalamanPaket() { window.location.href = "/paket"; }
-
+function updateQuotaBadge(sisa, limit) {
+            var badge = document.getElementById("quotaBadge");
+            if (sisa === undefined || sisa === null) return;
+            badge.style.display = "inline-block";
+            badge.textContent = sisa + "/" + limit + " pesan";
+            badge.className = "quota-badge";
+            if (sisa <= 5) badge.classList.add("kritis");
+            else if (sisa <= 10) badge.classList.add("rendah");
+        }
         function tampilTyping() {
             var messages = document.getElementById("messages");
             var div = document.createElement("div"); div.id = "typing"; div.className = "message";
