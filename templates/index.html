@@ -95,8 +95,8 @@
     .bubble.user { background: #1a6bff; color: white; border-bottom-right-radius: 4px; }
     .bubble.kaego { background: #1e1e1e; color: #e0e0e0; border-bottom-left-radius: 4px; border: 1px solid #2a2a2a; }
     .bubble p { margin: 3px 0; font-size: 15px; }
-    .btn-download-rpm { background: #34d399; color: #080f0b; border: none; padding: 8px 16px; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 600; margin-top: 8px; margin-left: 48px; display: block; }
-    .btn-download-rpm:hover { opacity: 0.85; }
+    .btn-download { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid #333; color: #888; padding: 5px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: inherit; margin-top: 8px; margin-left: 48px; transition: border-color 0.2s, color 0.2s; }
+    .btn-download:hover { border-color: #14b8a6; color: #14b8a6; }
     .input-area { padding: 8px 16px 16px; background: #0f0f0f; border-top: 1px solid #1a1a1a; flex-shrink: 0; z-index: 100; }
     .input-box { max-width: 100%; margin: 0; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
@@ -729,14 +729,26 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             if (tipe === "kaego" && (isRPM || isSoal)) {
                 var kontenAsli = bubble.innerText;
                 var btn = document.createElement("button");
-                btn.className = "btn-download-rpm";
-                btn.textContent = isRPM ? "📥 Download RPM (.docx)" : "📥 Download Soal (.docx)";
-                btn.addEventListener("click", function() { downloadRPM(kontenAsli); });
+                btn.className = "btn-download";
+                btn.innerHTML = isRPM ? "⬇ RPM (.docx)" : "⬇ Soal (.docx)";
+                var isRPMBtn = isRPM;
+                btn.addEventListener("click", function() { isRPMBtn ? downloadRPM(kontenAsli) : downloadSoal(kontenAsli); });
                 messages.appendChild(btn);
             }
             scrollKeBawah();
         }
-
+function downloadSoal(konten) {
+            showToast("Menyiapkan file soal...");
+            fetch("/download_soal", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({konten:konten})})
+            .then(function(res) { return res.blob(); })
+            .then(function(blob) {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement("a"); a.href = url; a.download = "Soal_Kaego.docx"; a.click();
+                URL.revokeObjectURL(url);
+                showToast("File berhasil didownload!");
+            })
+            .catch(function() { showToast("Gagal download, coba lagi!"); });
+        }
         function downloadRPM(konten) {
             showToast("Menyiapkan file Word...");
             fetch("/download_rpm", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({konten:konten})})

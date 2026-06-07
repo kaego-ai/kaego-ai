@@ -340,6 +340,31 @@ def update_profil():
     if update_data:
         supabase.table("users").update(update_data).eq("id", session["user_id"]).execute()
     return jsonify({"success": True})
+@app.route("/download_soal", methods=["POST"])
+def download_soal():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    try:
+        import re
+        konten = request.json.get("konten", "")
+        konten = re.sub(r'<[^>]+>', '', konten)
+        konten = konten.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>').replace('&nbsp;', ' ')
+        doc = Document()
+        doc.add_heading("SOAL", 0)
+        for baris in konten.split("\n"):
+            baris = baris.strip()
+            if baris == "":
+                continue
+            elif baris.isupper() and len(baris) > 3:
+                doc.add_heading(baris, 2)
+            else:
+                doc.add_paragraph(baris)
+        buf = io.BytesIO()
+        doc.save(buf)
+        buf.seek(0)
+        return send_file(buf, as_attachment=True, download_name="Soal_Kaego.docx", mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 @app.route("/download_rpm", methods=["POST"])
 def download_rpm():
     if "user_id" not in session:
