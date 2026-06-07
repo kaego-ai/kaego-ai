@@ -143,8 +143,8 @@ def chat():
     elif perlu_search:
         response = client.messages.create(
             model="claude-sonnet-4-5",
-            max_tokens=4096,
-            timeout=120,
+            max_tokens=2045,
+            timeout=60,
             system=f'Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
             tools=[{"type": "web_search_20250305", "name": "web_search"}],
             messages=riwayat
@@ -152,8 +152,8 @@ def chat():
     else:
         response = client.messages.create(
             model="claude-sonnet-4-5",
-            max_tokens=4096,
-            timeout=60,
+            max_tokens=1024,
+            timeout=30,
             system=f'Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
             messages=riwayat
         )
