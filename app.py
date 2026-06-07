@@ -130,7 +130,7 @@ def chat():
     is_rpm = "RPM" in pesan_user or "Rencana Pembelajaran" in pesan_user
     
     # Web search hanya untuk pertanyaan terkini
-    perlu_search = any(kata in pesan_user.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini"])
+    perlu_search = any(kata in pesan_user.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin"])
 
     if is_rpm:
         response = client.messages.create(
