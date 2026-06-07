@@ -724,11 +724,13 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             } else { bubble.textContent = teks; }
             wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
             wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
-            if (tipe === "kaego" && teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1) {
+            var isRPM = teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1;
+            var isSoal = (teks.indexOf("Soal 1") !== -1 || teks.indexOf("1.") !== -1) && (teks.indexOf("Kunci") !== -1 || teks.indexOf("kunci") !== -1);
+            if (tipe === "kaego" && (isRPM || isSoal)) {
                 var kontenAsli = bubble.innerText;
                 var btn = document.createElement("button");
                 btn.className = "btn-download-rpm";
-                btn.textContent = "📥 Download Word (.docx)";
+                btn.textContent = isRPM ? "📥 Download RPM (.docx)" : "📥 Download Soal (.docx)";
                 btn.addEventListener("click", function() { downloadRPM(kontenAsli); });
                 messages.appendChild(btn);
             }
