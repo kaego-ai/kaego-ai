@@ -353,6 +353,7 @@ def download_soal():
         doc.add_heading("SOAL", 0)
         for baris in konten.split("\n"):
             baris = baris.strip()
+            baris = baris.lstrip('•').strip()
             if baris == "":
                 continue
             elif baris.isupper() and len(baris) > 3:
