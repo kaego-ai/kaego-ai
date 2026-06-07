@@ -504,7 +504,7 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             fetch("/upload", {method:"POST", body:formData})
             .then(function(r){return r.json();})
             .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
-            .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+            .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Kaego sedang sibuk, mohon coba beberapa saat lagi ya! 🙏", "kaego"); });
         }
 
         function muatDaftarObrolan() {
@@ -643,7 +643,7 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                 fetch("/upload", {method:"POST",body:formData})
                 .then(function(r){return r.json();})
                 .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
-                .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error saat upload. Coba lagi ya!", "kaego"); });
+                .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("File gagal terkirim, mohon coba beberapa saat lagi ya! 🙏", "kaego"); });
             } else {
                 var teks = pesan;
                 document.getElementById("input").value = ""; document.getElementById("input").style.height = "auto";
