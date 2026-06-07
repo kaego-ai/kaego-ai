@@ -13,6 +13,15 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+from flask_mail import Mail, Message
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+mail = Mail(app)
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 supabase = create_client(os.environ.get("SUPABASE_URL"), os.environ.get("SUPABASE_SECRET_KEY"))
 
@@ -383,6 +392,37 @@ def chat_tamu_kirim():
         return jsonify({"jawaban": jawaban})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+import secrets
+
+@app.route("/lupa-sandi", methods=["GET", "POST"])
+def lupa_sandi():
+    if request.method == "POST":
+        email = request.json.get("email")
+        result = supabase.table("users").select("*").eq("email", email).execute()
+        if not result.data:
+            return jsonify({"success": False, "message": "Email tidak terdaftar"})
+        token = secrets.token_urlsafe(32)
+        supabase.table("users").update({"reset_token": token}).eq("email", email).execute()
+        link = f"https://kaego-ai-production.up.railway.app/reset-sandi/{token}"
+        try:
+            msg = Message("Reset Password Kaego AI", recipients=[email])
+            msg.body = f"Halo!\n\nKlik link berikut untuk reset password kamu:\n{link}\n\nLink berlaku 1 jam.\n\nKaego AI"
+            mail.send(msg)
+            return jsonify({"success": True})
+        except Exception as e:
+            return jsonify({"success": False, "message": str(e)})
+    return render_template("lupa_sandi.html")
+
+@app.route("/reset-sandi/<token>", methods=["GET", "POST"])
+def reset_sandi(token):
+    if request.method == "POST":
+        password_baru = hash_password(request.json.get("password"))
+        result = supabase.table("users").select("*").eq("reset_token", token).execute()
+        if not result.data:
+            return jsonify({"success": False, "message": "Link tidak valid"})
+        supabase.table("users").update({"password": password_baru, "reset_token": None}).eq("reset_token", token).execute()
+        return jsonify({"success": True})
+    return render_template("reset_sandi.html", token=token)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lupa Sandi - Kaego AI</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .box { background: #141414; border: 1px solid #2a2a2a; border-radius: 20px; padding: 32px; width: 90%; max-width: 400px; }
+    .logo { text-align: center; margin-bottom: 24px; }
+    .logo img { height: 48px; }
+    h2 { font-size: 20px; color: #fff; margin-bottom: 8px; text-align: center; }
+    p { font-size: 13px; color: #888; text-align: center; margin-bottom: 24px; line-height: 1.6; }
+    label { font-size: 12px; color: #888; display: block; margin-bottom: 6px; }
+    input { width: 100%; padding: 10px 14px; background: #111; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; font-family: inherit; margin-bottom: 16px; }
+    input:focus { border-color: #14b8a6; }
+    button { width: 100%; padding: 12px; background: linear-gradient(90deg, #f97316, #14b8a6); border: none; border-radius: 10px; color: #fff; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 600; }
+    .back { text-align: center; margin-top: 16px; font-size: 13px; color: #888; }
+    .back a { color: #14b8a6; text-decoration: none; }
+    .pesan { text-align: center; font-size: 13px; margin-top: 12px; padding: 10px; border-radius: 10px; display: none; }
+    .pesan.sukses { background: #1a2a1a; color: #34d399; border: 1px solid #34d399; }
+    .pesan.error { background: #2a1a1a; color: #ff8888; border: 1px solid #ff5555; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="logo"><img src="/static/logo.png" alt="Kaego"></div>
+        <h2>Lupa Sandi?</h2>
+        <p>Masukkan email kamu, kami akan kirim link untuk reset sandi.</p>
+        <label>Email</label>
+        <input type="email" id="email" placeholder="email@contoh.com">
+        <button onclick="kirim()">Kirim Link Reset</button>
+        <div class="pesan" id="pesan"></div>
+        <div class="back"><a href="/login">← Kembali ke Login</a></div>
+    </div>
+    <script>
+        function kirim() {
+            var email = document.getElementById("email").value.trim();
+            if (!email) { tampilPesan("Isi email dulu!", "error"); return; }
+            fetch("/lupa-sandi", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email: email})
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    tampilPesan("Link reset sandi sudah dikirim ke email kamu! Cek inbox atau spam.", "sukses");
+                } else {
+                    tampilPesan(data.message || "Terjadi kesalahan", "error");
+                }
+            });
+        }
+        function tampilPesan(msg, tipe) {
+            var el = document.getElementById("pesan");
+            el.textContent = msg;
+            el.className = "pesan " + tipe;
+            el.style.display = "block";
+        }
+    </script>
+</body>
+</html>
