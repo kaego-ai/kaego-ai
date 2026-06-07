@@ -380,16 +380,15 @@ def download_rpm():
         doc.add_heading("RENCANA PEMBELAJARAN MENDALAM (RPM)", 0)
         for baris in konten.split("\n"):
             baris = baris.strip()
+            baris = baris.lstrip('•').strip()
             if baris == "":
                 continue
-            elif baris.startswith("##"):
-                doc.add_heading(baris.replace("##", "").strip(), 2)
-            elif baris.startswith("#"):
-                doc.add_heading(baris.replace("#", "").strip(), 1)
             elif baris.isupper() and len(baris) > 3:
                 doc.add_heading(baris, 2)
             else:
-                doc.add_paragraph(baris)
+                p = doc.add_paragraph(baris)
+                p.runs[0].font.size = Pt(12)
+                p.runs[0].font.name = 'Calibri'
         buf = io.BytesIO()
         doc.save(buf)
         buf.seek(0)
