@@ -404,13 +404,7 @@ def lupa_sandi():
         token = secrets.token_urlsafe(32)
         supabase.table("users").update({"reset_token": token}).eq("email", email).execute()
         link = f"https://kaego-ai-production.up.railway.app/reset-sandi/{token}"
-        try:
-            msg = Message("Reset Password Kaego AI", recipients=[email])
-            msg.body = f"Halo!\n\nKlik link berikut untuk reset password kamu:\n{link}\n\nLink berlaku 1 jam.\n\nKaego AI"
-            mail.send(msg)
-            return jsonify({"success": True})
-        except Exception as e:
-            return jsonify({"success": False, "message": str(e)})
+        return jsonify({"success": True, "link": link})
     return render_template("lupa_sandi.html")
 
 @app.route("/reset-sandi/<token>", methods=["GET", "POST"])

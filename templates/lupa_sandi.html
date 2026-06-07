@@ -47,7 +47,13 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.success) {
-                    tampilPesan("Link reset sandi sudah dikirim ke email kamu! Cek inbox atau spam.", "sukses");
+    tampilPesan("Klik link berikut untuk reset sandi kamu:", "sukses");
+    var linkEl = document.createElement("a");
+    linkEl.href = data.link;
+    linkEl.textContent = "Klik di sini untuk reset sandi";
+    linkEl.style.cssText = "display:block;margin-top:8px;color:#14b8a6;word-break:break-all;";
+    document.getElementById("pesan").appendChild(linkEl);
+}
                 } else {
                     tampilPesan(data.message || "Terjadi kesalahan", "error");
                 }
