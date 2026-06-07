@@ -437,7 +437,10 @@ def chat_tamu_kirim():
                 system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan ceria. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
                 messages=riwayat
             )
-        jawaban = response.content[0].text
+        jawaban = ""
+        for block in response.content:
+            if hasattr(block, "text"):
+                jawaban += block.text
         return jsonify({"jawaban": jawaban})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
