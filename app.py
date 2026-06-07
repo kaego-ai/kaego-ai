@@ -419,13 +419,24 @@ def chat_tamu_kirim():
         pesan = request.json.get("pesan")
         riwayat = request.json.get("riwayat", [])
         riwayat.append({"role": "user", "content": pesan})
-        response = client.messages.create(
-            model="claude-sonnet-4-5",
-            max_tokens=1024,
-            timeout=60,
-            system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan ceria. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.",
-            messages=riwayat
-        )
+        perlu_search = any(kata in pesan.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin"])
+        if perlu_search:
+            response = client.messages.create(
+                model="claude-sonnet-4-5",
+                max_tokens=1024,
+                timeout=60,
+                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan ceria. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
+                tools=[{"type": "web_search_20250305", "name": "web_search"}],
+                messages=riwayat
+            )
+        else:
+            response = client.messages.create(
+                model="claude-sonnet-4-5",
+                max_tokens=1024,
+                timeout=60,
+                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan ceria. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
+                messages=riwayat
+            )
         jawaban = response.content[0].text
         return jsonify({"jawaban": jawaban})
     except Exception as e:
