@@ -453,8 +453,7 @@ def lupa_sandi():
         result = supabase.table("users").select("*").eq("email", email).execute()
         if not result.data:
             return jsonify({"success": False, "message": "Email tidak terdaftar"})
-        token = secrets.token_urlsafe(32)
-        supabase.table("users").update({"reset_token": token}).eq("email", email).execute()
+        
         link = f"https://kaego-ai-production.up.railway.app/reset-sandi/{token}"
         return jsonify({"success": True, "link": link})
     return render_template("lupa_sandi.html")
