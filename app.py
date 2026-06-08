@@ -394,7 +394,7 @@ def download_rpm():
 def halaman_paket():
     if "user_id" not in session:
         return redirect(url_for("login"))
-    return render_template("paket.html")
+    return render_template("paket.html", client_key=os.environ.get("MIDTRANS_CLIENT_KEY"))
 @app.route("/admin")
 def admin():
     if session.get("user_id") is None:
@@ -422,6 +422,67 @@ def admin():
         paket_pro=paket_pro.count,
         user_terbaru=user_terbaru.data
     )
+import midtransclient
+
+@app.route("/buat_pembayaran", methods=["POST"])
+def buat_pembayaran():
+    if "user_id" not in session:
+        return jsonify({"error": "Tidak terlogin"}), 401
+    
+    paket = request.json.get("paket")
+    harga = {"basic": 15000, "pro": 30000}
+    
+    if paket not in harga:
+        return jsonify({"error": "Paket tidak valid"}), 400
+    
+    snap = midtransclient.Snap(
+        is_production=False,
+        server_key=os.environ.get("MIDTRANS_SERVER_KEY")
+    )
+    
+    order_id = f"kaego-{session['user_id']}-{paket}-{int(__import__('time').time())}"
+    
+    param = {
+        "transaction_details": {
+            "order_id": order_id,
+            "gross_amount": harga[paket]
+        },
+        "customer_details": {
+            "first_name": session.get("nama"),
+        },
+        "item_details": [{
+            "id": paket,
+            "price": harga[paket],
+            "quantity": 1,
+            "name": f"Kaego AI Paket {paket.capitalize()}"
+        }]
+    }
+    
+    transaction = snap.create_transaction(param)
+    token = transaction["token"]
+    
+    supabase.table("users").update({"pending_paket": paket, "pending_order_id": order_id}).eq("id", session["user_id"]).execute()
+    
+    return jsonify({"token": token, "client_key": os.environ.get("MIDTRANS_CLIENT_KEY")})
+
+@app.route("/callback_pembayaran", methods=["POST"])
+def callback_pembayaran():
+    data = request.json
+    order_id = data.get("order_id")
+    status = data.get("transaction_status")
+    fraud = data.get("fraud_status")
+    
+    if status == "capture" and fraud == "accept" or status == "settlement":
+        result = supabase.table("users").select("*").eq("pending_order_id", order_id).execute()
+        if result.data:
+            user = result.data[0]
+            supabase.table("users").update({
+                "paket": user["pending_paket"],
+                "pending_paket": None,
+                "pending_order_id": None
+            }).eq("id", user["id"]).execute()
+    
+    return jsonify({"status": "ok"})
 @app.route("/privacy")
 def privacy():
     return render_template("privacy.html")
