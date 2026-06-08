@@ -44,8 +44,7 @@ def login():
         result = supabase.table("users").select("*").eq("email", email).eq("password", password).execute()
         if result.data:
             user = result.data[0]
-            token = secrets.token_urlsafe(32)
-        supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": False, "verify_token": token}).execute()
+           
             session["user_id"] = user["id"]
             session["nama"] = user["nama"]
             session["riwayat"] = []
