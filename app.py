@@ -440,7 +440,8 @@ def buat_pembayaran():
         server_key=os.environ.get("MIDTRANS_SERVER_KEY")
     )
     
-    order_id = f"kaego-{session['user_id']}-{paket}-{int(__import__('time').time())}"
+    import time
+    order_id = f"kg-{session['user_id'][:8]}-{int(time.time())}"
     
     param = {
         "transaction_details": {
