@@ -645,7 +645,7 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     updateQuotaBadge(data.sisa_quota, data.limit_quota);
                 }
             })
-            .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Maaf, terjadi error. Coba lagi ya!", "kaego"); });
+            .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Kaego sedang tidak bisa menjawab saat ini. Mohon coba beberapa saat lagi ya! 🙏", "kaego"); });
         }
 
         function kirim() {
