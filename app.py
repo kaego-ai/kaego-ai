@@ -44,8 +44,8 @@ def login():
         result = supabase.table("users").select("*").eq("email", email).eq("password", password).execute()
         if result.data:
             user = result.data[0]
-            if not user.get("is_verified"):
-                return jsonify({"success": False, "message": "Email belum diverifikasi. Cek inbox atau folder spam kamu!"})
+            token = secrets.token_urlsafe(32)
+        supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": False, "verify_token": token}).execute()
             session["user_id"] = user["id"]
             session["nama"] = user["nama"]
             session["riwayat"] = []
@@ -63,20 +63,7 @@ def daftar():
         cek = supabase.table("users").select("*").eq("email", email).execute()
         if cek.data:
             return jsonify({"success": False, "message": "Email sudah terdaftar"})
-        token = secrets.token_urlsafe(32)
-        supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": False, "verify_token": token}).execute()
-        link = f"https://kaego-ai-production.up.railway.app/verifikasi/{token}"
-        print(f"DEBUG API KEY: {resend.api_key[:10]}...")
-        print(f"DEBUG kirim ke: {email}")
-        try:
-            resend.Emails.send({
-                "from": "Kaego AI <onboarding@resend.dev>",
-                "to": email,
-                "subject": "Verifikasi Email Kaego AI",
-                "html": f"<p>Halo <b>{nama}</b>!</p><p>Klik link berikut untuk verifikasi akun Kaego AI kamu:</p><p><a href='{link}'>Verifikasi Sekarang</a></p><p>Jika kamu tidak mendaftar, abaikan email ini.</p>"
-            })
-        except Exception as e:
-            print(f"ERROR kirim email: {str(e)}")
+        supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": True}).execute()
         return jsonify({"success": True, "message": "Cek email kamu untuk verifikasi akun!"})
     return render_template("daftar.html")
 
