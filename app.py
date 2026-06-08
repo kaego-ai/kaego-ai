@@ -13,15 +13,8 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "kaego2026xyzabc123")
-from flask_mail import Mail, Message
-
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
-mail = Mail(app)
+import resend
+resend.api_key = os.environ.get("RESEND_API_KEY")
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 supabase = create_client(os.environ.get("SUPABASE_URL"), os.environ.get("SUPABASE_SECRET_KEY"))
 
@@ -73,10 +66,13 @@ def daftar():
         token = secrets.token_urlsafe(32)
         supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": False, "verify_token": token}).execute()
         link = f"https://kaego-ai-production.up.railway.app/verifikasi/{token}"
-        msg = Message("Verifikasi Email Kaego AI", recipients=[email])
-        msg.body = f"Halo {nama}!\n\nKlik link berikut untuk verifikasi akun Kaego AI kamu:\n{link}\n\nJika kamu tidak mendaftar, abaikan email ini."
         try:
-            mail.send(msg)
+            resend.Emails.send({
+                "from": "Kaego AI <onboarding@resend.dev>",
+                "to": email,
+                "subject": "Verifikasi Email Kaego AI",
+                "html": f"<p>Halo <b>{nama}</b>!</p><p>Klik link berikut untuk verifikasi akun Kaego AI kamu:</p><p><a href='{link}'>Verifikasi Sekarang</a></p><p>Jika kamu tidak mendaftar, abaikan email ini.</p>"
+            })
         except Exception as e:
             print(f"ERROR kirim email: {str(e)}")
         return jsonify({"success": True, "message": "Cek email kamu untuk verifikasi akun!"})
