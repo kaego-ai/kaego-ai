@@ -70,4 +70,3 @@ zstandard==0.25.0
 python-docx==1.1.2
 Flask-Mail==0.10.0
 resend
-requirements.txt
