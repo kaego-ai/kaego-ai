@@ -63,10 +63,7 @@
         </div>
     </div>
 
-    <div class="quota-bar">
-        <div class="quota-text">Mode Tamu · Sisa pesan: <span id="sisaPesan">5</span>/5</div>
-        <a href="/daftar" style="font-size:12px;color:#14b8a6;text-decoration:none;">Daftar untuk pesan unlimited →</a>
-    </div>
+    <div style="display:none;"><span id="sisaPesan">5</span></div>
 
     <div class="modal-daftar" id="modalDaftar">
         <div class="modal-box">
@@ -95,7 +92,7 @@
         var sedangLoading = false;
 
         // Sapaan awal
-        tampilPesan("Halo! Saya Kaego AI 👋 Saya asisten pendidikan yang siap membantu kamu. Tanya apa saja ya! (Mode tamu: 5 pesan gratis)", "kaego");
+        tampilPesan("Halo! Saya Kaego AI 👋 Saya siap membantu kamu. Tanya apa saja ya!", "kaego");
 
         document.getElementById("btnKirim").addEventListener("click", kirim);
         document.getElementById("input").addEventListener("keypress", function(e) {
