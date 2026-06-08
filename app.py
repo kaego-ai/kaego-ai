@@ -434,7 +434,7 @@ def buat_pembayaran():
     
     if paket not in harga:
         return jsonify({"error": "Paket tidak valid"}), 400
-    print(f"DEBUG SERVER KEY: {str(os.environ.get('MIDTRANS_SERVER_KEY', 'TIDAK ADA'))[:20]}...")
+    
     snap = midtransclient.Snap(
         is_production=False,
         server_key=os.environ.get("MIDTRANS_SERVER_KEY")
