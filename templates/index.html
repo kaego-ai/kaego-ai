@@ -159,7 +159,8 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
     <input type="file" id="fotoProfilInput" accept="image/*" style="display:none">
     <input type="file" id="fotoKoreksiInput" accept="image/*" style="display:none">
-<input type="file" id="fotoSoalInput" accept="image/*" style="display:none">
+    <input type="file" id="fotoSoalKamera" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="fotoSoalGaleri" accept="image/*" style="display:none">
     <div class="modal-overlay" id="modalFitur">
         <div class="modal-fitur" id="modalFiturBox"></div>
     </div>
@@ -389,7 +390,7 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             }
             ,fotosoal: {
                 judul: "📸 Foto Soal",
-                html: '<div class="modal-label">Pertanyaan tambahan (opsional)</div><input class="modal-input" id="fFotoSoalPesan" type="text" placeholder="Contoh: Tolong jelaskan langkah-langkahnya"><div style="margin-top:10px;"><button onclick="document.getElementById(\'fotoSoalInput\').click()" style="background:#1a6bff;color:white;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;width:100%;">📸 Pilih Foto Soal</button></div><div id="previewFotoSoal" style="margin-top:8px;display:none;"><img id="imgFotoSoalPreview" style="max-width:100%;border-radius:8px;border:1px solid #333;"></div><button class="modal-btn modal-btn-rangkuman" onclick="kirimFotoSoal()" style="margin-top:16px;">🔍 Analisis Soal</button>',
+                html: '<div class="modal-label">Pertanyaan tambahan (opsional)</div><input class="modal-input" id="fFotoSoalPesan" type="text" placeholder="Contoh: Tolong jelaskan langkah-langkahnya"><div style="margin-top:10px;display:flex;gap:8px;"><button onclick="document.getElementById(\'fotoSoalKamera\').click()" style="background:#1a6bff;color:white;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;flex:1;">📸 Ambil Foto</button><button onclick="document.getElementById(\'fotoSoalGaleri\').click()" style="background:#2a2a2a;color:#ccc;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;flex:1;">🖼️ Dari Galeri</button></div><div id="previewFotoSoal" style="margin-top:8px;display:none;"><img id="imgFotoSoalPreview" style="max-width:100%;border-radius:8px;border:1px solid #333;"></div><button class="modal-btn modal-btn-rangkuman" onclick="kirimFotoSoal()" style="margin-top:16px;">🔍 Analisis Soal</button>',
                 kirim: function() { return null; }
             }
         };
@@ -800,7 +801,18 @@ function downloadSoal(konten) {
 
         function bukaHalamanPaket() { window.location.href = "/paket"; }
 var fotoSoalFile = null;
-        document.getElementById("fotoSoalInput").addEventListener("change", function(e) {
+        function handleFotoSoal(e) {
+            var file = e.target.files[0]; if (!file) return;
+            fotoSoalFile = file;
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                document.getElementById("imgFotoSoalPreview").src = ev.target.result;
+                document.getElementById("previewFotoSoal").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+        document.getElementById("fotoSoalKamera").addEventListener("change", handleFotoSoal);
+        document.getElementById("fotoSoalGaleri").addEventListener("change", function(e) {
             var file = e.target.files[0]; if (!file) return;
             fotoSoalFile = file;
             var reader = new FileReader();
@@ -810,6 +822,7 @@ var fotoSoalFile = null;
             };
             reader.readAsDataURL(file);
         });
+        document.getElementById("fotoSoalGaleri").addEventListener("change", handleFotoSoal);
 
         function kirimFotoSoal() {
             if (!fotoSoalFile) { showToast("Pilih foto soal dulu!"); return; }
