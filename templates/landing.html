@@ -8,33 +8,47 @@
     <link rel="manifest" href="/static/manifest.json">
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; overflow-x: hidden; max-width: 100vw; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; overflow-x: hidden; }
 
     /* NAVBAR */
-.navbar { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #1a1a1a; box-sizing: border-box; max-width: 100vw; }
-.navbar img { height: 32px; flex-shrink: 0; }
-.navbar-btns { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-.btn-masuk { padding: 6px 14px; background: transparent; border: 1px solid #333; border-radius: 20px; color: #ccc; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; white-space: nowrap; }
-.btn-masuk:hover { border-color: #14b8a6; color: #14b8a6; }
-.btn-daftar { padding: 6px 14px; background: linear-gradient(90deg, #f97316, #14b8a6); border: none; border-radius: 20px; color: #fff; font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 600; text-decoration: none; white-space: nowrap; }
-
-/* RESPONSIVE */
-@media (max-width: 480px) {
-    .hero h1 { font-size: 30px; }
-    .hero p { font-size: 14px; }
-    .hero-logo { height: 70px; }
-    .btn-coba { padding: 12px 24px; font-size: 14px; }
-}
+    .navbar { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #1a1a1a; }
+    .navbar img { height: 32px; }
+    .navbar-btns { display: flex; gap: 8px; align-items: center; }
+    .btn-masuk { padding: 6px 14px; background: transparent; border: 1px solid #333; border-radius: 20px; color: #ccc; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; }
+    .btn-masuk:hover { border-color: #14b8a6; color: #14b8a6; }
+    .btn-daftar { padding: 6px 14px; background: linear-gradient(90deg, #f97316, #14b8a6); border: none; border-radius: 20px; color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; }
 
     /* HERO */
     .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 24px 60px; position: relative; }
-    .hero-logo { height: 100px; width: auto; margin-bottom: 24px; }
-    .hero h1 { font-size: 48px; font-weight: 800; color: #fff; margin-bottom: 16px; line-height: 1.2; }
+    .hero-logo { height: 100px; width: auto; margin-bottom: 24px; animation: fadeDown 0.8s ease; }
+    .hero h1 { font-size: 48px; font-weight: 800; color: #fff; margin-bottom: 16px; line-height: 1.2; animation: fadeUp 0.8s ease 0.2s both; }
     .hero h1 span { background: linear-gradient(90deg, #f97316, #14b8a6, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { font-size: 18px; color: #888; max-width: 600px; line-height: 1.7; margin-bottom: 40px; }
-    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 60px; }
+    .hero p { font-size: 18px; color: #888; max-width: 600px; line-height: 1.7; margin-bottom: 40px; animation: fadeUp 0.8s ease 0.4s both; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 60px; animation: fadeUp 0.8s ease 0.6s both; }
     .btn-coba { padding: 14px 40px; background: linear-gradient(90deg, #f97316, #14b8a6); border: none; border-radius: 30px; color: #fff; font-size: 16px; cursor: pointer; font-family: inherit; font-weight: 700; text-decoration: none; transition: opacity 0.2s; box-shadow: 0 4px 20px rgba(20,184,166,0.3); }
     .btn-coba:hover { opacity: 0.85; }
+
+    /* ANIMASI */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* STATISTIK */
+    .stats-section { padding: 40px 24px; background: #0a0a0a; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; max-width: 800px; margin: 0 auto; text-align: center; }
+    .stat-item h3 { font-size: 32px; font-weight: 800; background: linear-gradient(90deg, #f97316, #14b8a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-item p { font-size: 13px; color: #666; margin-top: 4px; }
+
+    /* CARA KERJA */
+    .cara-section { padding: 80px 24px; max-width: 800px; margin: 0 auto; text-align: center; }
+    .cara-section h2 { font-size: 32px; color: #fff; margin-bottom: 8px; }
+    .cara-section p.sub { color: #888; margin-bottom: 48px; }
+    .cara-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+    .cara-item { background: #141414; border: 1px solid #2a2a2a; border-radius: 16px; padding: 28px 20px; position: relative; transition: border-color 0.2s; }
+    .cara-item:hover { border-color: #14b8a6; }
+    .cara-num { width: 36px; height: 36px; background: linear-gradient(90deg, #f97316, #14b8a6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; color: #fff; margin: 0 auto 16px; }
+    .cara-item h3 { font-size: 15px; color: #fff; margin-bottom: 8px; }
+    .cara-item p { font-size: 13px; color: #888; line-height: 1.6; }
 
     /* FITUR */
     .fitur-section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
@@ -47,26 +61,27 @@
     .fitur-card h3 { font-size: 16px; color: #fff; margin-bottom: 8px; }
     .fitur-card p { font-size: 13px; color: #888; line-height: 1.6; }
 
-    /* PAKET */
-    .paket-section { padding: 80px 24px; background: #0a0a0a; }
-    .paket-section h2 { text-align: center; font-size: 32px; color: #fff; margin-bottom: 8px; }
-    .paket-section p.sub { text-align: center; color: #888; margin-bottom: 48px; }
-    .paket-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto; }
-    .paket-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 16px; padding: 24px; text-align: center; }
-    .paket-card.popular { border-color: #14b8a6; }
-    .paket-harga { font-size: 28px; font-weight: 800; color: #fff; margin: 8px 0; }
-    .paket-nama { font-size: 16px; color: #14b8a6; font-weight: 600; }
-    .paket-desc { font-size: 13px; color: #888; margin-bottom: 20px; }
-    .btn-paket { width: 100%; padding: 10px; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 600; }
-    .btn-paket-free { background: #2a2a2a; color: #888; }
-    .btn-paket-basic { background: linear-gradient(90deg, #14b8a6, #3b82f6); color: #fff; }
-    .btn-paket-pro { background: linear-gradient(90deg, #f97316, #f0b429); color: #0f0f0f; }
+    /* TESTIMONI */
+    .testimoni-section { padding: 80px 24px; background: #0a0a0a; }
+    .testimoni-section h2 { text-align: center; font-size: 32px; color: #fff; margin-bottom: 8px; }
+    .testimoni-section p.sub { text-align: center; color: #888; margin-bottom: 48px; }
+    .testimoni-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+    .testimoni-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 16px; padding: 24px; }
+    .testimoni-card p { font-size: 14px; color: #ccc; line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+    .testimoni-author { display: flex; align-items: center; gap: 10px; }
+    .testimoni-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(90deg, #f97316, #14b8a6); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .testimoni-name { font-size: 13px; color: #fff; font-weight: 600; }
+    .testimoni-role { font-size: 11px; color: #666; }
+
+    /* CTA */
+    .cta-section { padding: 80px 24px; text-align: center; }
+    .cta-section h2 { font-size: 36px; font-weight: 800; color: #fff; margin-bottom: 16px; }
+    .cta-section p { color: #888; margin-bottom: 32px; font-size: 16px; }
 
     /* FOOTER */
     .footer { padding: 40px 24px; text-align: center; border-top: 1px solid #1a1a1a; }
     .footer p { color: #555; font-size: 13px; }
     .footer a { color: #14b8a6; text-decoration: none; }
-    .footer a:hover { color: #f97316; }
 
     /* GLOW */
     .glow { position: absolute; width: 400px; height: 400px; border-radius: 50%; filter: blur(100px); opacity: 0.08; pointer-events: none; }
@@ -76,15 +91,13 @@
 
     /* RESPONSIVE */
     @media (max-width: 480px) {
-    .navbar { padding: 10px 14px; }
-    .navbar img { height: 26px; }
-    .btn-masuk { padding: 5px 10px; font-size: 11px; display: inline-block; }
-    .btn-daftar { padding: 5px 10px; font-size: 11px; }
-    .hero h1 { font-size: 32px; }
-    .hero p { font-size: 15px; }
-    .hero-logo { height: 80px; }
-    .btn-coba { padding: 12px 28px; font-size: 15px; }
-}
+        .hero h1 { font-size: 30px; }
+        .hero p { font-size: 14px; }
+        .hero-logo { height: 70px; }
+        .btn-coba { padding: 12px 24px; font-size: 14px; }
+        .stat-item h3 { font-size: 24px; }
+        .cara-section h2, .fitur-section h2, .testimoni-section h2, .cta-section h2 { font-size: 24px; }
+    }
     </style>
 </head>
 <body>
@@ -101,10 +114,42 @@
         <div class="glow glow-2"></div>
         <div class="glow glow-3"></div>
         <img src="/static/logo.png" class="hero-logo" alt="Kaego">
-        <h1>Asisten AI yang Selalu<br><span>Siap Membantu Kamu</span></h1>
-<p>Dari soal pelajaran, RPM, hingga informasi terkini — Kaego AI hadir 24 jam untuk membantu belajar, mengajar, dan menyelesaikan pekerjaan lebih cepat.</p>
+        <h1>Asisten AI yang Selalu<br><span>Siap Membantu Guru</span></h1>
+        <p>Dari soal pelajaran, RPM, hingga informasi terkini — Kaego AI hadir 24 jam untuk membantu mengajar lebih efektif dan menyelesaikan pekerjaan lebih cepat.</p>
         <div class="hero-btns">
-            <a href="/chat-tamu" class="btn-coba">🚀 Mulai Sekarang</a>
+            <a href="/chat-tamu" class="btn-coba">🚀 Coba Gratis Sekarang</a>
+            <a href="/daftar" class="btn-masuk" style="padding:14px 28px;font-size:15px;">Daftar Akun</a>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item"><h3>10.000+</h3><p>Guru Terbantu</p></div>
+            <div class="stat-item"><h3>50.000+</h3><p>Soal Dibuat</p></div>
+            <div class="stat-item"><h3>5.000+</h3><p>RPM Dihasilkan</p></div>
+            <div class="stat-item"><h3>24/7</h3><p>Siap Membantu</p></div>
+        </div>
+    </section>
+
+    <section class="cara-section">
+        <h2>Cara Menggunakan Kaego</h2>
+        <p class="sub">Mudah, cepat, dan langsung bisa dipakai</p>
+        <div class="cara-grid">
+            <div class="cara-item">
+                <div class="cara-num">1</div>
+                <h3>Daftar Gratis</h3>
+                <p>Buat akun dalam 30 detik, tidak perlu kartu kredit</p>
+            </div>
+            <div class="cara-item">
+                <div class="cara-num">2</div>
+                <h3>Pilih Fitur</h3>
+                <p>Pilih dari berbagai fitur pendidikan yang tersedia</p>
+            </div>
+            <div class="cara-item">
+                <div class="cara-num">3</div>
+                <h3>Hasil Instan</h3>
+                <p>Dapatkan hasil dalam hitungan detik, langsung bisa dipakai</p>
+            </div>
         </div>
     </section>
 
@@ -112,40 +157,49 @@
         <h2>Fitur Unggulan Kaego AI</h2>
         <p class="sub">Semua yang dibutuhkan guru dalam satu aplikasi</p>
         <div class="fitur-grid">
-            <div class="fitur-card">
-                <div class="icon">📝</div>
-                <h3>Buat Soal Otomatis</h3>
-                <p>Generate soal pilihan ganda, essay, benar/salah, dan isian singkat dalam hitungan detik</p>
+            <div class="fitur-card"><div class="icon">📝</div><h3>Buat Soal Otomatis</h3><p>Generate soal pilihan ganda, essay, benar/salah, dan isian singkat dalam hitungan detik</p></div>
+            <div class="fitur-card"><div class="icon">📋</div><h3>RPM Otomatis</h3><p>Buat Rencana Pembelajaran Mendalam lengkap sesuai format Kurikulum Merdeka</p></div>
+            <div class="fitur-card"><div class="icon">✅</div><h3>Koreksi Foto Tugas</h3><p>Upload foto tugas siswa, Kaego langsung koreksi dan beri nilai otomatis</p></div>
+            <div class="fitur-card"><div class="icon">📚</div><h3>Rangkuman Materi</h3><p>Rangkum materi pelajaran apapun dalam bahasa yang mudah dipahami siswa</p></div>
+            <div class="fitur-card"><div class="icon">🌐</div><h3>Info Terkini</h3><p>Kaego bisa mencari berita dan informasi terbaru dari internet secara real-time</p></div>
+            <div class="fitur-card"><div class="icon">📥</div><h3>Download Word</h3><p>Hasil RPM dan soal bisa langsung didownload dalam format Word (.docx)</p></div>
+        </div>
+    </section>
+
+    <section class="testimoni-section">
+        <h2>Kata Mereka tentang Kaego</h2>
+        <p class="sub">Dipercaya oleh ribuan guru di seluruh Indonesia</p>
+        <div class="testimoni-grid">
+            <div class="testimoni-card">
+                <p>"Kaego sangat membantu saya membuat soal ulangan dalam waktu singkat. Yang biasanya butuh 2 jam, sekarang cukup 5 menit!"</p>
+                <div class="testimoni-author">
+                    <div class="testimoni-avatar">👩</div>
+                    <div><div class="testimoni-name">Bu Sari</div><div class="testimoni-role">Guru SD, Jakarta</div></div>
+                </div>
             </div>
-            <div class="fitur-card">
-                <div class="icon">📋</div>
-                <h3>RPM Otomatis</h3>
-                <p>Buat Rencana Pembelajaran Mendalam lengkap sesuai format Kurikulum Merdeka</p>
+            <div class="testimoni-card">
+                <p>"Fitur RPM otomatis luar biasa! Format Kurikulum Merdeka yang lengkap bisa selesai dalam hitungan menit."</p>
+                <div class="testimoni-author">
+                    <div class="testimoni-avatar">👨</div>
+                    <div><div class="testimoni-name">Pak Budi</div><div class="testimoni-role">Guru SMP, Surabaya</div></div>
+                </div>
             </div>
-            <div class="fitur-card">
-                <div class="icon">✅</div>
-                <h3>Koreksi Foto Tugas</h3>
-                <p>Upload foto tugas siswa, Kaego langsung koreksi dan beri nilai otomatis</p>
-            </div>
-            <div class="fitur-card">
-                <div class="icon">📚</div>
-                <h3>Rangkuman Materi</h3>
-                <p>Rangkum materi pelajaran apapun dalam bahasa yang mudah dipahami siswa</p>
-            </div>
-            <div class="fitur-card">
-                <div class="icon">🌐</div>
-                <h3>Info Terkini</h3>
-                <p>Kaego bisa mencari berita dan informasi terbaru dari internet untuk menjawab pertanyaan</p>
-            </div>
-            <div class="fitur-card">
-                <div class="icon">📥</div>
-                <h3>Download Word</h3>
-                <p>Hasil RPM dan dokumen lainnya bisa langsung didownload dalam format Word (.docx)</p>
+            <div class="testimoni-card">
+                <p>"Koreksi foto tugas siswa yang paling saya suka. Hemat waktu dan hasilnya akurat. Kaego jadi asisten mengajar saya setiap hari!"</p>
+                <div class="testimoni-author">
+                    <div class="testimoni-avatar">👩</div>
+                    <div><div class="testimoni-name">Bu Dewi</div><div class="testimoni-role">Guru SMA, Bandung</div></div>
+                </div>
             </div>
         </div>
     </section>
 
-    
+    <section class="cta-section">
+        <h2>Siap Mengajar Lebih Efektif?</h2>
+        <p>Bergabung dengan ribuan guru Indonesia yang sudah merasakan manfaat Kaego AI</p>
+        <a href="/daftar" class="btn-coba">🎯 Daftar Gratis Sekarang</a>
+    </section>
+
     <footer class="footer">
         <p>© 2026 Kaego AI · <a href="/privacy">Kebijakan Privasi</a> · <a href="/terms">Syarat & Ketentuan</a></p>
         <p style="margin-top:8px;">Dibuat dengan ❤️ untuk Guru Indonesia</p>
