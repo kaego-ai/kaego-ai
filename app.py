@@ -51,6 +51,8 @@ def login():
         result = supabase.table("users").select("*").eq("email", email).eq("password", password).execute()
         if result.data:
             user = result.data[0]
+            if not user.get("is_verified"):
+                return jsonify({"success": False, "message": "Email belum diverifikasi. Cek inbox atau folder spam kamu!"})
             session["user_id"] = user["id"]
             session["nama"] = user["nama"]
             session["riwayat"] = []
@@ -68,8 +70,16 @@ def daftar():
         cek = supabase.table("users").select("*").eq("email", email).execute()
         if cek.data:
             return jsonify({"success": False, "message": "Email sudah terdaftar"})
-        supabase.table("users").insert({"email": email, "password": password, "nama": nama}).execute()
-        return jsonify({"success": True})
+        token = secrets.token_urlsafe(32)
+        supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": False, "verify_token": token}).execute()
+        link = f"https://kaego-ai-production.up.railway.app/verifikasi/{token}"
+        msg = Message("Verifikasi Email Kaego AI", recipients=[email])
+        msg.body = f"Halo {nama}!\n\nKlik link berikut untuk verifikasi akun Kaego AI kamu:\n{link}\n\nJika kamu tidak mendaftar, abaikan email ini."
+        try:
+            mail.send(msg)
+        except Exception as e:
+            print(f"ERROR kirim email: {str(e)}")
+        return jsonify({"success": True, "message": "Cek email kamu untuk verifikasi akun!"})
     return render_template("daftar.html")
 
 @app.route("/logout")
@@ -445,7 +455,13 @@ def chat_tamu_kirim():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 import secrets
-
+@app.route("/verifikasi/<token>")
+def verifikasi_email(token):
+    result = supabase.table("users").select("*").eq("verify_token", token).execute()
+    if not result.data:
+        return "<h2>Link tidak valid atau sudah digunakan.</h2>"
+    supabase.table("users").update({"is_verified": True, "verify_token": None}).eq("verify_token", token).execute()
+    return render_template("verifikasi_sukses.html")
 @app.route("/lupa-sandi", methods=["GET", "POST"])
 def lupa_sandi():
     if request.method == "POST":
