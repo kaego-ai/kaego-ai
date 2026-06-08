@@ -159,7 +159,7 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
     <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none">
     <input type="file" id="fotoProfilInput" accept="image/*" style="display:none">
     <input type="file" id="fotoKoreksiInput" accept="image/*" style="display:none">
-
+<input type="file" id="fotoSoalInput" accept="image/*" style="display:none">
     <div class="modal-overlay" id="modalFitur">
         <div class="modal-fitur" id="modalFiturBox"></div>
     </div>
@@ -222,6 +222,7 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
                 <button class="fitur-item" onclick="bukaModalFitur('rpp')"><span class="fitur-icon">📋</span> Buat RPM</button>
                 <button class="fitur-item" onclick="bukaModalFitur('koreksi')"><span class="fitur-icon">✅</span> Koreksi Jawaban</button>
                 <button class="fitur-item" onclick="bukaModalFitur('latihan')"><span class="fitur-icon">🎯</span> Latihan Soal</button>
+            <button class="fitur-item" onclick="bukaModalFitur('fotosoal')"><span class="fitur-icon">📸</span> Foto Soal</button>
             </div>
         </div>
         <div class="sidebar-footer">
@@ -385,6 +386,11 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     if (kelas) prompt += " kelas " + kelas;
                     return prompt;
                 }
+            }
+            ,fotosoal: {
+                judul: "📸 Foto Soal",
+                html: '<div class="modal-label">Pertanyaan tambahan (opsional)</div><input class="modal-input" id="fFotoSoalPesan" type="text" placeholder="Contoh: Tolong jelaskan langkah-langkahnya"><div style="margin-top:10px;"><button onclick="document.getElementById(\'fotoSoalInput\').click()" style="background:#1a6bff;color:white;border:none;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;width:100%;">📸 Pilih Foto Soal</button></div><div id="previewFotoSoal" style="margin-top:8px;display:none;"><img id="imgFotoSoalPreview" style="max-width:100%;border-radius:8px;border:1px solid #333;"></div><button class="modal-btn modal-btn-rangkuman" onclick="kirimFotoSoal()" style="margin-top:16px;">🔍 Analisis Soal</button>',
+                kirim: function() { return null; }
             }
         };
 
@@ -793,7 +799,35 @@ function downloadSoal(konten) {
         }
 
         function bukaHalamanPaket() { window.location.href = "/paket"; }
-function hapusObrolan(id, elWrap) {
+var fotoSoalFile = null;
+        document.getElementById("fotoSoalInput").addEventListener("change", function(e) {
+            var file = e.target.files[0]; if (!file) return;
+            fotoSoalFile = file;
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                document.getElementById("imgFotoSoalPreview").src = ev.target.result;
+                document.getElementById("previewFotoSoal").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function kirimFotoSoal() {
+            if (!fotoSoalFile) { showToast("Pilih foto soal dulu!"); return; }
+            var pesan = document.getElementById("fFotoSoalPesan").value.trim() || "Tolong bantu jawab soal ini dengan penjelasan langkah per langkah yang mudah dipahami.";
+            tutupModalFitur();
+            sembunyikanWelcome();
+            tampilPesanFile(fotoSoalFile, pesan);
+            var formData = new FormData();
+            formData.append("file", fotoSoalFile);
+            formData.append("pesan", pesan);
+            fotoSoalFile = null;
+            loadingMulai(); tampilTyping();
+            fetch("/upload", {method:"POST", body:formData})
+            .then(function(r){return r.json();})
+            .then(function(data) { hapusTyping(); loadingSelesai(); tampilPesan(data.error ? "Error: " + data.error : data.jawaban, "kaego"); })
+            .catch(function() { hapusTyping(); loadingSelesai(); tampilPesan("Kaego sedang tidak bisa menjawab saat ini. Mohon coba beberapa saat lagi ya! 🙏", "kaego"); });
+        }
+        function hapusObrolan(id, elWrap) {
             if (!confirm("Hapus obrolan ini?")) return;
             fetch("/hapus_obrolan/" + id, {method: "DELETE"})
             .then(function(r){return r.json();})
