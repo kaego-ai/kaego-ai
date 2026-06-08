@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Kaego AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #e0e0e0; padding: 24px; }
+        h1 { font-size: 22px; color: #fff; margin-bottom: 24px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-card h2 { font-size: 32px; font-weight: 800; color: #14b8a6; }
+        .stat-card p { font-size: 12px; color: #666; margin-top: 4px; }
+        .section-title { font-size: 16px; color: #fff; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; background: #1a1a1a; border-radius: 12px; overflow: hidden; }
+        th { background: #222; padding: 10px 14px; text-align: left; font-size: 12px; color: #888; }
+        td { padding: 10px 14px; font-size: 13px; border-top: 1px solid #222; color: #ccc; }
+        .paket-free { color: #888; }
+        .paket-basic { color: #14b8a6; }
+        .paket-pro { color: #f0b429; }
+    </style>
+</head>
+<body>
+    <h1>📊 Admin Kaego AI</h1>
+
+    <div class="stats">
+        <div class="stat-card"><h2>{{ total_user }}</h2><p>Total User</p></div>
+        <div class="stat-card"><h2>{{ total_pesan }}</h2><p>Total Pesan</p></div>
+        <div class="stat-card"><h2>{{ total_obrolan }}</h2><p>Total Obrolan</p></div>
+        <div class="stat-card"><h2>{{ paket_free }}</h2><p>Paket Free</p></div>
+        <div class="stat-card"><h2>{{ paket_basic }}</h2><p>Paket Basic</p></div>
+        <div class="stat-card"><h2>{{ paket_pro }}</h2><p>Paket Pro</p></div>
+    </div>
+
+    <div class="section-title">👥 User Terbaru</div>
+    <table>
+        <tr>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Paket</th>
+            <th>Daftar</th>
+        </tr>
+        {% for user in user_terbaru %}
+        <tr>
+            <td>{{ user.nama }}</td>
+            <td>{{ user.email }}</td>
+            <td class="paket-{{ user.paket }}">{{ user.paket }}</td>
+            <td>{{ user.created_at[:10] if user.created_at else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

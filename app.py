@@ -395,6 +395,33 @@ def halaman_paket():
     if "user_id" not in session:
         return redirect(url_for("login"))
     return render_template("paket.html")
+@app.route("/admin")
+def admin():
+    if session.get("user_id") is None:
+        return redirect(url_for("login"))
+    # Cek apakah admin
+    user_data = supabase.table("users").select("email").eq("id", session["user_id"]).execute()
+    if not user_data.data or user_data.data[0]["email"] != "ryoarka@gmail.com":
+        return redirect(url_for("home"))
+    
+    # Statistik
+    total_user = supabase.table("users").select("id", count="exact").execute()
+    total_pesan = supabase.table("riwayat_chat").select("id", count="exact").execute()
+    total_obrolan = supabase.table("obrolan").select("id", count="exact").execute()
+    paket_free = supabase.table("users").select("id", count="exact").eq("paket", "free").execute()
+    paket_basic = supabase.table("users").select("id", count="exact").eq("paket", "basic").execute()
+    paket_pro = supabase.table("users").select("id", count="exact").eq("paket", "pro").execute()
+    user_terbaru = supabase.table("users").select("nama, email, paket, created_at").order("created_at", desc=True).limit(20).execute()
+    
+    return render_template("admin.html",
+        total_user=total_user.count,
+        total_pesan=total_pesan.count,
+        total_obrolan=total_obrolan.count,
+        paket_free=paket_free.count,
+        paket_basic=paket_basic.count,
+        paket_pro=paket_pro.count,
+        user_terbaru=user_terbaru.data
+    )
 @app.route("/privacy")
 def privacy():
     return render_template("privacy.html")
