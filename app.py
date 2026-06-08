@@ -66,6 +66,8 @@ def daftar():
         token = secrets.token_urlsafe(32)
         supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": False, "verify_token": token}).execute()
         link = f"https://kaego-ai-production.up.railway.app/verifikasi/{token}"
+        print(f"DEBUG API KEY: {resend.api_key[:10]}...")
+        print(f"DEBUG kirim ke: {email}")
         try:
             resend.Emails.send({
                 "from": "Kaego AI <onboarding@resend.dev>",
