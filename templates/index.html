@@ -787,14 +787,16 @@ function hapusObrolan(id, elWrap) {
             });
         }
 function updateQuotaBadge(sisa, limit) {
-            var badge = document.getElementById("quotaBadge");
-            if (sisa === undefined || sisa === null) return;
-            badge.style.display = "inline-block";
-            badge.textContent = sisa + "/" + limit + " pesan";
-            badge.className = "quota-badge";
-            if (sisa <= 5) badge.classList.add("kritis");
-            else if (sisa <= 10) badge.classList.add("rendah");
-        }
+    var badge = document.getElementById("quotaBadge");
+    if (sisa === undefined || sisa === null) return;
+    var terpakai = limit - sisa;
+    if (terpakai < 25) { badge.style.display = "none"; return; }
+    badge.style.display = "inline-block";
+    badge.textContent = sisa + "/" + limit + " pesan";
+    badge.className = "quota-badge";
+    if (sisa <= 5) badge.classList.add("kritis");
+    else if (sisa <= 10) badge.classList.add("rendah");
+}
         function tampilTyping() {
             var messages = document.getElementById("messages");
             var div = document.createElement("div"); div.id = "typing"; div.className = "message";
