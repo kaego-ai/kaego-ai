@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pilih Paket - Kaego AI</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key=""></script>
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; }
@@ -138,15 +139,56 @@
         <div class="divider"></div>
 
         <div class="info-box">
-            <p>💳 Sistem pembayaran <strong style="color:#14b8a6;">segera hadir</strong> — QRIS, Transfer Bank, GoPay, OVO, Dana</p>
-            <p>Untuk upgrade sementara hubungi: <a href="mailto:kaego.ai@gmail.com">kaego.ai@gmail.com</a></p>
+            <p>💳 Pembayaran aman via <strong style="color:#14b8a6;">Midtrans</strong> — QRIS, Transfer Bank, GoPay, OVO, Dana</p>
+            <p>Butuh bantuan? Hubungi: <a href="mailto:kaego.ai@gmail.com">kaego.ai@gmail.com</a></p>
         </div>
     </div>
 
-    <script>
-        function pilihPaket(paket) {
-            alert("Sistem pembayaran segera hadir!\nUntuk upgrade sekarang hubungi: kaego.ai@gmail.com");
-        }
-    </script>
+    function pilihPaket(paket) {
+        var btn = event.target;
+        btn.textContent = "Memproses...";
+        btn.disabled = true;
+        
+        fetch("/buat_pembayaran", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({paket: paket})
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.error) {
+                alert(data.error);
+                btn.textContent = paket === "basic" ? "🚀 Pilih Basic" : "⚡ Pilih Pro";
+                btn.disabled = false;
+                return;
+            }
+            // Update client key di script tag
+            document.querySelector('[data-client-key]').setAttribute('data-client-key', data.client_key);
+            
+            window.snap.pay(data.token, {
+                onSuccess: function(result) {
+                    alert("Pembayaran berhasil! Paket kamu sudah diupgrade.");
+                    window.location.reload();
+                },
+                onPending: function(result) {
+                    alert("Pembayaran pending. Selesaikan pembayaranmu ya!");
+                },
+                onError: function(result) {
+                    alert("Pembayaran gagal. Coba lagi!");
+                    btn.textContent = paket === "basic" ? "🚀 Pilih Basic" : "⚡ Pilih Pro";
+                    btn.disabled = false;
+                },
+                onClose: function() {
+                    btn.textContent = paket === "basic" ? "🚀 Pilih Basic" : "⚡ Pilih Pro";
+                    btn.disabled = false;
+                }
+            });
+        })
+        .catch(function() {
+            alert("Terjadi error, coba lagi!");
+            btn.textContent = paket === "basic" ? "🚀 Pilih Basic" : "⚡ Pilih Pro";
+            btn.disabled = false;
+        });
+    }
 </body>
 </html>
