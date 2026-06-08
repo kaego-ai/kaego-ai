@@ -735,9 +735,23 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                 btn.innerHTML = isRPM ? "⬇ RPM (.docx)" : "⬇ Soal (.docx)";
                 var isRPMBtn = isRPM;
                 btn.addEventListener("click", function() { isRPMBtn ? downloadRPM(kontenAsli) : downloadSoal(kontenAsli); });
-                messages.appendChild(btn);
+                var btnWa = document.createElement("button");
+                btnWa.className = "btn-download";
+                btnWa.innerHTML = "🟢 WhatsApp";
+                btnWa.addEventListener("click", function() { shareWhatsApp(kontenAsli); });
+                var wrapBtn = document.createElement("div");
+                wrapBtn.style.cssText = "display:flex;gap:6px;margin-top:8px;margin-left:48px;";
+                wrapBtn.appendChild(btn);
+                wrapBtn.appendChild(btnWa);
+                messages.appendChild(wrapBtn);
             }
             scrollKeBawah();
+        }
+function shareWhatsApp(konten) {
+            var teks = konten.substring(0, 1000);
+            if (konten.length > 1000) teks += "...\n\n(Dibuat dengan Kaego AI - kaego-ai-production.up.railway.app)";
+            var url = "https://wa.me/?text=" + encodeURIComponent(teks);
+            window.open(url, "_blank");
         }
 function downloadSoal(konten) {
             showToast("Menyiapkan file soal...");
