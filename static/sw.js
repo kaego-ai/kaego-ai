@@ -1,11 +1,11 @@
-const CACHE_NAME = 'kaego-v1';
+const CACHE_NAME = 'kaego-v2';
 const urlsToCache = [
-    '/',
     '/static/logo.png',
     '/static/favicon.ico'
 ];
 
 self.addEventListener('install', function(event) {
+    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME).then(function(cache) {
             return cache.addAll(urlsToCache);
@@ -13,11 +13,36 @@ self.addEventListener('install', function(event) {
     );
 });
 
+self.addEventListener('activate', function(event) {
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    if (cacheName !== CACHE_NAME) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        }).then(function() {
+            return self.clients.claim();
+        })
+    );
+});
+
 self.addEventListener('fetch', function(event) {
+    // HTML & halaman: selalu ambil dari network dulu (versi terbaru)
+    if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+        event.respondWith(
+            fetch(event.request).catch(function() {
+                return caches.match(event.request);
+            })
+        );
+        return;
+    }
+    // Aset statis (gambar dll): cache first
     event.respondWith(
         caches.match(event.request).then(function(response) {
-            if (response) return response;
-            return fetch(event.request);
+            return response || fetch(event.request);
         })
     );
 });
