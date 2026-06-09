@@ -732,7 +732,20 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                 });
             } else { bubble.textContent = teks; }
             wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
-            wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
+            if (tipe === "kaego") {
+                var btnCopy = document.createElement("button");
+                btnCopy.className = "btn-download";
+                btnCopy.style.marginTop = "6px";
+                btnCopy.style.marginLeft = "48px";
+                btnCopy.innerHTML = "📋 Salin";
+                btnCopy.addEventListener("click", function() {
+                    navigator.clipboard.writeText(bubble.innerText).then(function() {
+                        btnCopy.innerHTML = "✓ Tersalin";
+                        setTimeout(function() { btnCopy.innerHTML = "📋 Salin"; }, 2000);
+                    });
+                });
+                messages.appendChild(btnCopy);
+            }
             var isRPM = teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1;
             var isSoal = teks.indexOf("SOAL") !== -1 && (teks.indexOf("1.") !== -1 || teks.indexOf("1)") !== -1);
             if (tipe === "kaego" && (isRPM || isSoal)) {
