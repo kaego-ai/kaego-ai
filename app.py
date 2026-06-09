@@ -430,7 +430,7 @@ def buat_pembayaran():
         return jsonify({"error": "Tidak terlogin"}), 401
     
     paket = request.json.get("paket")
-    harga = {"basic": 15000, "pro": 30000}
+    harga = {"basic": 15000, "pro": 49000}
     
     if paket not in harga:
         return jsonify({"error": "Paket tidak valid"}), 400
