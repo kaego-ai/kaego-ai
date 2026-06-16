@@ -44,7 +44,7 @@ def login():
         result = supabase.table("users").select("*").eq("email", email).eq("password", password).execute()
         if result.data:
             user = result.data[0]
-           
+
             session["user_id"] = user["id"]
             session["nama"] = user["nama"]
             session["riwayat"] = []
@@ -133,16 +133,15 @@ def chat():
 
     # RPM butuh token banyak, tidak pakai web search
     is_rpm = "RPM" in pesan_user or "Rencana Pembelajaran" in pesan_user
-    
-    # Web search hanya untuk pertanyaan terkini
-    perlu_search = any(kata in pesan_user.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin"])
 
+    # Web search hanya untuk pertanyaan terkini
+    perlu_search = any(kata in pesan_user.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin", "piala dunia", "world cup", "olimpiade", "pemilu", "siapa juara", "siapa pemenang", "juara"])
     if is_rpm:
         response = client.messages.create(
             model="claude-sonnet-4-5",
             max_tokens=8192,
             timeout=300,
-            system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat RPM, selesaikan SELURUH format hingga bagian Refleksi tanpa terpotong.',
+            system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat RPM, selesaikan SELURUH format hingga bagian Refleksi tanpa terpotong.',
             messages=riwayat
         )
     elif perlu_search:
@@ -150,7 +149,7 @@ def chat():
             model="claude-sonnet-4-5",
             max_tokens=2045,
             timeout=60,
-            system=f'Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
+            system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Kamu memiliki akses pencarian web. Gunakan hasil pencarian tersebut dengan percaya diri untuk menjawab pertanyaan terkini, dan JANGAN pernah mengatakan kamu tidak bisa memberikan informasi real-time. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
             tools=[{"type": "web_search_20250305", "name": "web_search"}],
             messages=riwayat
         )
@@ -159,7 +158,7 @@ def chat():
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
             timeout=30,
-            system=f'Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
+            system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
             messages=riwayat
         )
 
@@ -184,11 +183,11 @@ def chat():
 def get_riwayat():
     if "user_id" not in session:
         return jsonify({"error": "Tidak terlogin"}), 401
-    
+
     obrolan_id = session.get("obrolan_id")
     if not obrolan_id:
         return jsonify({"riwayat": []})
-    
+
     result = supabase.table("riwayat_chat").select("*").eq("obrolan_id", obrolan_id).order("created_at").execute()
     return jsonify({"riwayat": result.data})
 
@@ -258,7 +257,7 @@ def upload():
             model="claude-sonnet-4-5",
             max_tokens=4096,
             timeout=120,
-             system=f'Namamu adalah Kaego, asisten AI pribadi yang ramah dan ceria. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic.',
+             system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic.',
             messages=pesan_sementara
         )
         jawaban = response.content[0].text
@@ -388,7 +387,7 @@ def download_rpm():
         buf.seek(0)
         return send_file(buf, as_attachment=True, download_name="RPM_Kaego.docx", mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     except Exception as e:
-        
+
        return jsonify({"error": str(e)}), 500
 @app.route("/paket")
 def halaman_paket():
@@ -403,7 +402,7 @@ def admin():
     user_data = supabase.table("users").select("email").eq("id", session["user_id"]).execute()
     if not user_data.data or user_data.data[0]["email"] != "ryoarka@gmail.com":
         return redirect(url_for("home"))
-    
+
     # Statistik
     total_user = supabase.table("users").select("id", count="exact").execute()
     total_pesan = supabase.table("riwayat_chat").select("id", count="exact").execute()
@@ -412,7 +411,7 @@ def admin():
     paket_basic = supabase.table("users").select("id", count="exact").eq("paket", "basic").execute()
     paket_pro = supabase.table("users").select("id", count="exact").eq("paket", "pro").execute()
     user_terbaru = supabase.table("users").select("nama, email, paket, created_at").order("created_at", desc=True).limit(20).execute()
-    
+
     return render_template("admin.html",
         total_user=total_user.count,
         total_pesan=total_pesan.count,
@@ -428,21 +427,21 @@ import midtransclient
 def buat_pembayaran():
     if "user_id" not in session:
         return jsonify({"error": "Tidak terlogin"}), 401
-    
+
     paket = request.json.get("paket")
     harga = {"basic": 15000, "pro": 49000}
-    
+
     if paket not in harga:
         return jsonify({"error": "Paket tidak valid"}), 400
-    
+
     snap = midtransclient.Snap(
         is_production=False,
         server_key=os.environ.get("MIDTRANS_SERVER_KEY")
     )
-    
+
     import time
     order_id = f"kg-{session['user_id'][:8]}-{int(time.time())}"
-    
+
     param = {
         "transaction_details": {
             "order_id": order_id,
@@ -458,12 +457,12 @@ def buat_pembayaran():
             "name": f"Kaego AI Paket {paket.capitalize()}"
         }]
     }
-    
+
     transaction = snap.create_transaction(param)
     token = transaction["token"]
-    
+
     supabase.table("users").update({"pending_paket": paket, "pending_order_id": order_id}).eq("id", session["user_id"]).execute()
-    
+
     return jsonify({"token": token, "client_key": os.environ.get("MIDTRANS_CLIENT_KEY")})
 
 @app.route("/callback_pembayaran", methods=["POST"])
@@ -472,7 +471,7 @@ def callback_pembayaran():
     order_id = data.get("order_id")
     status = data.get("transaction_status")
     fraud = data.get("fraud_status")
-    
+
     if status == "capture" and fraud == "accept" or status == "settlement":
         result = supabase.table("users").select("*").eq("pending_order_id", order_id).execute()
         if result.data:
@@ -482,7 +481,7 @@ def callback_pembayaran():
                 "pending_paket": None,
                 "pending_order_id": None
             }).eq("id", user["id"]).execute()
-    
+
     return jsonify({"status": "ok"})
 @app.route("/privacy")
 def privacy():
@@ -502,13 +501,13 @@ def chat_tamu_kirim():
         pesan = request.json.get("pesan")
         riwayat = request.json.get("riwayat", [])
         riwayat.append({"role": "user", "content": pesan})
-        perlu_search = any(kata in pesan.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin"])
+        perlu_search = any(kata in pesan.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin", "piala dunia", "world cup", "olimpiade", "pemilu", "siapa juara", "siapa pemenang", "juara"])
         if perlu_search:
             response = client.messages.create(
                 model="claude-sonnet-4-5",
                 max_tokens=1024,
                 timeout=60,
-                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan ceria. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
+                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Kamu memiliki akses pencarian web. Gunakan hasil pencarian tersebut dengan percaya diri untuk menjawab pertanyaan terkini, dan JANGAN pernah mengatakan kamu tidak bisa memberikan informasi real-time.",
                 tools=[{"type": "web_search_20250305", "name": "web_search"}],
                 messages=riwayat
             )
@@ -517,7 +516,7 @@ def chat_tamu_kirim():
                 model="claude-sonnet-4-5",
                 max_tokens=1024,
                 timeout=60,
-                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan ceria. Gunakan bahasa Indonesia santai. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
+                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
                 messages=riwayat
             )
         jawaban = ""
@@ -542,7 +541,8 @@ def lupa_sandi():
         result = supabase.table("users").select("*").eq("email", email).execute()
         if not result.data:
             return jsonify({"success": False, "message": "Email tidak terdaftar"})
-        
+        token = secrets.token_urlsafe(32)
+        supabase.table("users").update({"reset_token": token}).eq("email", email).execute()
         link = f"https://kaego-ai-production.up.railway.app/reset-sandi/{token}"
         return jsonify({"success": True, "link": link})
     return render_template("lupa_sandi.html")
