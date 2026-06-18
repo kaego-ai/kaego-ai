@@ -365,10 +365,10 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     prompt += "IDENTIFIKASI MATA PELAJARAN:\n- Materi: " + materi + "\n- Peserta Didik (Prasyarat): [isi]\n- Dimensi Profil Lulusan: [pilih dari 8 profil]\n- Capaian Pembelajaran: [isi CP]\n- Lintas Disiplin Ilmu: [isi]\n- Tujuan Pembelajaran: [isi tujuan]\n- Topik Pembelajaran: [isi topik]\n\n";
                     prompt += "EMPAT KERANGKA PEMBELAJARAN MENDALAM:\n1. Praktis Pedagogis: [isi]\n2. Kemitraan Pembelajaran: [isi]\n3. Lingkungan Pembelajaran: [isi]\n4. Pemanfaatan Digital: [isi]\n\n";
                     prompt += "PENGALAMAN BELAJAR:\n- Awal/Apersepsi: [isi]\n- Inti: [isi langkah pembelajaran]\n- Penutup: [isi]\n\n";
-                    prompt += "ASESMEN:\n- Diagnostik: [isi]\n- Formatif: [isi]\n- Sumatif: [isi]\n\n";
+                    prompt += "ASESMEN:\n- Diagnostik: [isi]\n- Formatif: [isi penjelasan, lalu sertakan minimal 5 contoh soal formatif bernomor lengkap dengan kunci jawaban di bawahnya]\n- Sumatif: [isi penjelasan, lalu sertakan minimal 5 contoh soal sumatif bernomor lengkap dengan kunci jawaban di bawahnya]\n\n";
                     prompt += "PENGAYAAN DAN REMEDIAL:\n- Pengayaan: [isi]\n- Remedial: [isi]\n\n";
                     prompt += "REFLEKSI:\n- Refleksi Peserta Didik: [isi]\n- Refleksi Pendidik: [isi]\n\n";
-                    prompt += "Tolong lengkapi semua bagian dengan konten yang sesuai materi " + materi + ". Buat ringkas tapi lengkap, maksimal 2-3 kalimat per bagian.";
+                    prompt += "Tolong lengkapi semua bagian dengan konten yang sesuai materi " + materi + ". Buat ringkas tapi lengkap, maksimal 2-3 kalimat per bagian. KHUSUS untuk bagian Asesmen Formatif dan Sumatif, WAJIB sertakan minimal 5 contoh soal yang ditulis bernomor (1, 2, 3, dst), dan tuliskan Kunci Jawaban di bawah setiap kumpulan soal tersebut.";
                     return prompt;
                 }
             },
