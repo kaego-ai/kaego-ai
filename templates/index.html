@@ -96,8 +96,10 @@
     .bubble.user { background: #1a6bff; color: white; border-bottom-right-radius: 4px; }
     .bubble.kaego { background: #1e1e1e; color: #e0e0e0; border-bottom-left-radius: 4px; border: 1px solid #2a2a2a; }
     .bubble p { margin: 3px 0; font-size: 15px; }
-    .btn-download { display: inline-flex; align-items: center; gap: 5px; background: transparent; border: none; color: #777; padding: 6px 10px; border-radius: 8px; font-size: 12.5px; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
-    .btn-download:hover { background: #2a2a2a; color: #fff; }
+    .aksi-frame { display: inline-flex; align-items: center; gap: 2px; background: #161616; border: 1px solid #262626; border-radius: 12px; padding: 3px; margin-top: 8px; margin-left: 48px; }
+    .btn-download { display: inline-flex; align-items: center; gap: 5px; background: transparent; border: none; color: #888; padding: 6px 12px; border-radius: 9px; font-size: 12.5px; cursor: pointer; font-family: inherit; transition: background 0.2s, color 0.2s; }
+    .btn-download:hover { background: #262626; color: #14b8a6; }
+    .btn-download + .btn-download { border-left: 1px solid #262626; }
     .input-area { padding: 8px 16px 16px; background: #0f0f0f; border-top: 1px solid #1a1a1a; flex-shrink: 0; z-index: 100; }
     .input-box { max-width: 100%; margin: 0; display: flex; gap: 10px; align-items: center; background: #1e1e1e; border-radius: 24px; padding: 10px 16px; border: 1.5px solid #333; transition: border 0.2s; flex-wrap: wrap; }
     .input-box:focus-within { border-color: #1a6bff; }
@@ -200,7 +202,22 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
             <img src="/static/logo.png" style="height:32px;width:auto;max-width:140px;">
         </div>
         <div class="sidebar-body">
-            <button class="riwayat-toggle" id="toggleRiwayat">
+            <button class="fitur-toggle open" id="toggleFitur" style="margin-top:0;">
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Fitur Pendidikan
+                </span>
+                <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="fitur-list open" id="fiturList">
+                <button class="fitur-item" onclick="bukaModalFitur('rangkuman')"><span class="fitur-icon">📚</span> Rangkuman Materi</button>
+                <button class="fitur-item" onclick="bukaModalFitur('soal')"><span class="fitur-icon">📝</span> Buat Soal Otomatis</button>
+                <button class="fitur-item" onclick="bukaModalFitur('rpp')"><span class="fitur-icon">📋</span> Buat RPM</button>
+                <button class="fitur-item" onclick="bukaModalFitur('koreksi')"><span class="fitur-icon">✅</span> Koreksi Jawaban</button>
+                <button class="fitur-item" onclick="bukaModalFitur('latihan')"><span class="fitur-icon">🎯</span> Latihan Soal</button>
+                <button class="fitur-item" onclick="bukaModalFitur('fotosoal')"><span class="fitur-icon">📸</span> Foto Soal</button>
+            </div>
+            <button class="riwayat-toggle" id="toggleRiwayat" style="margin-top:8px;">
                 <span style="display:flex;align-items:center;gap:8px;">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     Riwayat Obrolan
@@ -209,21 +226,6 @@ pre code { white-space: pre !important; display: block; line-height: 1.5; }
             </button>
             <div class="sidebar-list" id="sidebarList">
                 <div class="sidebar-empty">Belum ada obrolan</div>
-            </div>
-            <button class="fitur-toggle" id="toggleFitur">
-                <span style="display:flex;align-items:center;gap:8px;">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                    Fitur Pendidikan
-                </span>
-                <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="fitur-list" id="fiturList">
-                <button class="fitur-item" onclick="bukaModalFitur('rangkuman')"><span class="fitur-icon">📚</span> Rangkuman Materi</button>
-                <button class="fitur-item" onclick="bukaModalFitur('soal')"><span class="fitur-icon">📝</span> Buat Soal Otomatis</button>
-                <button class="fitur-item" onclick="bukaModalFitur('rpp')"><span class="fitur-icon">📋</span> Buat RPM</button>
-                <button class="fitur-item" onclick="bukaModalFitur('koreksi')"><span class="fitur-icon">✅</span> Koreksi Jawaban</button>
-                <button class="fitur-item" onclick="bukaModalFitur('latihan')"><span class="fitur-icon">🎯</span> Latihan Soal</button>
-            <button class="fitur-item" onclick="bukaModalFitur('fotosoal')"><span class="fitur-icon">📸</span> Foto Soal</button>
             </div>
         </div>
         <div class="sidebar-footer">
@@ -742,7 +744,7 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                 var isSoal = teks.indexOf("SOAL") !== -1 && (teks.indexOf("1.") !== -1 || teks.indexOf("1)") !== -1);
 
                 var barisAksi = document.createElement("div");
-                barisAksi.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;margin-left:48px;";
+                barisAksi.className = "aksi-frame";
 
                 var btnCopy = document.createElement("button");
                 btnCopy.className = "btn-download";
