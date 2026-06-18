@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kaego-v7';
+const CACHE_NAME = 'kaego-v8';
 const urlsToCache = [
     '/static/logo.png',
     '/static/favicon.ico'
