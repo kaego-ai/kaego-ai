@@ -716,11 +716,15 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     return '<pre style="background:#161616;border-left:3px solid #14b8a6;border-radius:8px;padding:14px 16px;margin:8px 0;overflow-x:auto;"><code class="' + (lang || '') + '">' + code.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '&#10;') + '</code></pre>';
                 });
                 teks = teks.replace(/`([^`]+)`/g, '<code style="background:#2a2a3e;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:13px;">$1</code>');
+                teks = teks.replace(/^###\s*(.*)$/gm, '<div style="font-weight:600;font-size:15px;color:#14b8a6;margin:10px 0 4px;">$1</div>');
+                teks = teks.replace(/^##\s*(.*)$/gm, '<div style="font-weight:700;font-size:16px;color:#f97316;margin:12px 0 6px;">$1</div>');
+                teks = teks.replace(/^#\s*(.*)$/gm, '<div style="font-weight:800;font-size:18px;color:#fff;margin:14px 0 8px;">$1</div>');
+                teks = teks.replace(/^\s*[-–—]{2,}\s*$/gm, '<hr style="border:none;border-top:1px solid #2a2a2a;margin:10px 0;">');
                 teks = teks.replace(/^[\-\*]\s*/gm, '• ');
                 var lines = teks.split('\n');
                 var html = '';
                 lines.forEach(function(line) {
-                    if (line.includes('<pre') || line.includes('</pre>') || line.includes('<code') || line.includes('</code>')) {
+                    if (line.includes('<pre') || line.includes('</pre>') || line.includes('<code') || line.includes('</code>') || line.includes('<div') || line.includes('<hr')) {
                         html += line;
                     } else {
                         html += '<p>' + line + '</p>';
@@ -733,10 +737,15 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             } else { bubble.textContent = teks; }
             wrapper.appendChild(avatar); wrapper.appendChild(bubble); messages.appendChild(wrapper);
             if (tipe === "kaego") {
+                var kontenAsli = bubble.innerText;
+                var isRPM = teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1;
+                var isSoal = teks.indexOf("SOAL") !== -1 && (teks.indexOf("1.") !== -1 || teks.indexOf("1)") !== -1);
+
+                var barisAksi = document.createElement("div");
+                barisAksi.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;margin-left:48px;";
+
                 var btnCopy = document.createElement("button");
                 btnCopy.className = "btn-download";
-                btnCopy.style.marginTop = "6px";
-                btnCopy.style.marginLeft = "48px";
                 btnCopy.innerHTML = "📋 Salin";
                 btnCopy.addEventListener("click", function() {
                     navigator.clipboard.writeText(bubble.innerText).then(function() {
@@ -744,26 +753,24 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                         setTimeout(function() { btnCopy.innerHTML = "📋 Salin"; }, 2000);
                     });
                 });
-                messages.appendChild(btnCopy);
-            }
-            var isRPM = teks.indexOf("IDENTITAS") !== -1 && teks.indexOf("REFLEKSI") !== -1;
-            var isSoal = teks.indexOf("SOAL") !== -1 && (teks.indexOf("1.") !== -1 || teks.indexOf("1)") !== -1);
-            if (tipe === "kaego" && (isRPM || isSoal)) {
-                var kontenAsli = bubble.innerText;
-                var btn = document.createElement("button");
-                btn.className = "btn-download";
-                btn.innerHTML = isRPM ? "⬇ RPM (.docx)" : "⬇ Soal (.docx)";
-                var isRPMBtn = isRPM;
-                btn.addEventListener("click", function() { isRPMBtn ? downloadRPM(kontenAsli) : downloadSoal(kontenAsli); });
-                var btnWa = document.createElement("button");
-                btnWa.className = "btn-download";
-                btnWa.innerHTML = "🟢 WhatsApp";
-                btnWa.addEventListener("click", function() { shareWhatsApp(kontenAsli); });
-                var wrapBtn = document.createElement("div");
-                wrapBtn.style.cssText = "display:flex;gap:6px;margin-top:8px;margin-left:48px;";
-                wrapBtn.appendChild(btn);
-                wrapBtn.appendChild(btnWa);
-                messages.appendChild(wrapBtn);
+                barisAksi.appendChild(btnCopy);
+
+                if (isRPM || isSoal) {
+                    var btn = document.createElement("button");
+                    btn.className = "btn-download";
+                    btn.innerHTML = isRPM ? "⬇ RPM (.docx)" : "⬇ Soal (.docx)";
+                    var isRPMBtn = isRPM;
+                    btn.addEventListener("click", function() { isRPMBtn ? downloadRPM(kontenAsli) : downloadSoal(kontenAsli); });
+                    barisAksi.appendChild(btn);
+
+                    var btnWa = document.createElement("button");
+                    btnWa.className = "btn-download";
+                    btnWa.innerHTML = "🟢 WhatsApp";
+                    btnWa.addEventListener("click", function() { shareWhatsApp(kontenAsli); });
+                    barisAksi.appendChild(btnWa);
+                }
+
+                messages.appendChild(barisAksi);
             }
             scrollKeBawah();
         }
