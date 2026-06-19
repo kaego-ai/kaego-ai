@@ -351,9 +351,9 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             },
             rpp: {
                 judul: "📋 Buat RPM",
-                html: '<div class="modal-label">Mata Pelajaran</div><input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika"><div class="modal-label">Materi Pokok</div><input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear"><div class="modal-label">Kelas</div><div class="modal-row" style="gap:8px;"><select class="modal-select" id="fRppKelas" style="flex:1;"><option value="">Pilih Kelas</option><optgroup label="SD"><option value="1">Kelas 1 SD</option><option value="2">Kelas 2 SD</option><option value="3">Kelas 3 SD</option><option value="4">Kelas 4 SD</option><option value="5">Kelas 5 SD</option><option value="6">Kelas 6 SD</option></optgroup><optgroup label="SMP"><option value="7">Kelas 7 SMP</option><option value="8">Kelas 8 SMP</option><option value="9">Kelas 9 SMP</option></optgroup><optgroup label="SMA"><option value="10">Kelas 10 SMA</option><option value="11">Kelas 11 SMA</option><option value="12">Kelas 12 SMA</option></optgroup></select><select class="modal-select" id="fRppPertemuan" style="max-width:120px;"><option value="1">1 pertemuan</option><option value="2" selected>2 pertemuan</option><option value="3">3 pertemuan</option><option value="4">4 pertemuan</option></select></div><div class="modal-label">Dimensi Profil Lulusan (pilih yang sesuai)</div><div id="fRppDimensi" style="display:flex;flex-direction:column;gap:6px;background:#111;border:1px solid #333;border-radius:10px;padding:12px;">' +
+                html: '<div class="modal-label">Mata Pelajaran</div><input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika"><div class="modal-label">Materi Pokok</div><input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear"><div class="modal-label">Kelas</div><div class="modal-row" style="gap:8px;"><select class="modal-select" id="fRppKelas" style="flex:1;"><option value="">Pilih Kelas</option><optgroup label="SD"><option value="1">Kelas 1 SD</option><option value="2">Kelas 2 SD</option><option value="3">Kelas 3 SD</option><option value="4">Kelas 4 SD</option><option value="5">Kelas 5 SD</option><option value="6">Kelas 6 SD</option></optgroup><optgroup label="SMP"><option value="7">Kelas 7 SMP</option><option value="8">Kelas 8 SMP</option><option value="9">Kelas 9 SMP</option></optgroup><optgroup label="SMA"><option value="10">Kelas 10 SMA</option><option value="11">Kelas 11 SMA</option><option value="12">Kelas 12 SMA</option></optgroup></select><select class="modal-select" id="fRppPertemuan" style="max-width:120px;"><option value="1">1 pertemuan</option><option value="2" selected>2 pertemuan</option><option value="3">3 pertemuan</option><option value="4">4 pertemuan</option></select></div><div class="modal-label">Dimensi Profil Lulusan</div><button type="button" id="btnToggleDimensi" onclick="toggleDimensi()" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#111;border:1px solid #333;border-radius:10px;color:#aaa;font-size:14px;cursor:pointer;font-family:inherit;"><span id="dimensiLabel">Pilih dimensi (boleh lebih dari satu)</span><span id="dimensiChevron" style="transition:transform 0.2s;">▼</span></button><div id="fRppDimensi" style="display:none;flex-direction:column;gap:6px;background:#111;border:1px solid #333;border-top:none;border-radius:0 0 10px 10px;padding:12px;margin-top:-1px;">' +
                     ['Keimanan dan Ketakwaan terhadap Tuhan YME','Kewargaan','Penalaran Kritis','Kreativitas','Kolaborasi','Kemandirian','Kesehatan','Komunikasi'].map(function(d){
-                        return '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#ccc;cursor:pointer;"><input type="checkbox" class="dimensi-cb" value="'+d+'" style="width:16px;height:16px;accent-color:#34d399;cursor:pointer;">'+d+'</label>';
+                        return '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#ccc;cursor:pointer;"><input type="checkbox" class="dimensi-cb" value="'+d+'" onchange="updateDimensiLabel()" style="width:16px;height:16px;accent-color:#34d399;cursor:pointer;">'+d+'</label>';
                     }).join('') +
                     '</div><div class="modal-label">Nama Guru</div><input class="modal-input" id="fRppGuru" type="text" placeholder="Nama Guru"><div class="modal-label">Nama Sekolah</div><input class="modal-input" id="fRppSekolah" type="text" placeholder="Nama Sekolah"><button class="modal-btn modal-btn-rpp" onclick="kirimFitur(\'rpp\')">Buat RPM 📋</button>',
                 kirim: function() {
@@ -366,7 +366,6 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
                     if (!kelasNum) { showToast("Pilih kelas dulu!"); return; }
 
-                    // Tentukan fase otomatis dari kelas (Kurikulum Merdeka)
                     var k = parseInt(kelasNum);
                     var fase = "";
                     if (k <= 2) fase = "A"; else if (k <= 4) fase = "B"; else if (k <= 6) fase = "C";
@@ -374,7 +373,6 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
                     var jenjang = k <= 6 ? "SD" : (k <= 9 ? "SMP" : "SMA");
                     var kelas = "Kelas " + k + " " + jenjang + " / Fase " + fase;
 
-                    // Ambil dimensi yang dicentang
                     var dipilih = [];
                     document.querySelectorAll(".dimensi-cb:checked").forEach(function(cb){ dipilih.push(cb.value); });
                     var dimensiText = dipilih.length > 0 ? dipilih.join(", ") : "pilih yang paling relevan dengan materi";
@@ -416,7 +414,28 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
         };
 
         var fiturAktif = null;
+function toggleDimensi() {
+            var box = document.getElementById("fRppDimensi");
+            var chev = document.getElementById("dimensiChevron");
+            if (box.style.display === "none") {
+                box.style.display = "flex";
+                chev.style.transform = "rotate(180deg)";
+            } else {
+                box.style.display = "none";
+                chev.style.transform = "rotate(0deg)";
+            }
+        }
 
+        function updateDimensiLabel() {
+            var dipilih = document.querySelectorAll(".dimensi-cb:checked").length;
+            var label = document.getElementById("dimensiLabel");
+            if (dipilih === 0) {
+                label.textContent = "Pilih dimensi (boleh lebih dari satu)";
+                label.style.color = "";
+            } else {
+                label.textContent = dipilih + " dimensi dipilih";
+            }
+        }
         function bukaModalFitur(tipe) {
             fiturAktif = tipe;
             var f = kontenFitur[tipe];
