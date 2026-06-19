@@ -3,6 +3,7 @@ import anthropic
 import os
 import base64
 import hashlib
+import secrets
 from supabase import create_client
 from dotenv import load_dotenv
 from docx import Document
@@ -20,6 +21,21 @@ supabase = create_client(os.environ.get("SUPABASE_URL"), os.environ.get("SUPABAS
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
+
+def kirim_email(ke, subjek, isi_html):
+    try:
+        resend.Emails.send({
+            "from": "Kaego AI <noreply@kaego.id>",
+            "to": [ke],
+            "subject": subjek,
+            "html": isi_html
+        })
+        return True
+    except Exception as e:
+        print(f"ERROR kirim email: {str(e)}")
+        return False
+
+APP_URL = os.environ.get("APP_URL", "https://ai.kaego.id")
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
@@ -44,7 +60,8 @@ def login():
         result = supabase.table("users").select("*").eq("email", email).eq("password", password).execute()
         if result.data:
             user = result.data[0]
-
+            if not user.get("is_verified"):
+                return jsonify({"success": False, "message": "Akun belum diverifikasi. Cek email kamu dulu ya."})
             session["user_id"] = user["id"]
             session["nama"] = user["nama"]
             session["riwayat"] = []
@@ -62,7 +79,30 @@ def daftar():
         cek = supabase.table("users").select("*").eq("email", email).execute()
         if cek.data:
             return jsonify({"success": False, "message": "Email sudah terdaftar"})
-        supabase.table("users").insert({"email": email, "password": password, "nama": nama, "is_verified": True}).execute()
+
+        token = secrets.token_urlsafe(32)
+        supabase.table("users").insert({
+            "email": email,
+            "password": password,
+            "nama": nama,
+            "is_verified": False,
+            "verify_token": token
+        }).execute()
+
+        link = f"{APP_URL}/verifikasi/{token}"
+        isi = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto;">
+            <h2>Halo {nama}! 👋</h2>
+            <p>Terima kasih sudah mendaftar di <b>Kaego AI</b>.</p>
+            <p>Klik tombol di bawah untuk memverifikasi akunmu:</p>
+            <a href="{link}" style="display:inline-block; background:#f97316; color:#fff; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:bold;">Verifikasi Akun</a>
+            <p style="color:#888; font-size:13px; margin-top:20px;">Jika tombol tidak berfungsi, salin link ini:<br>{link}</p>
+        </div>
+        """
+        terkirim = kirim_email(email, "Verifikasi Akun Kaego AI", isi)
+        if not terkirim:
+            return jsonify({"success": False, "message": "Gagal mengirim email. Coba lagi."})
+
         return jsonify({"success": True, "message": "Cek email kamu untuk verifikasi akun!"})
     return render_template("daftar.html")
 
@@ -526,7 +566,7 @@ def chat_tamu_kirim():
         return jsonify({"jawaban": jawaban})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-import secrets
+
 @app.route("/verifikasi/<token>")
 def verifikasi_email(token):
     result = supabase.table("users").select("*").eq("verify_token", token).execute()
@@ -534,6 +574,7 @@ def verifikasi_email(token):
         return "<h2>Link tidak valid atau sudah digunakan.</h2>"
     supabase.table("users").update({"is_verified": True, "verify_token": None}).eq("verify_token", token).execute()
     return render_template("verifikasi_sukses.html")
+
 @app.route("/lupa-sandi", methods=["GET", "POST"])
 def lupa_sandi():
     if request.method == "POST":
@@ -543,8 +584,17 @@ def lupa_sandi():
             return jsonify({"success": False, "message": "Email tidak terdaftar"})
         token = secrets.token_urlsafe(32)
         supabase.table("users").update({"reset_token": token}).eq("email", email).execute()
-        link = f"https://kaego-ai-production.up.railway.app/reset-sandi/{token}"
-        return jsonify({"success": True, "link": link})
+        link = f"{APP_URL}/reset-sandi/{token}"
+        isi = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto;">
+            <h2>Reset Kata Sandi 🔑</h2>
+            <p>Kami menerima permintaan untuk mengatur ulang kata sandi akun Kaego AI kamu.</p>
+            <a href="{link}" style="display:inline-block; background:#f97316; color:#fff; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:bold;">Reset Kata Sandi</a>
+            <p style="color:#888; font-size:13px; margin-top:20px;">Jika kamu tidak meminta ini, abaikan saja email ini.<br>Atau salin link: {link}</p>
+        </div>
+        """
+        kirim_email(email, "Reset Kata Sandi Kaego AI", isi)
+        return jsonify({"success": True, "message": "Link reset sudah dikirim ke email kamu!"})
     return render_template("lupa_sandi.html")
 
 @app.route("/reset-sandi/<token>", methods=["GET", "POST"])

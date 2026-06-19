@@ -15,20 +15,17 @@
     label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
     input { width: 100%; padding: 10px 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 10px; color: #e0e0e0; font-size: 14px; outline: none; }
     input:focus { border-color: #1a6bff; }
-
-    /* Input password + tombol mata */
     .password-wrapper { position: relative; }
     .password-wrapper input { padding-right: 42px; }
     .toggle-pw { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #666; padding: 0; display: flex; align-items: center; width: auto; margin-top: 0; }
     .toggle-pw:hover { color: #aaa; background: transparent; }
     .toggle-pw svg { width: 18px; height: 18px; }
-
     button.btn-daftar { width: 100%; padding: 12px; background: #1a6bff; color: white; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; margin-top: 8px; }
     button.btn-daftar:hover { background: #0055dd; }
     .link { text-align: center; margin-top: 16px; font-size: 13px; color: #888; }
     .link a { color: #1a6bff; text-decoration: none; }
     .error { color: #ff4444; font-size: 13px; text-align: center; margin-top: 8px; display: none; }
-    .success { color: #44ff88; font-size: 13px; text-align: center; margin-top: 8px; display: none; }
+    .success { color: #44ff88; font-size: 13px; text-align: center; margin-top: 12px; display: none; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -67,7 +64,6 @@
     </div>
 
     <script>
-        // Toggle password
         document.getElementById("togglePw").addEventListener("click", function() {
             var input = document.getElementById("password");
             var iconTutup = document.getElementById("iconTutup");
@@ -100,9 +96,9 @@
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (data.success) {
+                    document.getElementById("error").style.display = "none";
                     document.getElementById("success").style.display = "block";
-                    document.getElementById("success").textContent = "Berhasil daftar! Silakan login.";
-                    setTimeout(function() { window.location.href = "/login"; }, 2000);
+                    document.getElementById("success").innerHTML = "Berhasil daftar! 📧<br>Cek email kamu untuk verifikasi akun sebelum login.";
                 } else {
                     document.getElementById("error").style.display = "block";
                     document.getElementById("error").textContent = data.message;
