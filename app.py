@@ -604,7 +604,7 @@ def reset_sandi(token):
         result = supabase.table("users").select("*").eq("reset_token", token).execute()
         if not result.data:
             return jsonify({"success": False, "message": "Link tidak valid"})
-        supabase.table("users").update({"password": password_baru, "reset_token": None}).eq("reset_token", token).execute()
+        supabase.table("users").update({"password": password_baru, "reset_token": None, "is_verified": True}).eq("reset_token", token).execute()
         return jsonify({"success": True})
     return render_template("reset_sandi.html", token=token)
 if __name__ == "__main__":
