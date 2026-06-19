@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, jsonify, session, send_from_directory, redirect, url_for
 import anthropic
 import os
@@ -523,20 +524,45 @@ def buat_pembayaran():
 
 @app.route("/callback_pembayaran", methods=["POST"])
 def callback_pembayaran():
-    data = request.json
+    data = request.json or {}
     order_id = data.get("order_id")
+    status_code = data.get("status_code")
+    gross_amount = data.get("gross_amount")
+    signature_key = data.get("signature_key")
     status = data.get("transaction_status")
     fraud = data.get("fraud_status")
 
-    if status == "capture" and fraud == "accept" or status == "settlement":
-        result = supabase.table("users").select("*").eq("pending_order_id", order_id).execute()
-        if result.data:
-            user = result.data[0]
-            supabase.table("users").update({
-                "paket": user["pending_paket"],
-                "pending_paket": None,
-                "pending_order_id": None
-            }).eq("id", user["id"]).execute()
+    # 1) Verifikasi signature dari Midtrans (cegah notifikasi palsu)
+    server_key = os.environ.get("MIDTRANS_SERVER_KEY", "")
+    if not (order_id and status_code and gross_amount and signature_key):
+        return jsonify({"status": "data tidak lengkap"}), 400
+    bahan = f"{order_id}{status_code}{gross_amount}{server_key}"
+    signature_hitung = hashlib.sha512(bahan.encode()).hexdigest()
+    if signature_hitung != signature_key:
+        print(f"PERINGATAN: signature tidak cocok untuk order {order_id}")
+        return jsonify({"status": "signature tidak valid"}), 403
+
+    # 2) Hanya proses jika pembayaran benar-benar berhasil
+    sukses = (status == "settlement") or (status == "capture" and fraud == "accept")
+    if not sukses:
+        return jsonify({"status": "ok"})
+
+    # 3) Cari user berdasarkan order_id yang tersimpan
+    result = supabase.table("users").select("*").eq("pending_order_id", order_id).execute()
+    if not result.data:
+        return jsonify({"status": "order tidak ditemukan"})
+
+    user = result.data[0]
+
+    # 4) Cegah double-proses (kalau notifikasi datang lebih dari sekali)
+    if not user.get("pending_paket"):
+        return jsonify({"status": "sudah diproses"})
+
+    supabase.table("users").update({
+        "paket": user["pending_paket"],
+        "pending_paket": None,
+        "pending_order_id": None
+    }).eq("id", user["id"]).execute()
 
     return jsonify({"status": "ok"})
 @app.route("/privacy")
