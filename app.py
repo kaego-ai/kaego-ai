@@ -178,18 +178,26 @@ def chat():
     perlu_search = any(kata in pesan_user.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin", "piala dunia", "world cup", "olimpiade", "pemilu", "siapa juara", "siapa pemenang", "juara"])
     if is_rpm:
         response = client.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=8192,
             timeout=300,
-            system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat RPM, selesaikan SELURUH format hingga bagian Refleksi tanpa terpotong. Awali setiap judul bagian dengan satu emoji yang relevan dengan isinya, misalnya 🌳 untuk materi alam, 🎯 untuk tujuan pembelajaran, 📋 untuk identitas, 📝 untuk asesmen, dan emoji lain yang sesuai topik.',
+            system=[{
+                "type": "text",
+                "text": f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat RPM, selesaikan SELURUH format hingga bagian Refleksi tanpa terpotong. Awali setiap judul bagian dengan satu emoji yang relevan dengan isinya, misalnya 🌳 untuk materi alam, 🎯 untuk tujuan pembelajaran, 📋 untuk identitas, 📝 untuk asesmen, dan emoji lain yang sesuai topik.',
+                "cache_control": {"type": "ephemeral"}
+            }],
             messages=riwayat
         )
     elif perlu_search:
         response = client.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=2045,
             timeout=60,
-            system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Kamu memiliki akses pencarian web. Gunakan hasil pencarian tersebut dengan percaya diri untuk menjawab pertanyaan terkini, dan JANGAN pernah mengatakan kamu tidak bisa memberikan informasi real-time. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
+            system=[{
+                "type": "text",
+                "text": f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Kamu memiliki akses pencarian web. Gunakan hasil pencarian tersebut dengan percaya diri untuk menjawab pertanyaan terkini, dan JANGAN pernah mengatakan kamu tidak bisa memberikan informasi real-time. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
+                "cache_control": {"type": "ephemeral"}
+            }],
             tools=[{"type": "web_search_20250305", "name": "web_search"}],
             messages=riwayat
         )
@@ -198,7 +206,11 @@ def chat():
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
             timeout=30,
-            system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
+            system=[{
+                "type": "text",
+                "text": f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Selalu sapa dengan Halo {session.get("nama")}! di awal percakapan. Panggil pengguna langsung dengan namanya tanpa kata Kak. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Saat membuat soal pilihan ganda, tulis setiap pilihan di baris baru dengan tanda strip seperti: - a. pilihan - b. pilihan',
+                "cache_control": {"type": "ephemeral"}
+            }],
             messages=riwayat
         )
 
@@ -294,10 +306,14 @@ def upload():
        # Buat pesan sementara tanpa simpan foto di session
         pesan_sementara = riwayat + [{"role": "user", "content": content}]
         response = client.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=4096,
             timeout=120,
-             system=f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic.',
+             system=[{
+                 "type": "text",
+                 "text": f'Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Nama pengguna adalah {session.get("nama")}. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic.',
+                 "cache_control": {"type": "ephemeral"}
+             }],
             messages=pesan_sementara
         )
         jawaban = response.content[0].text
@@ -544,19 +560,27 @@ def chat_tamu_kirim():
         perlu_search = any(kata in pesan.lower() for kata in ["berita", "terkini", "hari ini", "sekarang", "terbaru", "2025", "2026", "minggu ini", "bulan ini", "tahun ini", "motogp", "formula", "bola", "liga", "pertandingan", "hasil", "score", "jadwal", "harga", "cuaca", "gempa", "banjir", "politik", "presiden", "menteri", "covid", "virus", "ekonomi", "dolar", "rupiah", "saham", "crypto", "bitcoin", "piala dunia", "world cup", "olimpiade", "pemilu", "siapa juara", "siapa pemenang", "juara"])
         if perlu_search:
             response = client.messages.create(
-                model="claude-sonnet-4-5",
+                model="claude-sonnet-4-6",
                 max_tokens=1024,
                 timeout=60,
-                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Kamu memiliki akses pencarian web. Gunakan hasil pencarian tersebut dengan percaya diri untuk menjawab pertanyaan terkini, dan JANGAN pernah mengatakan kamu tidak bisa memberikan informasi real-time.",
+                system=[{
+                    "type": "text",
+                    "text": "Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026. Kamu memiliki akses pencarian web. Gunakan hasil pencarian tersebut dengan percaya diri untuk menjawab pertanyaan terkini, dan JANGAN pernah mengatakan kamu tidak bisa memberikan informasi real-time.",
+                    "cache_control": {"type": "ephemeral"}
+                }],
                 tools=[{"type": "web_search_20250305", "name": "web_search"}],
                 messages=riwayat
             )
         else:
             response = client.messages.create(
-                model="claude-sonnet-4-5",
+                model="claude-sonnet-4-6",
                 max_tokens=1024,
                 timeout=60,
-                system="Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
+                system=[{
+                    "type": "text",
+                    "text": "Namamu adalah Kaego, asisten AI pendidikan yang ramah dan sopan. Gunakan bahasa Indonesia yang baik dan jelas, hindari singkatan gaul seperti ngak, gak, kalo, udah. Jangan pernah mengaku sebagai Claude atau Anthropic. Tahun sekarang adalah 2026.",
+                    "cache_control": {"type": "ephemeral"}
+                }],
                 messages=riwayat
             )
         jawaban = ""
@@ -604,7 +628,7 @@ def reset_sandi(token):
         result = supabase.table("users").select("*").eq("reset_token", token).execute()
         if not result.data:
             return jsonify({"success": False, "message": "Link tidak valid"})
-        supabase.table("users").update({"password": password_baru, "reset_token": None, "is_verified": True}).eq("reset_token", token).execute()
+        supabase.table("users").update({"password": password_baru, "reset_token": None}).eq("reset_token", token).execute()
         return jsonify({"success": True})
     return render_template("reset_sandi.html", token=token)
 if __name__ == "__main__":
