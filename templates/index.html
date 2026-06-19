@@ -351,24 +351,43 @@ fetch("/profil").then(function(r){return r.json();}).then(function(data) {
             },
             rpp: {
                 judul: "📋 Buat RPM",
-                html: '<div class="modal-label">Mata Pelajaran</div><input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika"><div class="modal-label">Materi Pokok</div><input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear"><div class="modal-label">Kelas / Fase</div><div class="modal-row" style="gap:8px;"><input class="modal-input" id="fRppKelas" type="text" placeholder="Contoh: 4 / Fase B" style="flex:1;"><select class="modal-select" id="fRppPertemuan" style="max-width:120px;"><option value="1">1 pertemuan</option><option value="2" selected>2 pertemuan</option><option value="3">3 pertemuan</option><option value="4">4 pertemuan</option></select></div><div class="modal-label">Nama Guru</div><input class="modal-input" id="fRppGuru" type="text" placeholder="Nama Guru"><div class="modal-label">Nama Sekolah</div><input class="modal-input" id="fRppSekolah" type="text" placeholder="Nama Sekolah"><button class="modal-btn modal-btn-rpp" onclick="kirimFitur(\'rpp\')">Buat RPM 📋</button>',
+                html: '<div class="modal-label">Mata Pelajaran</div><input class="modal-input" id="fRppMapel" type="text" placeholder="Contoh: Matematika"><div class="modal-label">Materi Pokok</div><input class="modal-input" id="fRppMateri" type="text" placeholder="Contoh: Persamaan Linear"><div class="modal-label">Kelas</div><div class="modal-row" style="gap:8px;"><select class="modal-select" id="fRppKelas" style="flex:1;"><option value="">Pilih Kelas</option><optgroup label="SD"><option value="1">Kelas 1 SD</option><option value="2">Kelas 2 SD</option><option value="3">Kelas 3 SD</option><option value="4">Kelas 4 SD</option><option value="5">Kelas 5 SD</option><option value="6">Kelas 6 SD</option></optgroup><optgroup label="SMP"><option value="7">Kelas 7 SMP</option><option value="8">Kelas 8 SMP</option><option value="9">Kelas 9 SMP</option></optgroup><optgroup label="SMA"><option value="10">Kelas 10 SMA</option><option value="11">Kelas 11 SMA</option><option value="12">Kelas 12 SMA</option></optgroup></select><select class="modal-select" id="fRppPertemuan" style="max-width:120px;"><option value="1">1 pertemuan</option><option value="2" selected>2 pertemuan</option><option value="3">3 pertemuan</option><option value="4">4 pertemuan</option></select></div><div class="modal-label">Dimensi Profil Lulusan (pilih yang sesuai)</div><div id="fRppDimensi" style="display:flex;flex-direction:column;gap:6px;background:#111;border:1px solid #333;border-radius:10px;padding:12px;">' +
+                    ['Keimanan dan Ketakwaan terhadap Tuhan YME','Kewargaan','Penalaran Kritis','Kreativitas','Kolaborasi','Kemandirian','Kesehatan','Komunikasi'].map(function(d){
+                        return '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#ccc;cursor:pointer;"><input type="checkbox" class="dimensi-cb" value="'+d+'" style="width:16px;height:16px;accent-color:#34d399;cursor:pointer;">'+d+'</label>';
+                    }).join('') +
+                    '</div><div class="modal-label">Nama Guru</div><input class="modal-input" id="fRppGuru" type="text" placeholder="Nama Guru"><div class="modal-label">Nama Sekolah</div><input class="modal-input" id="fRppSekolah" type="text" placeholder="Nama Sekolah"><button class="modal-btn modal-btn-rpp" onclick="kirimFitur(\'rpp\')">Buat RPM 📋</button>',
                 kirim: function() {
                     var mapel = document.getElementById("fRppMapel").value.trim();
                     var materi = document.getElementById("fRppMateri").value.trim();
-                    var kelas = document.getElementById("fRppKelas").value.trim();
+                    var kelasNum = document.getElementById("fRppKelas").value;
                     var pertemuan = document.getElementById("fRppPertemuan").value;
                     var guru = document.getElementById("fRppGuru").value.trim();
                     var sekolah = document.getElementById("fRppSekolah").value.trim();
                     if (!mapel || !materi) { showToast("Isi mata pelajaran dan materi!"); return; }
+                    if (!kelasNum) { showToast("Pilih kelas dulu!"); return; }
+
+                    // Tentukan fase otomatis dari kelas (Kurikulum Merdeka)
+                    var k = parseInt(kelasNum);
+                    var fase = "";
+                    if (k <= 2) fase = "A"; else if (k <= 4) fase = "B"; else if (k <= 6) fase = "C";
+                    else if (k <= 9) fase = "D"; else if (k === 10) fase = "E"; else fase = "F";
+                    var jenjang = k <= 6 ? "SD" : (k <= 9 ? "SMP" : "SMA");
+                    var kelas = "Kelas " + k + " " + jenjang + " / Fase " + fase;
+
+                    // Ambil dimensi yang dicentang
+                    var dipilih = [];
+                    document.querySelectorAll(".dimensi-cb:checked").forEach(function(cb){ dipilih.push(cb.value); });
+                    var dimensiText = dipilih.length > 0 ? dipilih.join(", ") : "pilih yang paling relevan dengan materi";
+
                     var prompt = "Buatkan RPM (Rencana Pembelajaran Mendalam) lengkap dengan format berikut:\n\n";
-                    prompt += "IDENTITAS:\n- Satuan Pendidikan: " + (sekolah || "[nama sekolah]") + "\n- Semester/Tahun: [semester/tahun]\n- Mata Pelajaran: " + mapel + "\n- Kelas/Fase: " + (kelas || "[kelas/fase]") + "\n- Alokasi Waktu: " + pertemuan + " pertemuan\n- Guru: " + (guru || "[nama guru]") + "\n\n";
-                    prompt += "IDENTIFIKASI MATA PELAJARAN:\n- Materi: " + materi + "\n- Peserta Didik (Prasyarat): [isi]\n- Dimensi Profil Lulusan: [pilih dari 8 profil]\n- Capaian Pembelajaran: [isi CP]\n- Lintas Disiplin Ilmu: [isi]\n- Tujuan Pembelajaran: [isi tujuan]\n- Topik Pembelajaran: [isi topik]\n\n";
+                    prompt += "IDENTITAS:\n- Satuan Pendidikan: " + (sekolah || "[nama sekolah]") + "\n- Semester/Tahun: [semester/tahun]\n- Mata Pelajaran: " + mapel + "\n- Kelas/Fase: " + kelas + "\n- Alokasi Waktu: " + pertemuan + " pertemuan\n- Guru: " + (guru || "[nama guru]") + "\n\n";
+                    prompt += "IDENTIFIKASI MATA PELAJARAN:\n- Materi: " + materi + "\n- Peserta Didik (Prasyarat): [isi]\n- Dimensi Profil Lulusan: " + dimensiText + "\n- Capaian Pembelajaran: [isi CP]\n- Lintas Disiplin Ilmu: [isi]\n- Tujuan Pembelajaran: [isi tujuan]\n- Topik Pembelajaran: [isi topik]\n\n";
                     prompt += "EMPAT KERANGKA PEMBELAJARAN MENDALAM:\n1. Praktis Pedagogis: [isi]\n2. Kemitraan Pembelajaran: [isi]\n3. Lingkungan Pembelajaran: [isi]\n4. Pemanfaatan Digital: [isi]\n\n";
                     prompt += "PENGALAMAN BELAJAR:\n- Awal/Apersepsi: [isi]\n- Inti: [isi langkah pembelajaran]\n- Penutup: [isi]\n\n";
                     prompt += "ASESMEN:\n- Diagnostik: [isi]\n- Formatif: [isi penjelasan, lalu sertakan minimal 5 contoh soal formatif bernomor lengkap dengan kunci jawaban di bawahnya]\n- Sumatif: [isi penjelasan, lalu sertakan minimal 5 contoh soal sumatif bernomor lengkap dengan kunci jawaban di bawahnya]\n\n";
                     prompt += "PENGAYAAN DAN REMEDIAL:\n- Pengayaan: [isi]\n- Remedial: [isi]\n\n";
                     prompt += "REFLEKSI:\n- Refleksi Peserta Didik: [isi]\n- Refleksi Pendidik: [isi]\n\n";
-                    prompt += "Tolong lengkapi semua bagian dengan konten yang sesuai materi " + materi + ". Buat ringkas tapi lengkap, maksimal 2-3 kalimat per bagian. KHUSUS untuk bagian Asesmen Formatif dan Sumatif, WAJIB sertakan minimal 5 contoh soal yang ditulis bernomor (1, 2, 3, dst), dan tuliskan Kunci Jawaban di bawah setiap kumpulan soal tersebut.";
+                    prompt += "Tolong lengkapi semua bagian dengan konten yang sesuai materi " + materi + ". Buat ringkas tapi lengkap, maksimal 2-3 kalimat per bagian. Untuk Dimensi Profil Lulusan, gunakan dimensi yang sudah saya tentukan: " + dimensiText + ". KHUSUS untuk bagian Asesmen Formatif dan Sumatif, WAJIB sertakan minimal 5 contoh soal yang ditulis bernomor (1, 2, 3, dst), dan tuliskan Kunci Jawaban di bawah setiap kumpulan soal tersebut.";
                     return prompt;
                 }
             },
